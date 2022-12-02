@@ -1,0 +1,4 @@
+# ignores following folders
+
+.vs/
+Debug/
