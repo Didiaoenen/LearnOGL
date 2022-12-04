@@ -24,7 +24,7 @@ namespace OGL
 
 		virtual bool Init();
 
-		virtual void SetUp();
+		virtual void Setup();
 
 		virtual void Render(double dt);
 

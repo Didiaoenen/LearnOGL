@@ -25,7 +25,7 @@ namespace OGL
 		return true;
 	}
 
-	void LearnOGLApp::SetUp()
+	void LearnOGLApp::Setup()
 	{
 	}
 
@@ -43,7 +43,7 @@ namespace OGL
 
 		WindowHint();
 
-		SetUp();
+		Setup();
 
 		bool running = true;
 
