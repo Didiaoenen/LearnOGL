@@ -8,23 +8,26 @@
 #include <string>
 #include <iostream>
 
-class LearnOGLTexture
+namespace OGL
 {
-public:
-	LearnOGLTexture(const std::string path, LearnOGLModel::TextureType textureType = LearnOGLModel::TextureType::Diffuse, GLenum targetType = GL_TEXTURE_2D);
-	~LearnOGLTexture();
+	class LearnOGLTexture
+	{
+	public:
+		LearnOGLTexture(const std::string path, TextureType textureType = TextureType::Diffuse, GLenum targetType = GL_TEXTURE_2D);
+		~LearnOGLTexture();
 
-	void Bind(GLenum textureUnit/* = GL_TEXTURE0*/);
+		void Bind(GLenum textureUnit = GL_TEXTURE0);
 
-public:
-	UINT mID;
-	std::string mPath;
-	GLenum mTargetType;
-	LearnOGLModel::TextureType mTextureType;
+	public:
+		GLuint mID;
+		std::string mPath;
+		GLenum mTargetType;
+		TextureType mTextureType;
 
-	int imageWidth;
-	int imageHeight;
-	int imageChannels;
-private:
-};
+		int imageWidth;
+		int imageHeight;
+		int imageChannels;
+	private:
+	};
+}
 

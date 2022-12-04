@@ -1,9 +1,12 @@
 #include "LearnOGLMaterial.h"
 
-LearnOGLMaterial::LearnOGLMaterial()
+namespace OGL
 {
-}
+	LearnOGLMaterial::LearnOGLMaterial()
+	{
+	}
 
-LearnOGLMaterial::~LearnOGLMaterial()
-{
+	LearnOGLMaterial::~LearnOGLMaterial()
+	{
+	}
 }

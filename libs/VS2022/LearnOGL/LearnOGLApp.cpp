@@ -3,10 +3,10 @@
 #include <iostream>
 #include <functional>
 
-OGL::LearnOGLApp* OGL::LearnOGLApp::oglApp = nullptr;
-
 namespace OGL
 {
+	LearnOGLApp* LearnOGLApp::oglApp = nullptr;
+	
 	LearnOGLApp::LearnOGLApp()
 	{
 		info.title = "Default Window";

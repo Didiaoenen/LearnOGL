@@ -11,15 +11,8 @@
 #include <string>
 #include <vector>
 
-class LearnOGLModel
+namespace OGL
 {
-public:
-	LearnOGLModel(const std::string path);
-	~LearnOGLModel();
-
-	void Draw();
-
-public:
 	enum TextureType
 	{
 		None = 0,
@@ -28,18 +21,28 @@ public:
 		Normal,
 		Height,
 	};
-	
-	std::vector<LearnOGLMesh> mMeshs;
-	
-	std::vector<LearnOGLTexture> mTextures;
-	
-	std::vector<LearnOGLMaterial> mMaterials;
 
-private:
-	void ProcessNode(aiNode* node, const aiScene* scene);
+	class LearnOGLModel
+	{
+	public:
+		LearnOGLModel(const std::string path);
+		~LearnOGLModel();
 
-	LearnOGLMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		void Draw();
 
-	std::vector<LearnOGLTexture> LoadMaterialTexture(aiMaterial* mat, aiTextureType type, TextureType eType);
-};
+	public:
+		std::string mPath;
+		
+		std::vector<LearnOGLMesh> mMeshs;
+	
+		std::vector<LearnOGLMaterial> mMaterials;
+
+	private:
+		void LoadModel();
+
+		void ProcessNode(aiNode* node, const aiScene* scene);
+
+		LearnOGLMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+	};
+}
 

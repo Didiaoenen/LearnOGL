@@ -3,20 +3,27 @@
 #include "LearnOGLShader.h"
 #include "LearnOGLTexture.h"
 
-class LearnOGLMaterial
+namespace OGL
 {
-public:
-	LearnOGLMaterial();
-	~LearnOGLMaterial();
+	class LearnOGLMaterial
+	{
+	public:
+		LearnOGLMaterial();
+		~LearnOGLMaterial();
 
-public:
+	public:
 
-	LearnOGLShader mShader;
+		LearnOGLShader* mShader;
 
-	LearnOGLTexture mDiffuseTexture;
+		LearnOGLTexture* mDiffuseTexture;
 
-	LearnOGLTexture mNormalTexture;
+		LearnOGLTexture* mNormalTexture;
 
-private:
-};
+		LearnOGLTexture* mRoughnessTexture;
+	
+		LearnOGLTexture* mSpecularTexture;
+
+	private:
+	};
+}
 

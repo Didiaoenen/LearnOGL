@@ -7,6 +7,15 @@
 
 namespace OGL
 {
+	struct AppInfo
+	{
+		std::string title;
+		int windowWidth;
+		int windowHeight;
+		int majorVersion;
+		int minorVersion;
+	};
+
 	class LearnOGLApp
 	{
 	public:
@@ -26,15 +35,8 @@ namespace OGL
 		void Run(LearnOGLApp* app);
 
 		void WindowHint();
+
 	public:
-		struct AppInfo
-		{
-			std::string title;
-			int windowWidth;
-			int windowHeight;
-			int majorVersion;
-			int minorVersion;
-		};
 
 	protected:
 		AppInfo info;

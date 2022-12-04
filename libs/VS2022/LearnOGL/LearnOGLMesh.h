@@ -7,21 +7,44 @@
 
 #include <vector>
 
-struct oglVertex
+namespace OGL
 {
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec3 tangent;
-	glm::vec3 bitTangent;
-	glm::vec2 texcoords;
-};
+	struct oglVertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec2 texcoords;
+		glm::vec3 tangent;
+		glm::vec3 bittangent;
+	};
 
-class LearnOGLMesh
-{
-public:
-	LearnOGLMesh(std::vector<oglVertex> vertices, std::vector<UINT> indices, std::vector<LearnOGLTexture> textures);
-	~LearnOGLMesh();
+	enum oglAttrib
+	{
+		Position = 0,
+		Normal,
+		TexCoords,
+		Tangent,
+		BitTangent,
+	};
 
-private:
-};
+	class LearnOGLMesh
+	{
+	public:
+		LearnOGLMesh(std::vector<oglVertex> vertices, std::vector<uint32_t> indices, std::vector<LearnOGLTexture> textures);
+		~LearnOGLMesh();
+
+		void Draw();
+
+	public:
+		std::vector<oglVertex> mVertices;
+		std::vector<uint32_t> mIndices;
+
+	private:
+		void SetupMesh();
+
+		GLuint mVAO;
+		GLuint mVBO;
+		GLuint mEBO;
+	};
+}
 
