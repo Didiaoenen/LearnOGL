@@ -60,16 +60,18 @@ public:
 		glm::mat4 projection = glm::perspective(glm::radians(oglCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
 		glm::mat4 view = oglCamera->GetViewMatrix();
 
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 
 		for (uint32_t i = 0; i < oglModel->mMaterials.size(); i++)
 		{
 			oglModel->mMaterials[i].mShader->SetMat4("projection", projection);
 			oglModel->mMaterials[i].mShader->SetMat4("view", view);
-			oglModel->mMaterials[i].mShader->SetMat4("model", model);
 		}
+
+		OGL::oglTransform transform;
+		transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
+		transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+		oglModel->SetTransform(transform);
 
 		oglModel->Draw();
 	}
