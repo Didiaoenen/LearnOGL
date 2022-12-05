@@ -41,7 +41,17 @@ namespace OGL
 	{
 		oglApp = app;
 
-		WindowHint();
+		if (!WindowHint())
+		{
+			std::cout << "Faild to create GLFW window" << std::endl;
+			return;
+		}
+
+		if (!InitGLAD())
+		{
+			std::cout << "Failed to initialize GLAD" << std::endl;
+			return;
+		}
 
 		Setup();
 
@@ -74,7 +84,12 @@ namespace OGL
 		}
 	}
 
-	void LearnOGLApp::WindowHint()
+	bool LearnOGLApp::InitGLAD()
+	{
+		return gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	}
+
+	bool LearnOGLApp::WindowHint()
 	{
 		glfwInit();
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, info.majorVersion);
@@ -84,11 +99,12 @@ namespace OGL
 		window = glfwCreateWindow(info.windowWidth, info.windowHeight, info.title.c_str(), nullptr, nullptr);
 		if (!window)
 		{
-			std::cout << "Faild to create GLFW window" << std::endl;
-			return;
+			return false;
 		}
 		glfwMakeContextCurrent(window);
 
 		glfwSetWindowSizeCallback(window, LearnOGLApp::GLFWWindowSizeCallback);
+		
+		return true;
 	}
 }

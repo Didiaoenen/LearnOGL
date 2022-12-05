@@ -2,6 +2,10 @@
 
 namespace OGL
 {
+	LearnOGLModel::LearnOGLModel()
+	{
+	}
+
 	LearnOGLModel::LearnOGLModel(const std::string path)
 		:mPath(path)
 	{
@@ -14,6 +18,15 @@ namespace OGL
 
 	void LearnOGLModel::Draw()
 	{
+		for (uint32_t i = 0; i < mMeshs.size(); i++)
+		{
+			mMeshs[i].Draw();
+		}
+
+		for (uint32_t i = 0; i < mMaterials.size(); i++)
+		{
+			mMaterials[i].Draw();
+		}
 	}
 
 	void LearnOGLModel::LoadModel()
@@ -50,7 +63,6 @@ namespace OGL
 	{
 		std::vector<oglVertex> vertices;
 		std::vector<uint32_t> indices;
-		std::vector<LearnOGLTexture> textures;
 
 		for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -104,6 +116,6 @@ namespace OGL
 			}
 		}
 
-		return LearnOGLMesh(vertices, indices, textures);
+		return LearnOGLMesh(vertices, indices);
 	}
 }

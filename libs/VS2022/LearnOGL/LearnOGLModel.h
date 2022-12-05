@@ -1,7 +1,6 @@
 #pragma once
 
 #include "LearnOGLMesh.h"
-#include "LearnOGLTexture.h"
 #include "LearnOGLMaterial.h"
 
 #include <assimp/Importer.hpp>
@@ -13,18 +12,10 @@
 
 namespace OGL
 {
-	enum TextureType
-	{
-		None = 0,
-		Diffuse,
-		Specular,
-		Normal,
-		Height,
-	};
-
 	class LearnOGLModel
 	{
 	public:
+		LearnOGLModel();
 		LearnOGLModel(const std::string path);
 		~LearnOGLModel();
 

@@ -2,7 +2,8 @@
 
 namespace OGL
 {
-	LearnOGLMesh::LearnOGLMesh(std::vector<oglVertex> vertices, std::vector<uint32_t> indices, std::vector<LearnOGLTexture> textures)
+	LearnOGLMesh::LearnOGLMesh(std::vector<oglVertex> vertices, std::vector<uint32_t> indices)
+		:mVertices(vertices), mIndices(indices)
 	{
 		SetupMesh();
 	}
@@ -31,20 +32,20 @@ namespace OGL
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mIndices.size() * sizeof(uint32_t), &mIndices[0], GL_STATIC_DRAW);
 
-		glEnableVertexAttribArray(oglAttrib::Position);
-		glVertexAttribPointer(oglAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)0);
+		glEnableVertexAttribArray((GLuint)oglAttrib::Position);
+		glVertexAttribPointer((GLuint)oglAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)0);
 
-		glEnableVertexAttribArray(oglAttrib::Normal);
-		glVertexAttribPointer(oglAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::normal));
+		glEnableVertexAttribArray((GLuint)oglAttrib::Normal);
+		glVertexAttribPointer((GLuint)oglAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::normal));
 
-		glEnableVertexAttribArray(oglAttrib::TexCoords);
-		glVertexAttribPointer(oglAttrib::TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::texcoords));
+		glEnableVertexAttribArray((GLuint)oglAttrib::TexCoords);
+		glVertexAttribPointer((GLuint)oglAttrib::TexCoords, 2, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::texcoords));
 
-		glEnableVertexAttribArray(oglAttrib::Tangent);
-		glVertexAttribPointer(oglAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::tangent));
+		glEnableVertexAttribArray((GLuint)oglAttrib::Tangent);
+		glVertexAttribPointer((GLuint)oglAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::tangent));
 
-		glEnableVertexAttribArray(oglAttrib::BitTangent);
-		glVertexAttribPointer(oglAttrib::BitTangent, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::bittangent));
+		glEnableVertexAttribArray((GLuint)oglAttrib::BitTangent);
+		glVertexAttribPointer((GLuint)oglAttrib::BitTangent, 3, GL_FLOAT, GL_FALSE, sizeof(oglVertex), (void*)offsetof(oglVertex, oglVertex::bittangent));
 
 		glBindVertexArray(0);
 	}

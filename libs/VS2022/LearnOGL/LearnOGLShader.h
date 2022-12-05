@@ -7,6 +7,17 @@
 
 namespace OGL
 {
+	#define INVALID_UNIFORM_LOCATION 0xFFFFFFFF
+
+	enum CompileType
+	{
+		None = 0,
+		Vertex,
+		Fragment,
+		Geometry,
+		Program,
+	};
+
 	class LearnOGLShader
 	{
 	public:
@@ -14,6 +25,8 @@ namespace OGL
 		~LearnOGLShader();
 	
 		void Use();
+
+		void SetTexUnit(std::string locStr, uint32_t texUni);
 
 		void SetBool(const std::string &name, bool value) const;
 
@@ -40,19 +53,13 @@ namespace OGL
 		void SetMat4(const std::string &name, const glm::mat4 &value) const;
 
 	public:
-		enum CompileType
-		{
-			None = 0,
-			Vertex,
-			Fragment,
-			Geometry,
-			Program,
-		};
-
-		GLuint id;
+		GLuint mID;
 
 	private:
 		void CheckCompileErrors(GLuint shader, CompileType type);
+	
+		GLuint GetUniformLocation(std::string locName);
+
 	};
 }
 

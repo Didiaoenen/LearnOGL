@@ -34,7 +34,9 @@ namespace OGL
 
 		void Run(LearnOGLApp* app);
 
-		void WindowHint();
+		bool InitGLAD();
+
+		bool WindowHint();
 
 	public:
 

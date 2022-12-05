@@ -5,10 +5,12 @@ namespace OGL
 	LearnOGLTexture::LearnOGLTexture(const std::string path, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/)
 		: mID(0), mPath(path), mTextureType(textureType), mTargetType(targetType)
 	{
+		stbi_set_flip_vertically_on_load(true);
+
 		auto imageData = stbi_load(path.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
 		if (!imageData)
 		{
-			std::cout << "Error::Texture load failed" << path << std::endl;
+			std::cout << "Error::Texture load failed: " << path << std::endl;
 			stbi_image_free(imageData);
 			return;
 		}
@@ -58,6 +60,7 @@ namespace OGL
 
 	LearnOGLTexture::~LearnOGLTexture()
 	{
+		std::cout << "LearnOGLTexture::~LearnOGLTexture" << std::endl;
 	}
 
 	void LearnOGLTexture::Bind(GLenum textureUnit/* = GL_TEXTURE0*/)

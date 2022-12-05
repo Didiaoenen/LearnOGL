@@ -131,6 +131,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LearnOGLApp.cpp" />
+    <ClCompile Include="LearnOGLCamera.cpp" />
     <ClCompile Include="LearnOGLMaterial.cpp" />
     <ClCompile Include="LearnOGLMesh.cpp" />
     <ClCompile Include="LearnOGLModel.cpp" />
@@ -139,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h" />
+    <ClInclude Include="LearnOGLCamera.h" />
     <ClInclude Include="LearnOGLMaterial.h" />
     <ClInclude Include="LearnOGLMesh.h" />
     <ClInclude Include="LearnOGLModel.h" />

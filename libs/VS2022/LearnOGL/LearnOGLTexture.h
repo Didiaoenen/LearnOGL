@@ -3,13 +3,20 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-#include "LearnOGLModel.h"
-
 #include <string>
 #include <iostream>
 
 namespace OGL
 {
+	enum class TextureType
+	{
+		None = 0,
+		Diffuse,
+		Normal,
+		Roughness,
+		Specular,
+	};
+
 	class LearnOGLTexture
 	{
 	public:
@@ -17,6 +24,7 @@ namespace OGL
 		~LearnOGLTexture();
 
 		void Bind(GLenum textureUnit = GL_TEXTURE0);
+		
 
 	public:
 		GLuint mID;

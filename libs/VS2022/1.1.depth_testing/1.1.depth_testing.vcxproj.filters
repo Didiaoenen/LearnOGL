@@ -21,5 +21,31 @@
     <ClCompile Include="..\LearnOGL\LearnOGLApp.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="..\LearnOGL\LearnOGLMaterial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LearnOGL\LearnOGLMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LearnOGL\LearnOGLModel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LearnOGL\LearnOGLShader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LearnOGL\LearnOGLTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LearnOGL\LearnOGLCamera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="1.model_loading.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="1.model_loading.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "LearnOGLTexture.h"
-
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
@@ -18,7 +16,7 @@ namespace OGL
 		glm::vec3 bittangent;
 	};
 
-	enum oglAttrib
+	enum class oglAttrib
 	{
 		Position = 0,
 		Normal,
@@ -30,7 +28,7 @@ namespace OGL
 	class LearnOGLMesh
 	{
 	public:
-		LearnOGLMesh(std::vector<oglVertex> vertices, std::vector<uint32_t> indices, std::vector<LearnOGLTexture> textures);
+		LearnOGLMesh(std::vector<oglVertex> vertices, std::vector<uint32_t> indices);
 		~LearnOGLMesh();
 
 		void Draw();
