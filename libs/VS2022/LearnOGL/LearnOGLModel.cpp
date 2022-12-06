@@ -29,6 +29,22 @@ namespace OGL
 		}
 	}
 
+	void LearnOGLModel::SetCameraView(glm::mat4 cameraview)
+	{
+		for (uint32_t i = 0; i < mMaterials.size(); i++)
+		{
+			mMaterials[i].mShader->SetMat4("view", cameraview);
+		}
+	}
+
+	void LearnOGLModel::SetProjection(glm::mat4 projection)
+	{
+		for (uint32_t i = 0; i < mMaterials.size(); i++)
+		{
+			mMaterials[i].mShader->SetMat4("projection", projection);
+		}
+	}
+
 	void LearnOGLModel::SetTransform(oglTransform transofrm)
 	{
 		mTransform = transofrm;

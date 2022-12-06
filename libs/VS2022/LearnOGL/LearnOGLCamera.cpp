@@ -16,6 +16,16 @@ namespace OGL
 	{
 	}
 
+	glm::mat4 LearnOGLCamera::GetOrthographicProjection(float left, float right, float bottom, float top, float nearplance, float farplane)
+	{
+		return glm::ortho(left, right, bottom, top, nearplance, farplane);
+	}
+
+	glm::mat4 LearnOGLCamera::GetPerspectiveProjection(float fov, float aspect, float nearplane, float farplane)
+	{
+		return glm::perspective(fov, aspect, nearplane, farplane);
+	}
+
 	glm::mat4 LearnOGLCamera::GetViewMatrix()
 	{
 		return glm::lookAt(mPosition, mPosition + mFront, mUp);

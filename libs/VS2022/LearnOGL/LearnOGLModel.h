@@ -30,6 +30,8 @@ namespace OGL
 
 		void Draw();
 
+		void SetProjection(glm::mat4 projection);
+		void SetCameraView(glm::mat4 cameraview);
 		void SetTransform(oglTransform transofrm);
 
 	public:

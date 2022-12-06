@@ -57,15 +57,11 @@ public:
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 projection = glm::perspective(glm::radians(oglCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
+		glm::mat4 projection = oglCamera->GetPerspectiveProjection(glm::radians(oglCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
+		oglModel->SetProjection(projection);
+		
 		glm::mat4 view = oglCamera->GetViewMatrix();
-
-
-		for (uint32_t i = 0; i < oglModel->mMaterials.size(); i++)
-		{
-			oglModel->mMaterials[i].mShader->SetMat4("projection", projection);
-			oglModel->mMaterials[i].mShader->SetMat4("view", view);
-		}
+		oglModel->SetCameraView(view);
 
 		OGL::oglTransform transform;
 		transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
