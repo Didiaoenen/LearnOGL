@@ -36,6 +36,12 @@
     <ClCompile Include="LearnOGLCamera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LearnOGLBatch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LearnOGLTools.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -57,6 +63,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LearnOGLCamera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLBatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLTools.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

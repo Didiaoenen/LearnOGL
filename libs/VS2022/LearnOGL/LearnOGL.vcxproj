@@ -131,21 +131,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LearnOGLApp.cpp" />
+    <ClCompile Include="LearnOGLBatch.cpp" />
     <ClCompile Include="LearnOGLCamera.cpp" />
     <ClCompile Include="LearnOGLMaterial.cpp" />
     <ClCompile Include="LearnOGLMesh.cpp" />
     <ClCompile Include="LearnOGLModel.cpp" />
     <ClCompile Include="LearnOGLShader.cpp" />
     <ClCompile Include="LearnOGLTexture.cpp" />
+    <ClCompile Include="LearnOGLTools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h" />
+    <ClInclude Include="LearnOGLBatch.h" />
     <ClInclude Include="LearnOGLCamera.h" />
     <ClInclude Include="LearnOGLMaterial.h" />
     <ClInclude Include="LearnOGLMesh.h" />
     <ClInclude Include="LearnOGLModel.h" />
     <ClInclude Include="LearnOGLShader.h" />
     <ClInclude Include="LearnOGLTexture.h" />
+    <ClInclude Include="LearnOGLTools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
