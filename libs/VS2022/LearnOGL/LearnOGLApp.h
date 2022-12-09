@@ -20,7 +20,7 @@ namespace OGL
 	{
 	public:
 		LearnOGLApp();
-		~LearnOGLApp();
+		virtual ~LearnOGLApp();
 
 		virtual bool Init();
 

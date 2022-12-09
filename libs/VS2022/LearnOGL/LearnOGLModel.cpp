@@ -3,6 +3,7 @@
 namespace OGL
 {
 	LearnOGLModel::LearnOGLModel()
+		:mTransform()
 	{
 	}
 
