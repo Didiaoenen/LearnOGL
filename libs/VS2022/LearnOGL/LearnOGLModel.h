@@ -26,13 +26,13 @@ namespace OGL
 	public:
 		LearnOGLModel();
 		LearnOGLModel(const std::string path);
-		~LearnOGLModel();
+		virtual ~LearnOGLModel();
 
-		void Draw();
+		virtual void Draw();
 
-		void SetProjection(glm::mat4 projection);
-		void SetCameraView(glm::mat4 cameraview);
-		void SetTransform(oglTransform transofrm);
+		virtual void SetProjection(glm::mat4 projection);
+		virtual void SetCameraView(glm::mat4 cameraview);
+		virtual void SetTransform(oglTransform transofrm);
 
 	public:
 		std::string mPath;

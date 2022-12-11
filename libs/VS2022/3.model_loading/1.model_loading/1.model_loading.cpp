@@ -1,20 +1,84 @@
-﻿// 1.model_loading.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+﻿
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "../LearnOGL/LearnOGLApp.h"
+#include "../LearnOGL/LearnOGLModel.h"
+#include "../LearnOGL/LearnOGLMaterial.h"
+#include "../LearnOGL/LearnOGLCamera.h"
 
 #include <iostream>
 
-int main()
+class model_loading : public OGL::LearnOGLApp
 {
-    std::cout << "Hello World!\n";
-}
+public:
 
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
+	model_loading() :
+		oglShader(nullptr),
+		oglDiffuseTex(nullptr),
+		oglNormalTex(nullptr),
+		oglRoughnessTex(nullptr),
+		oglSpecularTex(nullptr),
+		oglMaterial(nullptr),
+		oglModel(nullptr),
+		oglCamera(nullptr)
+	{
+	}
 
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
+	virtual bool Init() override
+	{
+		return true;
+	}
+
+	virtual void Setup() override
+	{
+		oglShader = new OGL::LearnOGLShader("1.model_loading.vs.vert", "1.model_loading.fs.frag");
+		oglDiffuseTex = new OGL::LearnOGLTexture("../../resources/objects/backpack/diffuse.jpg", OGL::TextureType::Diffuse);
+		oglNormalTex = new OGL::LearnOGLTexture("../../resources/objects/backpack/normal.png", OGL::TextureType::Normal);
+		oglRoughnessTex = new OGL::LearnOGLTexture("../../resources/objects/backpack/roughness.jpg", OGL::TextureType::Roughness);
+		oglSpecularTex = new OGL::LearnOGLTexture("../../resources/objects/backpack/specular.jpg", OGL::TextureType::Specular);
+
+		oglMaterial = new OGL::LearnOGLMaterial(oglShader);
+		oglMaterial->mDiffuseTexture = oglDiffuseTex;
+		oglMaterial->mNormalTexture = oglNormalTex;
+		oglMaterial->mRoughnessTexture = oglRoughnessTex;
+		oglMaterial->mSpecularTexture = oglSpecularTex;
+
+		oglModel = new OGL::LearnOGLModel("../../resources/objects/backpack/backpack.obj");
+		oglModel->mMaterials.push_back(*oglMaterial);
+
+		oglCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+	}
+
+	virtual void Render(double dt) override
+	{
+		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glm::mat4 projection = oglCamera->GetPerspectiveProjection(glm::radians(oglCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
+		oglModel->SetProjection(projection);
+
+		glm::mat4 view = oglCamera->GetViewMatrix();
+		oglModel->SetCameraView(view);
+
+		OGL::oglTransform transform;
+		transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
+		transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);
+		transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+		oglModel->SetTransform(transform);
+
+		oglModel->Draw();
+	}
+
+private:
+	OGL::LearnOGLShader* oglShader;
+	OGL::LearnOGLTexture* oglDiffuseTex;
+	OGL::LearnOGLTexture* oglNormalTex;
+	OGL::LearnOGLTexture* oglRoughnessTex;
+	OGL::LearnOGLTexture* oglSpecularTex;
+	OGL::LearnOGLMaterial* oglMaterial;
+	OGL::LearnOGLModel* oglModel;
+	OGL::LearnOGLCamera* oglCamera;
+};
+
+DECLARE_MAIN(model_loading)
