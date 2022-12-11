@@ -19,4 +19,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="3.1.1.shadow_mapping_depth.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.1.1.shadow_mapping_depth.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.1.1.debug_quad_depth.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.1.1.debug_quad_depth.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

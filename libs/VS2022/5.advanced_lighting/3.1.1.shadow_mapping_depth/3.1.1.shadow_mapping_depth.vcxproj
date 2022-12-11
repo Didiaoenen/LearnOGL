@@ -109,8 +109,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;assimp.lib;STB_IMAGE.lib;GLAD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>./../../../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;assimp.lib;STB_IMAGE.lib;GLAD.lib;LearnOGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./../../../lib;./../../LearnOGL/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,6 +131,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3.1.1.shadow_mapping_depth.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\LearnOGL\LearnOGL.vcxproj">
+      <Project>{d76a5803-2985-4185-a091-544972987d5c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="3.1.1.debug_quad_depth.fs.frag" />
+    <None Include="3.1.1.shadow_mapping_depth.fs.frag" />
+    <None Include="3.1.1.debug_quad_depth.vs.vert" />
+    <None Include="3.1.1.shadow_mapping_depth.vs.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
