@@ -18,6 +18,7 @@ namespace OGL
 		mRoughnessTexture(nullptr),
 		mSpecularTexture(nullptr)
 	{
+		mShader->Use();
 		mShader->SetTexUnit(oglDiffuseLoc, 0);
 		mShader->SetTexUnit(oglNormalLoc, 1);
 		mShader->SetTexUnit(oglRoughnessLoc, 2);

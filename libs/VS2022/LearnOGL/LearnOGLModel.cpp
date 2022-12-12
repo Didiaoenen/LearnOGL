@@ -19,14 +19,14 @@ namespace OGL
 
 	void LearnOGLModel::Draw()
 	{
-		for (uint32_t i = 0; i < mMeshs.size(); i++)
-		{
-			mMeshs[i].Draw();
-		}
-
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
 			mMaterials[i].Draw();
+		}
+
+		for (uint32_t i = 0; i < mMeshs.size(); i++)
+		{
+			mMeshs[i].Draw();
 		}
 	}
 

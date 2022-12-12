@@ -361,13 +361,13 @@ namespace OGL
 			return;
 		}
 
-		glBindVertexArray(mVAO);
-		glDrawArrays(mPrimitiveType, 0, mVerts);
-		glBindVertexArray(0);
-
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
 			mMaterials[i].Draw();
 		}
+
+		glBindVertexArray(mVAO);
+		glDrawArrays(mPrimitiveType, 0, mVerts);
+		glBindVertexArray(0);
 	}
 }

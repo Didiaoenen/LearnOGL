@@ -15,7 +15,7 @@ namespace OGL
 	void LearnOGLMesh::Draw()
 	{
 		glBindVertexArray(mVAO);
-		glDrawElements(GL_TRIANGLES, static_cast<uint32_t>(mIndices.size()), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, mIndices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
