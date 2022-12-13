@@ -140,6 +140,7 @@
     <ClCompile Include="LearnOGLMaterial.cpp" />
     <ClCompile Include="LearnOGLMesh.cpp" />
     <ClCompile Include="LearnOGLModel.cpp" />
+    <ClCompile Include="LearnOGLPipeline.cpp" />
     <ClCompile Include="LearnOGLShader.cpp" />
     <ClCompile Include="LearnOGLTexture.cpp" />
     <ClCompile Include="LearnOGLTools.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="LearnOGLMaterial.h" />
     <ClInclude Include="LearnOGLMesh.h" />
     <ClInclude Include="LearnOGLModel.h" />
+    <ClInclude Include="LearnOGLPipeline.h" />
     <ClInclude Include="LearnOGLShader.h" />
     <ClInclude Include="LearnOGLTexture.h" />
     <ClInclude Include="LearnOGLTools.h" />
