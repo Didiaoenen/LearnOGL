@@ -4,8 +4,9 @@
 
 #include "../LearnOGL/LearnOGLApp.h"
 #include "../LearnOGL/LearnOGLModel.h"
-#include "../LearnOGL/LearnOGLMaterial.h"
 #include "../LearnOGL/LearnOGLCamera.h"
+
+#include "1.model_loading_material.h"
 
 #include <iostream>
 
@@ -14,14 +15,10 @@ class model_loading : public OGL::LearnOGLApp
 public:
 
 	model_loading() :
-		oglShader(nullptr),
-		oglDiffuseTex(nullptr),
-		oglNormalTex(nullptr),
-		oglRoughnessTex(nullptr),
-		oglSpecularTex(nullptr),
-		oglMaterial(nullptr),
-		oglModel(nullptr),
-		oglCamera(nullptr)
+		mMaterial(nullptr),
+		mCamera(nullptr),
+		mShader(nullptr),
+		mModel(nullptr)
 	{
 	}
 
@@ -32,22 +29,18 @@ public:
 
 	virtual void Setup() override
 	{
-		oglShader = new OGL::LearnOGLShader("1.model_loading.vs.vert", "1.model_loading.fs.frag");
-		oglDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", OGL::TextureType::Diffuse);
-		oglNormalTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/normal.png", OGL::TextureType::Normal);
-		oglRoughnessTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/roughness.jpg", OGL::TextureType::Roughness);
-		oglSpecularTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/specular.jpg", OGL::TextureType::Specular);
+		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-		oglMaterial = new OGL::LearnOGLMaterial(oglShader);
-		oglMaterial->mDiffuseTexture = oglDiffuseTex;
-		oglMaterial->mNormalTexture = oglNormalTex;
-		oglMaterial->mRoughnessTexture = oglRoughnessTex;
-		oglMaterial->mSpecularTexture = oglSpecularTex;
+		mShader = new OGL::LearnOGLShader("1.model_loading.vs.vert", "1.model_loading.fs.frag");
 
-		oglModel = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
-		oglModel->mMaterials.push_back(*oglMaterial);
+		mMaterial = new model_loading_material(mShader);
+		mMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", OGL::TextureType::Diffuse);
+		mMaterial->mNormalTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/normal.png", OGL::TextureType::Normal);
+		mMaterial->mRoughnessTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/roughness.jpg", OGL::TextureType::Roughness);
+		mMaterial->mSpecularTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/specular.jpg", OGL::TextureType::Specular);
 
-		oglCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+		mModel = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
+		mModel->mMaterials.push_back(mMaterial);
 	}
 
 	virtual void Render(double dt) override
@@ -55,30 +48,27 @@ public:
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 projection = oglCamera->GetPerspectiveProjection(glm::radians(oglCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
-		oglModel->SetProjection(projection);
+		glm::mat4 projection = mCamera->GetPerspectiveProjection(glm::radians(mCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
+		mModel->SetProjection(projection);
 
-		glm::mat4 view = oglCamera->GetViewMatrix();
-		oglModel->SetCameraView(view);
+		glm::mat4 view = mCamera->GetViewMatrix();
+		mModel->SetCameraView(view);
 
 		OGL::oglTransform transform;
 		transform.position = glm::vec3(0.0f, 0.0f, 0.0f);
 		transform.scale = glm::vec3(0.5f, 0.5f, 0.5f);
 		transform.rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-		oglModel->SetTransform(transform);
+		mModel->SetTransform(transform);
 
-		oglModel->Draw();
+		mModel->Draw();
 	}
 
 private:
-	OGL::LearnOGLShader* oglShader;
-	OGL::LearnOGLTexture* oglDiffuseTex;
-	OGL::LearnOGLTexture* oglNormalTex;
-	OGL::LearnOGLTexture* oglRoughnessTex;
-	OGL::LearnOGLTexture* oglSpecularTex;
-	OGL::LearnOGLMaterial* oglMaterial;
-	OGL::LearnOGLModel* oglModel;
-	OGL::LearnOGLCamera* oglCamera;
+	model_loading_material* mMaterial;
+
+	OGL::LearnOGLCamera* mCamera;
+	OGL::LearnOGLShader* mShader;
+	OGL::LearnOGLModel* mModel;
 };
 
 DECLARE_MAIN(model_loading)

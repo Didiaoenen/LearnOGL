@@ -14,6 +14,8 @@ namespace OGL
 		~LearnOGLDepthFBO();
 
 		void BindForWriting();
+		void UnbindForWriting();
+
 		void BindForReading(GLenum textureUnit = GL_TEXTURE0);
 
 	public:

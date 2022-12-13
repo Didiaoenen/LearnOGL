@@ -3,10 +3,10 @@
 #include <GLFW/glfw3.h>
 
 #include "../LearnOGL/LearnOGLApp.h"
-#include "../LearnOGL/LearnOGLShader.h"
 #include "../LearnOGL/LearnOGLCamera.h"
-#include "../LearnOGL/LearnOGLMaterial.h"
 #include "../LearnOGL/LearnOGLTools.h"
+
+#include "test_material.h"
 
 #include <iostream>
 
@@ -22,19 +22,19 @@ public:
 	{
 		glEnable(GL_DEPTH_TEST);
 
-		oglCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
 
-		oglShader = new OGL::LearnOGLShader("test.vs.vert", "test.fs.frag");
-		oglMaterial = new OGL::LearnOGLMaterial(oglShader);
-		oglMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
+		mShader = new OGL::LearnOGLShader("test.vs.vert", "test.fs.frag");
+		mMaterial = new test_material(mShader);
+		mMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
 
-		oglTools = OGL::LearnOGLTools::Instance();
+		mTools = OGL::LearnOGLTools::Instance();
 
-		oglPlane = oglTools->MakePlane(0.3f);
-		oglPlane.mMaterials.push_back(*oglMaterial);
+		mPlane = mTools->MakePlane(0.3f);
+		mPlane.mMaterials.push_back(mMaterial);
 
-		oglCube = oglTools->MakeCube(0.3f);
-		oglCube.mMaterials.push_back(*oglMaterial);
+		mCube = mTools->MakeCube(0.3f);
+		mCube.mMaterials.push_back(mMaterial);
 	}
 
 	virtual void Render(double dt) override
@@ -43,26 +43,26 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		OGL::oglTransform transform;
-		glm::mat4 projection = oglCamera->GetPerspectiveProjection(glm::radians(oglCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
-		glm::mat4 view = oglCamera->GetViewMatrix();
+		glm::mat4 projection = mCamera->GetPerspectiveProjection(glm::radians(mCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
+		glm::mat4 view = mCamera->GetViewMatrix();
 
 		transform.position = glm::vec3(-1.0f, 0.0f, 0.0f);
 		transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 		transform.rotation = glm::vec3(45.0f, 45.0f, 0.0f);
 
-		oglPlane.SetProjection(projection);
-		oglPlane.SetCameraView(view);
-		oglPlane.SetTransform(transform);
-		oglPlane.Draw();
+		mPlane.SetProjection(projection);
+		mPlane.SetCameraView(view);
+		mPlane.SetTransform(transform);
+		mPlane.Draw();
 
 		transform.position = glm::vec3(1.0f, 0.0f, 0.0f);
 		transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
 		transform.rotation = glm::vec3(45.0f, 45.0f, 0.0f);
 
-		oglCube.SetProjection(projection);
-		oglCube.SetCameraView(view);
-		oglCube.SetTransform(transform);
-		oglCube.Draw();
+		mCube.SetProjection(projection);
+		mCube.SetCameraView(view);
+		mCube.SetTransform(transform);
+		mCube.Draw();
 	}
 
 	virtual void ShutDown() override
@@ -71,14 +71,14 @@ public:
 	}
 
 private:
+	test_material* mMaterial;
 
-	OGL::LearnOGLBatch oglPlane;
-	OGL::LearnOGLBatch oglCube;
+	OGL::LearnOGLCamera* mCamera;
+	OGL::LearnOGLShader* mShader;
+	OGL::LearnOGLTools* mTools;
 
-	OGL::LearnOGLTools* oglTools;
-	OGL::LearnOGLShader* oglShader;
-	OGL::LearnOGLMaterial* oglMaterial;
-	OGL::LearnOGLCamera* oglCamera;
+	OGL::LearnOGLBatch mPlane;
+	OGL::LearnOGLBatch mCube;
 };
 
 DECLARE_MAIN(test)

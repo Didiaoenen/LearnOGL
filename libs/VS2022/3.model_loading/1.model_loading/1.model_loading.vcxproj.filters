@@ -18,6 +18,9 @@
     <ClCompile Include="1.model_loading.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="1.model_loading_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="1.model_loading.fs.frag">
@@ -26,5 +29,10 @@
     <None Include="1.model_loading.vs.vert">
       <Filter>资源文件</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="1.model_loading_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

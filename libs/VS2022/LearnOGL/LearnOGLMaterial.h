@@ -3,35 +3,26 @@
 #include "LearnOGLShader.h"
 #include "LearnOGLTexture.h"
 
-#include <string>
-
 namespace OGL
 {
+	enum class TexCoord
+	{
+		TexCoord0x00,
+		TexCoord0x01,
+		TexCoord0x02,
+		TexCoord0x03,
+	};
+
 	class LearnOGLMaterial
 	{
 	public:
 		LearnOGLMaterial();
-		LearnOGLMaterial(LearnOGLShader* oglShader);
-		~LearnOGLMaterial();
+		LearnOGLMaterial(LearnOGLShader* shader);
+		virtual ~LearnOGLMaterial();
 
-		void Draw();
+		virtual void Draw();
 
 	public:
-
 		LearnOGLShader* mShader;
-
-		LearnOGLTexture* mDiffuseTexture;
-
-		LearnOGLTexture* mNormalTexture;
-
-		LearnOGLTexture* mRoughnessTexture;
-	
-		LearnOGLTexture* mSpecularTexture;
-
-	private:
-		std::string oglDiffuseLoc = "diffuseTex";
-		std::string oglNormalLoc = "normalTex";
-		std::string oglRoughnessLoc = "roughnessTex";
-		std::string oglSpecularLoc = "specularTex";
 	};
 }

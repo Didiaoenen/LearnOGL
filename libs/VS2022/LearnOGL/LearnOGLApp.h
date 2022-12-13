@@ -7,6 +7,25 @@
 
 namespace OGL
 {
+	struct PersProjInfo
+	{
+		float fov;
+		float width;
+		float height;
+		float zNear;
+		float zFar;
+	};
+
+	struct OrthoProjInfo
+	{
+		float right;
+		float left;
+		float bottom;
+		float top;
+		float zNear;
+		float zFar;
+	};
+
 	struct AppInfo
 	{
 		std::string title;

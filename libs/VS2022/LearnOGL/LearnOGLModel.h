@@ -37,9 +37,9 @@ namespace OGL
 	public:
 		std::string mPath;
 		
-		std::vector<LearnOGLMesh> mMeshs;
+		std::vector<LearnOGLMesh*> mMeshs;
 	
-		std::vector<LearnOGLMaterial> mMaterials;
+		std::vector<LearnOGLMaterial*> mMaterials;
 
 		oglTransform mTransform;
 
@@ -48,7 +48,7 @@ namespace OGL
 
 		void ProcessNode(aiNode* node, const aiScene* scene);
 
-		LearnOGLMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		LearnOGLMesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	};
 }
 

@@ -131,11 +131,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="test_material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\LearnOGL\LearnOGL.vcxproj">
       <Project>{d76a5803-2985-4185-a091-544972987d5c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="test_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

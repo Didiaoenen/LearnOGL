@@ -21,12 +21,12 @@ namespace OGL
 	{
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
-			mMaterials[i].Draw();
+			mMaterials[i]->Draw();
 		}
 
 		for (uint32_t i = 0; i < mMeshs.size(); i++)
 		{
-			mMeshs[i].Draw();
+			mMeshs[i]->Draw();
 		}
 	}
 
@@ -34,7 +34,7 @@ namespace OGL
 	{
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
-			mMaterials[i].mShader->SetMat4("view", cameraview);
+			mMaterials[i]->mShader->SetMat4("view", cameraview);
 		}
 	}
 
@@ -42,7 +42,7 @@ namespace OGL
 	{
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
-			mMaterials[i].mShader->SetMat4("projection", projection);
+			mMaterials[i]->mShader->SetMat4("projection", projection);
 		}
 	}
 
@@ -59,7 +59,7 @@ namespace OGL
 
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
-			mMaterials[i].mShader->SetMat4("model", modelMat);
+			mMaterials[i]->mShader->SetMat4("model", modelMat);
 		}
 	}
 
@@ -93,7 +93,7 @@ namespace OGL
 		}
 	}
 
-	LearnOGLMesh LearnOGLModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	LearnOGLMesh* LearnOGLModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		std::vector<oglVertex> vertices;
 		std::vector<uint32_t> indices;
@@ -150,6 +150,6 @@ namespace OGL
 			}
 		}
 
-		return LearnOGLMesh(vertices, indices);
+		return new LearnOGLMesh(vertices, indices);
 	}
 }

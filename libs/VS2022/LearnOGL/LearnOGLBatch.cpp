@@ -363,7 +363,7 @@ namespace OGL
 
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
-			mMaterials[i].Draw();
+			mMaterials[i]->Draw();
 		}
 
 		glBindVertexArray(mVAO);
