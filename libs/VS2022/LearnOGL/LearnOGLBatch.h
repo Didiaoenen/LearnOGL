@@ -14,7 +14,6 @@ namespace OGL
 	enum class oglBatchAttrib
 	{
 		Position = 0,
-		Color,
 		Normal,
 		TexCoord,
 	};
@@ -32,15 +31,11 @@ namespace OGL
 		void End();
 
 		void CopyVertexData3f(glm::vec3* vertexs);
-		void CopyColorData4f(glm::vec4* colors);
 		void CopyNormalData3f(glm::vec3* normals);
 		void CopyTexCoordData2f(glm::vec2* texcoord);
 
 		void Vertex3f(GLfloat x, GLfloat y, GLfloat z);
 		void Vertex3fv(glm::vec3 vertex);
-
-		void Color4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a);
-		void Color4fv(glm::vec4 color);
 
 		void Normal3f(GLfloat x, GLfloat y, GLfloat z);
 		void Normal3fv(glm::vec3 normal);
@@ -60,12 +55,10 @@ namespace OGL
 		GLuint mVAO;
 
 		GLuint mVertexArray;
-		GLuint mColorArray;
 		GLuint mNormalArray;
 		GLuint mTexCoordArray;
 
 		glm::vec3* pVerts;
-		glm::vec4* pColors;
 		glm::vec3* pNorms;
 		glm::vec2* pTexCoord;
 	};

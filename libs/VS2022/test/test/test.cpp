@@ -5,6 +5,7 @@
 #include "../LearnOGL/LearnOGLApp.h"
 #include "../LearnOGL/LearnOGLCamera.h"
 #include "../LearnOGL/LearnOGLTools.h"
+#include "../LearnOGL/LearnOGLPipeline.h"
 
 #include "test_material.h"
 
@@ -13,16 +14,30 @@
 class test : public OGL::LearnOGLApp
 {
 public:
+	test() :
+		mMaterial(nullptr),
+		mCamera(nullptr),
+		mShader(nullptr),
+		mTools(nullptr)
+	{
+	}
+
 	virtual bool Init() override
 	{
+		mCameraType = OGL::CameraType::Perspective;
+		mPersInfo.fov = 45.0f;
+		mPersInfo.width = info.windowWidth;
+		mPersInfo.height = info.windowHeight;
+		mPersInfo.zFar = 100.0f;
+		mPersInfo.zNear = 0.1f;
+
 		return true;
 	}
 
 	virtual void Setup() override
 	{
-		glEnable(GL_DEPTH_TEST);
-
 		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
 
 		mShader = new OGL::LearnOGLShader("test.vs.vert", "test.fs.frag");
 		mMaterial = new test_material(mShader);
@@ -42,32 +57,45 @@ public:
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		OGL::oglTransform transform;
-		glm::mat4 projection = mCamera->GetPerspectiveProjection(glm::radians(mCamera->mZoom), (float)info.windowWidth / (float)info.windowHeight, 0.1f, 100.0f);
-		glm::mat4 view = mCamera->GetViewMatrix();
+		glEnable(GL_DEPTH_TEST);
 
-		transform.position = glm::vec3(-1.0f, 0.0f, 0.0f);
-		transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-		transform.rotation = glm::vec3(45.0f, 45.0f, 0.0f);
-
-		mPlane.SetProjection(projection);
-		mPlane.SetCameraView(view);
-		mPlane.SetTransform(transform);
-		mPlane.Draw();
-
-		transform.position = glm::vec3(1.0f, 0.0f, 0.0f);
-		transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
-		transform.rotation = glm::vec3(45.0f, 45.0f, 0.0f);
-
-		mCube.SetProjection(projection);
-		mCube.SetCameraView(view);
-		mCube.SetTransform(transform);
-		mCube.Draw();
+		RenderPlanePass();
+		RenderCubePass();
 	}
 
 	virtual void ShutDown() override
 	{
 
+	}
+
+	void RenderPlanePass()
+	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
+		pipeline.SetPerspectiveInfo(mPersInfo);
+		pipeline.SetPos(-1.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(45.0f, 45.0f, 0.0f);
+
+		mPlane.SetProjection(pipeline.GetPerspectiveProjection());
+		mPlane.SetCameraView(pipeline.GetCameraView());
+		mPlane.SetTransform(pipeline.GetTransform());
+		mPlane.Draw();
+	}
+
+	void RenderCubePass()
+	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
+		pipeline.SetPerspectiveInfo(mPersInfo);
+		pipeline.SetPos(1.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(45.0f, 45.0f, 0.0f);
+
+		mCube.SetProjection(pipeline.GetPerspectiveProjection());
+		mCube.SetCameraView(pipeline.GetCameraView());
+		mCube.SetTransform(pipeline.GetTransform());
+		mCube.Draw();
 	}
 
 private:

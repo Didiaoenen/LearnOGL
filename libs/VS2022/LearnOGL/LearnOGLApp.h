@@ -2,39 +2,14 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+
+#include "LearnOGLDefine.h"
 
 #include <string>
 
 namespace OGL
 {
-	struct PersProjInfo
-	{
-		float fov;
-		float width;
-		float height;
-		float zNear;
-		float zFar;
-	};
-
-	struct OrthoProjInfo
-	{
-		float right;
-		float left;
-		float bottom;
-		float top;
-		float zNear;
-		float zFar;
-	};
-
-	struct AppInfo
-	{
-		std::string title;
-		int windowWidth;
-		int windowHeight;
-		int majorVersion;
-		int minorVersion;
-	};
-
 	class LearnOGLApp
 	{
 	public:
@@ -61,10 +36,13 @@ namespace OGL
 
 	protected:
 		AppInfo info;
+		CameraType mCameraType;
+		PersProjInfo mPersInfo;
+		OrthoProjInfo mOrthoInfo;
 
-		static LearnOGLApp* oglApp;
+		static LearnOGLApp* mApp;
 
-		GLFWwindow* window;
+		GLFWwindow* mWindow;
 
 		static void GLFWWindowSizeCallback(GLFWwindow* window, int width, int height);
 	};

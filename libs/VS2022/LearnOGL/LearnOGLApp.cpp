@@ -5,7 +5,7 @@
 
 namespace OGL
 {
-	LearnOGLApp* LearnOGLApp::oglApp = nullptr;
+	LearnOGLApp* LearnOGLApp::mApp = nullptr;
 	
 	LearnOGLApp::LearnOGLApp()
 	{
@@ -39,7 +39,7 @@ namespace OGL
 
 	void LearnOGLApp::Run(LearnOGLApp* app)
 	{
-		oglApp = app;
+		mApp = app;
 
 		if (!WindowHint())
 		{
@@ -61,14 +61,14 @@ namespace OGL
 		{
 			Render(glfwGetTime());
 
-			glfwSwapBuffers(window);
+			glfwSwapBuffers(mWindow);
 			glfwPollEvents();
 
 		} while (running);
 
 		ShutDown();
 
-		glfwDestroyWindow(window);
+		glfwDestroyWindow(mWindow);
 		glfwTerminate();
 	}
 
@@ -78,9 +78,9 @@ namespace OGL
 
 	void LearnOGLApp::GLFWWindowSizeCallback(GLFWwindow* window, int width, int height)
 	{
-		if (oglApp)
+		if (mApp)
 		{
-			oglApp->WindowSizeCallback(window, width, height);
+			mApp->WindowSizeCallback(window, width, height);
 		}
 	}
 
@@ -96,14 +96,14 @@ namespace OGL
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, info.minorVersion);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		window = glfwCreateWindow(info.windowWidth, info.windowHeight, info.title.c_str(), nullptr, nullptr);
-		if (!window)
+		mWindow = glfwCreateWindow(info.windowWidth, info.windowHeight, info.title.c_str(), nullptr, nullptr);
+		if (!mWindow)
 		{
 			return false;
 		}
-		glfwMakeContextCurrent(window);
+		glfwMakeContextCurrent(mWindow);
 
-		glfwSetWindowSizeCallback(window, LearnOGLApp::GLFWWindowSizeCallback);
+		glfwSetWindowSizeCallback(mWindow, LearnOGLApp::GLFWWindowSizeCallback);
 		
 		return true;
 	}

@@ -27,4 +27,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="test.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

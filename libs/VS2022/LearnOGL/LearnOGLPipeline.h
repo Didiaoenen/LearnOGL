@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "LearnOGLApp.h"
+#include "LearnOGLDefine.h"
 #include "LearnOGLCamera.h"
 
 namespace OGL
@@ -18,10 +18,12 @@ namespace OGL
 		void SetScale(float x, float y, float z);
 		void SetRotate(float x, float y, float z);
 
-		void SetCamera(const LearnOGLCamera& camera);
+		void SetCamera(LearnOGLCamera* camera);
 		void SetPerspectiveInfo(const PersProjInfo& info);
 		void SetOrthographicInfo(const OrthoProjInfo& info);
 
+		glm::mat4 GetTransform();
+		glm::mat4 GetCameraView();
 		glm::mat4 GetPerspectiveProjection();
 		glm::mat4 GetOrthographicProjection();
 
@@ -30,7 +32,7 @@ namespace OGL
 		glm::vec3 mScale;
 		glm::vec3 mRotate;
 
-		LearnOGLCamera mCamera;
+		LearnOGLCamera* mCamera;
 
 		PersProjInfo mPersInfo;
 		OrthoProjInfo mOrthoInfo;

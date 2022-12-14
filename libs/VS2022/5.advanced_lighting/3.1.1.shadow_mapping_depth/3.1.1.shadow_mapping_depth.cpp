@@ -7,6 +7,7 @@
 #include "../LearnOGL/LearnOGLTools.h"
 #include "../LearnOGL/LearnOGLCamera.h"
 #include "../LearnOGL/LearnOGLMaterial.h"
+#include "../LearnOGL/LearnOGLDepthFBO.h"
 
 #include <iostream>
 
@@ -15,14 +16,19 @@ class shadow_mapping_depth : public OGL::LearnOGLApp
 public:
 	virtual bool Init() override
 	{
+		mCameraType = OGL::CameraType::Perspective;
+		mPersInfo.fov = 45.0f;
+		mPersInfo.width = info.windowWidth;
+		mPersInfo.height = info.windowHeight;
+		mPersInfo.zFar = 100.0f;
+		mPersInfo.zNear = 0.1f;
 		return true;
 	}
 
 	virtual void Setup() override
 	{
-		glEnable(GL_DEPTH_TEST);
-	
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 10.0f));
+		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
 
 		mSimpleDepthShader = new OGL::LearnOGLShader("3.1.1.shadow_mapping_depth.vs.vert", "3.1.1.shadow_mapping_depth.fs.frag");
 		mDebugDepthShader = new OGL::LearnOGLShader("3.1.1.debug_quad_depth.vs.vert", "3.1.1.debug_quad_depth.fs.frag");
@@ -33,7 +39,8 @@ public:
 		mTools = OGL::LearnOGLTools::Instance();
 
 		mPlane = mTools->MakePlane(12.5f);
-		
+	
+		mDepthFBO = new OGL::LearnOGLDepthFBO(info.windowWidth, info.windowHeight);
 	}
 
 	virtual void Render(double dt) override
@@ -41,16 +48,19 @@ public:
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 projection = mCamera->GetOrthographicProjection(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 7.5f);
-		glm::mat4 view = mCamera->GetViewMatrix();
-	
-		
+		glEnable(GL_DEPTH_TEST);
+
+		RenderShadowPass();
+	}
+
+	void RenderShadowPass()
+	{
 
 	}
 
 	virtual void ShutDown() override
 	{
-
+		
 	}
 
 private:
@@ -66,6 +76,8 @@ private:
 	OGL::LearnOGLTools* mTools;
 
 	OGL::LearnOGLBatch mPlane;
+
+	OGL::LearnOGLDepthFBO* mDepthFBO;
 };
 
 DECLARE_MAIN(shadow_mapping_depth)

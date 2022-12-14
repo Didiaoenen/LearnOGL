@@ -46,20 +46,13 @@ namespace OGL
 		}
 	}
 
-	void LearnOGLModel::SetTransform(oglTransform transofrm)
+	void LearnOGLModel::SetTransform(glm::mat4 transofrm)
 	{
 		mTransform = transofrm;
 
-		glm::mat4 modelMat = glm::mat4(1.0);
-		modelMat = glm::translate(modelMat, mTransform.position);
-		modelMat = glm::rotate(modelMat, glm::radians(mTransform.rotation.x), glm::vec3(1.0, 0.0, 0.0));
-		modelMat = glm::rotate(modelMat, glm::radians(mTransform.rotation.y), glm::vec3(0.0, 1.0, 0.0));
-		modelMat = glm::rotate(modelMat, glm::radians(mTransform.rotation.z), glm::vec3(0.0, 0.0, 1.0));
-		modelMat = glm::scale(modelMat, mTransform.scale);
-
 		for (uint32_t i = 0; i < mMaterials.size(); i++)
 		{
-			mMaterials[i]->mShader->SetMat4("model", modelMat);
+			mMaterials[i]->mShader->SetMat4("model", mTransform);
 		}
 	}
 

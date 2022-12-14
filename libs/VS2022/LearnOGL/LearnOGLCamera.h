@@ -4,25 +4,19 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "LearnOGLDefine.h"
+
 #include <vector>
 
 namespace OGL
 {
-	enum class oglCameraType
-	{
-		Perspective,
-		Orthographic,
-	};
-
 	class LearnOGLCamera
 	{
 	public:
 		LearnOGLCamera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f);
 		~LearnOGLCamera();
 
-		glm::mat4 GetOrthographicProjection(float left, float right, float bottom, float top, float nearplance, float farplane);
-		glm::mat4 GetPerspectiveProjection(float fov, float aspect, float nearplane, float farplane);
-		glm::mat4 GetViewMatrix();
+		void SetCameraInfo(CameraType type, const ProjInfo* info);
 
 	public:
 		glm::vec3 mPosition;
@@ -37,10 +31,13 @@ namespace OGL
 		float mMovementSpeed;
 		float mMouseSenesitivity;
 
-		float mZoom;
+		CameraType mCameraType;
+		PersProjInfo* mPersInfo;
+		OrthoProjInfo* mOrthoInfo;
 
 	private:
 		void UpdateCameraVectors();
+
 	};
 }
 

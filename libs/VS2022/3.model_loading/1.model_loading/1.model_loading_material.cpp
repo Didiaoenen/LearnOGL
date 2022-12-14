@@ -1,10 +1,19 @@
 #include "1.model_loading_material.h"
 
-model_loading_material::model_loading_material()
+model_loading_material::model_loading_material() :
+	mDiffuseTexture(nullptr),
+	mNormalTexture(nullptr),
+	mRoughnessTexture(nullptr),
+	mSpecularTexture(nullptr)
 {
 }
 
-model_loading_material::model_loading_material(OGL::LearnOGLShader* shader) : OGL::LearnOGLMaterial(shader)
+model_loading_material::model_loading_material(OGL::LearnOGLShader* shader) :
+	OGL::LearnOGLMaterial(shader),
+	mDiffuseTexture(nullptr),
+	mNormalTexture(nullptr),
+	mRoughnessTexture(nullptr),
+	mSpecularTexture(nullptr)
 {
 	mShader->Use();
 	mShader->SetTexUnit(mDiffuseLoc, (uint32_t)OGL::TexCoord::TexCoord0x00);

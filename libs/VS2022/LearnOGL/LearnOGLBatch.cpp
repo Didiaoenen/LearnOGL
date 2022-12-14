@@ -10,11 +10,9 @@ namespace OGL
 		mBatchDone(false),
 		mVertexArray(0),
 		mNormalArray(0),
-		mColorArray(0),
 		mTexCoordArray(0),
 		pVerts(nullptr),
 		pNorms(nullptr),
-		pColors(nullptr),
 		pTexCoord(nullptr)
 	{
 	}
@@ -46,13 +44,6 @@ namespace OGL
 			pVerts = nullptr;
 		}
 
-		if (pColors)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			glUnmapBuffer(GL_ARRAY_BUFFER);
-			pColors = nullptr;
-		}
-
 		if (pNorms)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, mNormalArray);
@@ -74,13 +65,6 @@ namespace OGL
 			glEnableVertexAttribArray((GLuint)oglBatchAttrib::Position);
 			glBindBuffer(GL_ARRAY_BUFFER, mVertexArray);
 			glVertexAttribPointer((GLuint)oglBatchAttrib::Position, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		}
-
-		if (mColorArray > 0)
-		{
-			glEnableVertexAttribArray((GLuint)oglBatchAttrib::Color);
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			glVertexAttribPointer((GLuint)oglBatchAttrib::Color, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
 		if (mNormalArray > 0)
@@ -113,22 +97,6 @@ namespace OGL
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, mVertexArray);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 3 * mVerts, vertexs);
-		}
-	}
-
-	void LearnOGLBatch::CopyColorData4f(glm::vec4* colors)
-	{
-		if (mColorArray == 0)
-		{
-			glGenBuffers(1, &mColorArray);
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * mVerts, colors, GL_DYNAMIC_DRAW);
-		}
-		else
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 4 * mVerts, colors);
 		}
 	}
 
@@ -208,55 +176,6 @@ namespace OGL
 		}
 
 		pVerts = &vertex;
-	}
-
-	void LearnOGLBatch::Color4f(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
-	{
-		if (mColorArray == 0)
-		{
-			glGenBuffers(1, &mColorArray);
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * mVerts, NULL, GL_DYNAMIC_DRAW);
-		}
-
-		if (!pColors)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			pColors = (glm::vec4*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-		}
-
-		if (pVertCount > mVerts)
-		{
-			return;
-		}
-
-		pColors[pVertCount].r = r;
-		pColors[pVertCount].g = g;
-		pColors[pVertCount].b = b;
-		pColors[pVertCount].a = a;
-	}
-
-	void LearnOGLBatch::Color4fv(glm::vec4 color)
-	{
-		if (mColorArray == 0)
-		{
-			glGenBuffers(1, &mColorArray);
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * mVerts, NULL, GL_DYNAMIC_DRAW);
-		}
-
-		if (!pColors)
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, mColorArray);
-			pColors = (glm::vec4*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-		}
-
-		if (pVertCount >= mVerts)
-		{
-			return;
-		}
-
-		pColors = &color;
 	}
 
 	void LearnOGLBatch::Normal3f(GLfloat x, GLfloat y, GLfloat z)

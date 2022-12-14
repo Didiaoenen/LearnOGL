@@ -27,7 +27,6 @@ namespace OGL
 
 		bool Init(uint32_t width, uint32_t height);
 
-
 	private:
 
 		GLuint mFBO;

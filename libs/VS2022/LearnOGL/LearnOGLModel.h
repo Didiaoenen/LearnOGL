@@ -1,5 +1,6 @@
 #pragma once
 
+#include "LearnOGLApp.h"
 #include "LearnOGLMesh.h"
 #include "LearnOGLMaterial.h"
 
@@ -14,13 +15,6 @@
 
 namespace OGL
 {
-	struct oglTransform
-	{
-		glm::vec3 position;
-		glm::vec3 scale;
-		glm::vec3 rotation;
-	};
-
 	class LearnOGLModel
 	{
 	public:
@@ -32,7 +26,7 @@ namespace OGL
 
 		virtual void SetProjection(glm::mat4 projection);
 		virtual void SetCameraView(glm::mat4 cameraview);
-		virtual void SetTransform(oglTransform transofrm);
+		virtual void SetTransform(glm::mat4 transofrm);
 
 	public:
 		std::string mPath;
@@ -41,7 +35,7 @@ namespace OGL
 	
 		std::vector<LearnOGLMaterial*> mMaterials;
 
-		oglTransform mTransform;
+		glm::mat4 mTransform;
 
 	private:
 		void LoadModel();
