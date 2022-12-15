@@ -25,12 +25,12 @@ namespace OGL
 
 	void OGL::LearnOGLDepthFBO::BindForWriting()
 	{
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	}
 
 	void LearnOGLDepthFBO::UnbindForWriting()
 	{
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void OGL::LearnOGLDepthFBO::BindForReading(GLenum textureUnit/* = GL_TEXTURE0*/)

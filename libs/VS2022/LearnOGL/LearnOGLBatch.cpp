@@ -62,23 +62,23 @@ namespace OGL
 
 		if (mVertexArray > 0)
 		{
-			glEnableVertexAttribArray((GLuint)oglBatchAttrib::Position);
+			glEnableVertexAttribArray((GLuint)VertAttrib::Position);
 			glBindBuffer(GL_ARRAY_BUFFER, mVertexArray);
-			glVertexAttribPointer((GLuint)oglBatchAttrib::Position, 3, GL_FLOAT, GL_FALSE, 0, 0);
+			glVertexAttribPointer((GLuint)VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
 		if (mNormalArray > 0)
 		{
-			glEnableVertexAttribArray((GLuint)oglBatchAttrib::Normal);
+			glEnableVertexAttribArray((GLuint)VertAttrib::Normal);
 			glBindBuffer(GL_ARRAY_BUFFER, mNormalArray);
-			glVertexAttribPointer((GLuint)oglBatchAttrib::Normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+			glVertexAttribPointer((GLuint)VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
 		if (mTexCoordArray > 0)
 		{
-			glEnableVertexAttribArray((GLuint)oglBatchAttrib::TexCoord);
+			glEnableVertexAttribArray((GLuint)VertAttrib::TexCoord);
 			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
-			glVertexAttribPointer((GLuint)oglBatchAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
+			glVertexAttribPointer((GLuint)VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
 		mBatchDone = true;
@@ -280,10 +280,21 @@ namespace OGL
 			return;
 		}
 
-		for (uint32_t i = 0; i < mMaterials.size(); i++)
+		mMaterials->Draw();
+
+		glBindVertexArray(mVAO);
+		glDrawArrays(mPrimitiveType, 0, mVerts);
+		glBindVertexArray(0);
+	}
+
+	void LearnOGLBatch::ShadowDraw()
+	{
+		if (!mBatchDone)
 		{
-			mMaterials[i]->Draw();
+			return;
 		}
+
+		mShadowMaterial->Draw();
 
 		glBindVertexArray(mVAO);
 		glDrawArrays(mPrimitiveType, 0, mVerts);

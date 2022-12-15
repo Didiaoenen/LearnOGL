@@ -24,16 +24,22 @@ namespace OGL
 
 		virtual void Draw();
 
+		virtual void ShadowDraw();
+
 		virtual void SetProjection(glm::mat4 projection);
 		virtual void SetCameraView(glm::mat4 cameraview);
 		virtual void SetTransform(glm::mat4 transofrm);
+
+		virtual void SetShadowProjection(glm::mat4 projection);
 
 	public:
 		std::string mPath;
 		
 		std::vector<LearnOGLMesh*> mMeshs;
 	
-		std::vector<LearnOGLMaterial*> mMaterials;
+		LearnOGLMaterial* mMaterials;
+
+		LearnOGLMaterial* mShadowMaterial;
 
 		glm::mat4 mTransform;
 

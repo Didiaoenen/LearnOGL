@@ -57,12 +57,12 @@ namespace OGL
 		vertex = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertex, 1, &vShaderCode, NULL);
 		glCompileShader(vertex);
-		CheckCompileErrors(vertex, Vertex);
+		CheckCompileErrors(vertex, CompileType::Vertex);
 		
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment, 1, &fShaderCode, NULL);
 		glCompileShader(fragment);
-		CheckCompileErrors(fragment, Fragment);
+		CheckCompileErrors(fragment, CompileType::Fragment);
 		
 		uint32_t geometry;
 		if (geometryPath)
@@ -71,7 +71,7 @@ namespace OGL
 			geometry = glCreateShader(GL_GEOMETRY_SHADER);
 			glShaderSource(geometry, 1, &gShaderCode, NULL);
 			glCompileShader(geometry);
-			CheckCompileErrors(geometry, Geometry);
+			CheckCompileErrors(geometry, CompileType::Geometry);
 		}
 		
 		mID = glCreateProgram();
@@ -82,7 +82,7 @@ namespace OGL
 			glAttachShader(mID, geometry);
 		}
 		glLinkProgram(mID);
-		CheckCompileErrors(mID, Program);
+		CheckCompileErrors(mID, CompileType::Program);
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
@@ -192,7 +192,7 @@ namespace OGL
 				if (!success)
 				{
 					glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-					std::cout << "Error::Shader_Link of type: " << type << "\n" << infoLog << "\n -- --------------------------------------- --" << std::endl;
+					std::cout << "Error::Shader_Link of type: " << (int)type << "\n" << infoLog << "\n -- --------------------------------------- --" << std::endl;
 				}
 			}
 			break;
@@ -202,7 +202,7 @@ namespace OGL
 				if (!success)
 				{
 					glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-					std::cout << "Error::Shader_compile of type: " << type << "\n" << infoLog << "\n -- --------------------------------------- --" << std::endl;
+					std::cout << "Error::Shader_compile of type: " << (int)type << "\n" << infoLog << "\n -- --------------------------------------- --" << std::endl;
 				}
 			}
 			break;

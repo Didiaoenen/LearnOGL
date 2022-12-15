@@ -19,10 +19,17 @@ namespace OGL
 
 	void LearnOGLModel::Draw()
 	{
-		for (uint32_t i = 0; i < mMaterials.size(); i++)
+		mMaterials->Draw();
+
+		for (uint32_t i = 0; i < mMeshs.size(); i++)
 		{
-			mMaterials[i]->Draw();
+			mMeshs[i]->Draw();
 		}
+	}
+
+	void LearnOGLModel::ShadowDraw()
+	{
+		mShadowMaterial->Draw();
 
 		for (uint32_t i = 0; i < mMeshs.size(); i++)
 		{
@@ -32,28 +39,27 @@ namespace OGL
 
 	void LearnOGLModel::SetCameraView(glm::mat4 cameraview)
 	{
-		for (uint32_t i = 0; i < mMaterials.size(); i++)
-		{
-			mMaterials[i]->mShader->SetMat4("view", cameraview);
-		}
+		mMaterials->mShader->Use();
+		mMaterials->mShader->SetMat4("view", cameraview);
 	}
 
 	void LearnOGLModel::SetProjection(glm::mat4 projection)
 	{
-		for (uint32_t i = 0; i < mMaterials.size(); i++)
-		{
-			mMaterials[i]->mShader->SetMat4("projection", projection);
-		}
+		mMaterials->mShader->Use();
+		mMaterials->mShader->SetMat4("projection", projection);
 	}
 
 	void LearnOGLModel::SetTransform(glm::mat4 transofrm)
 	{
 		mTransform = transofrm;
+		mMaterials->mShader->Use();
+		mMaterials->mShader->SetMat4("model", mTransform);
+	}
 
-		for (uint32_t i = 0; i < mMaterials.size(); i++)
-		{
-			mMaterials[i]->mShader->SetMat4("model", mTransform);
-		}
+	void LearnOGLModel::SetShadowProjection(glm::mat4 projection)
+	{
+		mShadowMaterial->mShader->Use();
+		mShadowMaterial->mShader->SetMat4("projection", projection);
 	}
 
 	void LearnOGLModel::LoadModel()
@@ -88,12 +94,12 @@ namespace OGL
 
 	LearnOGLMesh* LearnOGLModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
-		std::vector<oglVertex> vertices;
+		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 
 		for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 		{
-			oglVertex vertex;
+			Vertex vertex;
 			glm::vec3 vec3;
 
 			vec3.x = mesh->mVertices[i].x;

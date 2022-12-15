@@ -6,6 +6,17 @@
 
 namespace OGL
 {
+#define INVALID_UNIFORM_LOCATION 0xFFFFFFFF
+
+	enum class CompileType
+	{
+		None,
+		Vertex,
+		Fragment,
+		Geometry,
+		Program,
+	};
+
 	struct Transform
 	{
 		glm::vec3 pos;
@@ -50,6 +61,32 @@ namespace OGL
 		int windowHeight;
 		int majorVersion;
 		int minorVersion;
+	};
+
+	struct Vertex
+	{
+		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec2 texcoords;
+		glm::vec3 tangent;
+		glm::vec3 bittangent;
+	};
+
+	enum class VertAttrib
+	{
+		Position,
+		Normal,
+		TexCoord,
+		Tangent,
+		BitTangent,
+	};
+
+	enum class TexCoordIndex
+	{
+		TexCoord0x00,
+		TexCoord0x01,
+		TexCoord0x02,
+		TexCoord0x03,
 	};
 }
 

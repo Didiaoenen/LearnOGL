@@ -10,7 +10,7 @@ test_material::test_material(OGL::LearnOGLShader* shader) :
 	mDiffuseTexture(nullptr)
 {
 	mShader->Use();
-	mShader->SetTexUnit(mDiffuseLoc, (uint32_t)OGL::TexCoord::TexCoord0x00);
+	mShader->SetTexUnit(mDiffuseLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x00);
 }
 
 test_material::~test_material()

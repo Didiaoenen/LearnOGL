@@ -6,8 +6,11 @@
 #include "../LearnOGL/LearnOGLCamera.h"
 #include "../LearnOGL/LearnOGLTools.h"
 #include "../LearnOGL/LearnOGLPipeline.h"
+#include "../LearnOGL/LearnOGLDepthFBO.h"
 
 #include "test_material.h"
+#include "shadow_material.h"
+#include "debug_shadow_material.h"
 
 #include <iostream>
 
@@ -31,11 +34,20 @@ public:
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
 
+		mOrthoInfo.left = -10.0f;
+		mOrthoInfo.right = 10.0f;
+		mOrthoInfo.bottom = -10.0f;
+		mOrthoInfo.top = 10.0f;
+		mOrthoInfo.zNear = -10.0f;
+		mOrthoInfo.zFar = 10.0f;
+
 		return true;
 	}
 
 	virtual void Setup() override
 	{
+		mDepthFBO = new OGL::LearnOGLDepthFBO();
+
 		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
 		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
 
@@ -43,13 +55,20 @@ public:
 		mMaterial = new test_material(mShader);
 		mMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
 
+		mShadowShader = new OGL::LearnOGLShader("shadow_mapping_depth.vs.vert", "shadow_mapping_depth.fs.frag");
+		mShadowMaterial = new shadow_material(mShadowShader);
+
+		mDebugShadowShader = new OGL::LearnOGLShader("debug_quad_depth.vs.vert", "debug_quad_depth.fs.frag");
+		mDebugShadowMaterial = new debug_shadow_material(mDebugShadowShader);
+
 		mTools = OGL::LearnOGLTools::Instance();
 
 		mPlane = mTools->MakePlane(0.3f);
-		mPlane.mMaterials.push_back(mMaterial);
+		mPlane.mMaterials = mMaterial;
+		mPlane.mShadowMaterial = mShadowMaterial;
 
 		mCube = mTools->MakeCube(0.3f);
-		mCube.mMaterials.push_back(mMaterial);
+		mCube.mMaterials = mMaterial;
 	}
 
 	virtual void Render(double dt) override
@@ -59,11 +78,33 @@ public:
 
 		glEnable(GL_DEPTH_TEST);
 
-		RenderPlanePass();
-		RenderCubePass();
+		RenderShadowPass();
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+		//RenderPlanePass();
+		//RenderCubePass();
 	}
 
-	virtual void ShutDown() override
+	void RenderShadowPass()
+	{
+		mDepthFBO->BindForWriting();
+
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetOrthographicInfo(mOrthoInfo);
+		pipeline.SetPos(-1.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(45.0f, 45.0f, 0.0f);
+
+		mPlane.SetProjection(pipeline.GetOrthographicProjection());
+		mPlane.SetTransform(pipeline.GetTransform());
+		mPlane.ShadowDraw();
+
+		mDepthFBO->UnbindForWriting();
+	}
+
+	void RenderDebugShadowPass()
 	{
 
 	}
@@ -98,15 +139,27 @@ public:
 		mCube.Draw();
 	}
 
+	virtual void ShutDown() override
+	{
+
+	}
+
 private:
-	test_material* mMaterial;
-
 	OGL::LearnOGLCamera* mCamera;
-	OGL::LearnOGLShader* mShader;
-	OGL::LearnOGLTools* mTools;
 
+	test_material* mMaterial;
+	shadow_material* mShadowMaterial;
+	debug_shadow_material* mDebugShadowMaterial;
+
+	OGL::LearnOGLShader* mShader;
+	OGL::LearnOGLShader* mShadowShader;
+	OGL::LearnOGLShader* mDebugShadowShader;
+
+	OGL::LearnOGLTools* mTools;
 	OGL::LearnOGLBatch mPlane;
 	OGL::LearnOGLBatch mCube;
+
+	OGL::LearnOGLDepthFBO* mDepthFBO;
 };
 
 DECLARE_MAIN(test)

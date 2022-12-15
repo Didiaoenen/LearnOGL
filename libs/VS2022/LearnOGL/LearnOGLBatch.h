@@ -11,13 +11,6 @@
 
 namespace OGL
 {
-	enum class oglBatchAttrib
-	{
-		Position = 0,
-		Normal,
-		TexCoord,
-	};
-
 	class LearnOGLBatch : public LearnOGLModel
 	{
 	public:
@@ -44,6 +37,8 @@ namespace OGL
 		void TexCoord2fv(glm::vec2 texcoord);
 
 		virtual void Draw() override;
+
+		virtual void ShadowDraw() override;
 
 	private:
 		GLenum mPrimitiveType;

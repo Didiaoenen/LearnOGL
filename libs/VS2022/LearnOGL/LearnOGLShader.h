@@ -3,21 +3,12 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "LearnOGLDefine.h"
+
 #include <string>
 
 namespace OGL
 {
-	#define INVALID_UNIFORM_LOCATION 0xFFFFFFFF
-
-	enum CompileType
-	{
-		None = 0,
-		Vertex,
-		Fragment,
-		Geometry,
-		Program,
-	};
-
 	class LearnOGLShader
 	{
 	public:
