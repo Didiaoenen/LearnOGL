@@ -28,9 +28,11 @@ namespace OGL
 
 		virtual void SetProjection(glm::mat4 projection);
 		virtual void SetCameraView(glm::mat4 cameraview);
-		virtual void SetTransform(glm::mat4 transofrm);
+		virtual void SetTransform(glm::mat4 transfrom);
 
 		virtual void SetShadowProjection(glm::mat4 projection);
+		virtual void SetShadowCameraView(glm::mat4 cameraview);
+		virtual void SetShadowTransform(glm::mat4 transfrom);
 
 	public:
 		std::string mPath;

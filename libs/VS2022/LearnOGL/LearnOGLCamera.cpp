@@ -21,7 +21,8 @@ namespace OGL
 
 	void LearnOGLCamera::SetCameraInfo(CameraType type, const ProjInfo* info)
 	{
-		switch (type)
+		mCameraType = type;
+		switch (mCameraType)
 		{
 			case OGL::CameraType::Perspective:
 			{

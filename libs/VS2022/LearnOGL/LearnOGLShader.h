@@ -17,7 +17,7 @@ namespace OGL
 	
 		void Use();
 
-		void SetTexUnit(std::string locStr, uint32_t texUni);
+		void SetTexUnit(std::string locStr, uint32_t texUni) const;
 
 		void SetBool(const std::string &name, bool value) const;
 
@@ -49,7 +49,7 @@ namespace OGL
 	private:
 		void CheckCompileErrors(GLuint shader, CompileType type);
 	
-		GLuint GetUniformLocation(std::string locName);
+		GLuint GetUniformLocation(std::string locName) const;
 
 	};
 }

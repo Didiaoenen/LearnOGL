@@ -16,10 +16,10 @@ model_loading_material::model_loading_material(OGL::LearnOGLShader* shader) :
 	mSpecularTexture(nullptr)
 {
 	mShader->Use();
-	mShader->SetTexUnit(mDiffuseLoc, (uint32_t)OGL::TexCoord::TexCoord0x00);
-	mShader->SetTexUnit(mNormalLoc, (uint32_t)OGL::TexCoord::TexCoord0x01);
-	mShader->SetTexUnit(mRoughnessLoc, (uint32_t)OGL::TexCoord::TexCoord0x02);
-	mShader->SetTexUnit(mSpecularLoc, (uint32_t)OGL::TexCoord::TexCoord0x03);
+	mShader->SetTexUnit(mDiffuseLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x00);
+	mShader->SetTexUnit(mNormalLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x01);
+	mShader->SetTexUnit(mRoughnessLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x02);
+	mShader->SetTexUnit(mSpecularLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x03);
 }
 
 model_loading_material::~model_loading_material()

@@ -49,9 +49,9 @@ namespace OGL
 		mMaterials->mShader->SetMat4("projection", projection);
 	}
 
-	void LearnOGLModel::SetTransform(glm::mat4 transofrm)
+	void LearnOGLModel::SetTransform(glm::mat4 transfrom)
 	{
-		mTransform = transofrm;
+		mTransform = transfrom;
 		mMaterials->mShader->Use();
 		mMaterials->mShader->SetMat4("model", mTransform);
 	}
@@ -60,6 +60,19 @@ namespace OGL
 	{
 		mShadowMaterial->mShader->Use();
 		mShadowMaterial->mShader->SetMat4("projection", projection);
+	}
+
+	void LearnOGLModel::SetShadowCameraView(glm::mat4 cameraview)
+	{
+		mShadowMaterial->mShader->Use();
+		mShadowMaterial->mShader->SetMat4("view", cameraview);
+	}
+
+	void LearnOGLModel::SetShadowTransform(glm::mat4 transfrom)
+	{
+		mTransform = transfrom;
+		mShadowMaterial->mShader->Use();
+		mShadowMaterial->mShader->SetMat4("model", mTransform);
 	}
 
 	void LearnOGLModel::LoadModel()

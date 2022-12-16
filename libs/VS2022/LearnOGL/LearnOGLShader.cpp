@@ -102,13 +102,12 @@ namespace OGL
 		glUseProgram(mID);
 	}
 
-	void LearnOGLShader::SetTexUnit(std::string locStr, uint32_t texUnit)
+	void LearnOGLShader::SetTexUnit(std::string locStr, uint32_t texUnit) const
 	{
-		GLuint location = GetUniformLocation(locStr);
-		glUniform1i(location, texUnit);
+		glUniform1i(GetUniformLocation(locStr), texUnit);
 	}
 
-	GLuint LearnOGLShader::GetUniformLocation(std::string locStr)
+	GLuint LearnOGLShader::GetUniformLocation(std::string locStr) const
 	{
 		GLuint location = glGetUniformLocation(mID, locStr.c_str());
 		if (location == INVALID_UNIFORM_LOCATION)
@@ -120,62 +119,62 @@ namespace OGL
 
 	void LearnOGLShader::SetBool(const std::string& name, bool value) const
 	{
-		glUniform1i(glGetUniformLocation(mID, name.c_str()), (int)value);
+		glUniform1i(GetUniformLocation(name), (int)value);
 	}
 
 	void LearnOGLShader::SetInt(const std::string& name, int value) const
 	{
-		glUniform1i(glGetUniformLocation(mID, name.c_str()), value);
+		glUniform1i(GetUniformLocation(name), value);
 	}
 
 	void LearnOGLShader::SetFloat(const std::string& name, float value) const
 	{
-		glUniform1f(glGetUniformLocation(mID, name.c_str()), value);
+		glUniform1f(GetUniformLocation(name), value);
 	}
 
 	void LearnOGLShader::SetVec2(const std::string& name, const glm::vec2& value) const
 	{
-		glUniform2fv(glGetUniformLocation(mID, name.c_str()), 1, &value[0]);
+		glUniform2fv(GetUniformLocation(name), 1, &value[0]);
 	}
 
 	void LearnOGLShader::SetVec2(const std::string& name, float x, float y) const
 	{
-		glUniform2f(glGetUniformLocation(mID, name.c_str()), x, y);
+		glUniform2f(GetUniformLocation(name), x, y);
 	}
 
 	void LearnOGLShader::SetVec3(const std::string& name, const glm::vec3& value) const
 	{
-		glUniform3fv(glGetUniformLocation(mID, name.c_str()), 1, &value[0]);
+		glUniform3fv(GetUniformLocation(name), 1, &value[0]);
 	}
 
 	void LearnOGLShader::SetVec3(const std::string& name, float x, float y, float z) const
 	{
-		glUniform3f(glGetUniformLocation(mID, name.c_str()), x, y, z);
+		glUniform3f(GetUniformLocation(name), x, y, z);
 	}
 
 	void LearnOGLShader::SetVec4(const std::string& name, const glm::vec4& value) const
 	{
-		glUniform4fv(glGetUniformLocation(mID, name.c_str()), 1, &value[0]);
+		glUniform4fv(GetUniformLocation(name), 1, &value[0]);
 	}
 
 	void LearnOGLShader::SetVec4(const std::string& name, float x, float y, float z, float w) const
 	{
-		glUniform4f(glGetUniformLocation(mID, name.c_str()), x, y, z, w);
+		glUniform4f(GetUniformLocation(name), x, y, z, w);
 	}
 
 	void LearnOGLShader::SetMat2(const std::string& name, const glm::mat2& value) const
 	{
-		glUniformMatrix2fv(glGetUniformLocation(mID, name.c_str()), 1, GL_FALSE, &value[0][0]);
+		glUniformMatrix2fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 	}
 
 	void LearnOGLShader::SetMat3(const std::string& name, const glm::mat3& value) const
 	{
-		glUniformMatrix3fv(glGetUniformLocation(mID, name.c_str()), 1, GL_FALSE, &value[0][0]);
+		glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 	}
 
 	void LearnOGLShader::SetMat4(const std::string& name, const glm::mat4& value) const
 	{
-		glUniformMatrix4fv(glGetUniformLocation(mID, name.c_str()), 1, GL_FALSE, &value[0][0]);
+		glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &value[0][0]);
 	}
 
 	void LearnOGLShader::CheckCompileErrors(GLuint shader, CompileType type)

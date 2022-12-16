@@ -130,6 +130,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="debug_shadow_material.cpp" />
     <ClCompile Include="shadow_material.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_material.cpp" />
@@ -140,10 +141,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="debug_shadow_material.h" />
     <ClInclude Include="shadow_material.h" />
     <ClInclude Include="test_material.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="debug_quad_depth.fs.frag" />
+    <None Include="debug_quad_depth.vs.vert" />
     <None Include="shadow_mapping_depth.fs.frag" />
     <None Include="shadow_mapping_depth.vs.vert" />
     <None Include="test.fs.frag" />

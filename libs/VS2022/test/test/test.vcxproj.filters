@@ -24,12 +24,18 @@
     <ClCompile Include="shadow_material.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="debug_shadow_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test_material.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="shadow_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="debug_shadow_material.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,6 +50,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="shadow_mapping_depth.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="debug_quad_depth.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="debug_quad_depth.vs.vert">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

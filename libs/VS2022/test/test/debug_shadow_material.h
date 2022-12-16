@@ -2,6 +2,8 @@
 
 #include "../LearnOGL/LearnOGLMaterial.h"
 
+#include <string>
+
 class debug_shadow_material : public OGL::LearnOGLMaterial
 {
 public:
@@ -9,6 +11,10 @@ public:
 	debug_shadow_material(OGL::LearnOGLShader* shader);
 	~debug_shadow_material();
 
+	virtual void Draw() override;
+
 private:
+	std::string	mDepthMapLoc = "depthMap";
+
 };
 
