@@ -48,6 +48,12 @@
     <ClCompile Include="LearnOGLPipeline.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LearnOGLCommand.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LearnOGLContext.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -84,6 +90,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LearnOGLDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLCommand.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLContext.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "LearnOGLApp.h"
 #include "LearnOGLMesh.h"
 #include "LearnOGLMaterial.h"
 

@@ -27,32 +27,32 @@ namespace OGL
 
 		batch.Begin(GL_TRIANGLES, 6);
 		{
-			batch.Vertex3f(radius, radius, 0);
+			batch.Vertex3f(radius, 0, radius);
 			batch.Normal3f(0.0f, 1.0f, 0.0f);
 			batch.TexCoord2f(1.0f, 1.0f);
 			batch.Next();
 
-			batch.Vertex3f(radius, -radius, 0);
+			batch.Vertex3f(radius, 0, -radius);
 			batch.Normal3f(0.0f, 1.0f, 0.0f);
 			batch.TexCoord2f(1.0f, 0.0f);
 			batch.Next();
 
-			batch.Vertex3f(-radius, -radius, 0);
+			batch.Vertex3f(-radius, 0, -radius);
 			batch.Normal3f(0.0f, 1.0f, 0.0f);
 			batch.TexCoord2f(0.0f, 0.0f);
 			batch.Next();
 
-			batch.Vertex3f(radius, radius, 0);
+			batch.Vertex3f(radius, 0, radius);
 			batch.Normal3f(0.0f, 1.0f, 0.0f);
 			batch.TexCoord2f(1.0f, 1.0f);
 			batch.Next();
 
-			batch.Vertex3f(-radius, -radius, 0);
+			batch.Vertex3f(-radius, 0, -radius);
 			batch.Normal3f(0.0f, 1.0f, 0.0f);
 			batch.TexCoord2f(0.0f, 0.0f);
 			batch.Next();
 
-			batch.Vertex3f(-radius, radius, 0);
+			batch.Vertex3f(-radius, 0, radius);
 			batch.Normal3f(0.0f, 1.0f, 0.0f);
 			batch.TexCoord2f(0.0f, 1.0f);
 		}
@@ -60,6 +60,46 @@ namespace OGL
 
 		return batch;
 	}
+
+    LearnOGLBatch LearnOGLTools::MakeQuad(GLfloat radius, glm::vec4 color/* = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)*/)
+    {
+        LearnOGLBatch batch;
+
+        batch.Begin(GL_TRIANGLES, 6);
+        {
+            batch.Vertex3f(radius, radius, 0);
+            batch.Normal3f(0.0f, 1.0f, 0.0f);
+            batch.TexCoord2f(1.0f, 1.0f);
+            batch.Next();
+
+            batch.Vertex3f(radius, -radius, 0);
+            batch.Normal3f(0.0f, 1.0f, 0.0f);
+            batch.TexCoord2f(1.0f, 0.0f);
+            batch.Next();
+
+            batch.Vertex3f(-radius, -radius, 0);
+            batch.Normal3f(0.0f, 1.0f, 0.0f);
+            batch.TexCoord2f(0.0f, 0.0f);
+            batch.Next();
+
+            batch.Vertex3f(radius, radius, 0);
+            batch.Normal3f(0.0f, 1.0f, 0.0f);
+            batch.TexCoord2f(1.0f, 1.0f);
+            batch.Next();
+
+            batch.Vertex3f(-radius, -radius, 0);
+            batch.Normal3f(0.0f, 1.0f, 0.0f);
+            batch.TexCoord2f(0.0f, 0.0f);
+            batch.Next();
+
+            batch.Vertex3f(-radius, radius, 0);
+            batch.Normal3f(0.0f, 1.0f, 0.0f);
+            batch.TexCoord2f(0.0f, 1.0f);
+        }
+        batch.End();
+
+        return batch;
+    }
 
     LearnOGLBatch LearnOGLTools::MakeCube(GLfloat radius, glm::vec4 color/* = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)*/)
     {

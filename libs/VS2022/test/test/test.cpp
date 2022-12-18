@@ -20,17 +20,19 @@ public:
 
 	virtual bool Init() override
 	{
+		OGL::LearnOGLApp::Init();
+
 		mCameraType = OGL::CameraType::Perspective;
-		mPersInfo.fov = 45.0f;
+		mPersInfo.fov = 60.0f;
 		mPersInfo.width = info.windowWidth;
 		mPersInfo.height = info.windowHeight;
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
 
-		mOrthoInfo.left = -1.0f;
-		mOrthoInfo.right = 1.0f;
-		mOrthoInfo.bottom = -1.0f;
-		mOrthoInfo.top = 1.0f;
+		mOrthoInfo.left = -mShadowWidth / 2;
+		mOrthoInfo.right = mShadowWidth / 2;
+		mOrthoInfo.bottom = -mShadowHeight / 2;
+		mOrthoInfo.top = mShadowHeight / 2;
 		mOrthoInfo.zNear = -10.0f;
 		mOrthoInfo.zFar = 10.0f;
 
@@ -39,10 +41,10 @@ public:
 
 	virtual void Setup() override
 	{
-		mDepthFBO = new OGL::LearnOGLDepthFBO(info.windowWidth, info.windowHeight);
-
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 5.0f));
 		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
+
+		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
 		mShader = new OGL::LearnOGLShader("test.vs.vert", "test.fs.frag");
 		mMaterial = new test_material(mShader);
@@ -53,32 +55,45 @@ public:
 
 		mDebugShadowShader = new OGL::LearnOGLShader("debug_quad_depth.vs.vert", "debug_quad_depth.fs.frag");
 		mDebugShadowMaterial = new debug_shadow_material(mDebugShadowShader);
+		mDebugShadowMaterial->mCommand = mCommand;
+
+		mDepthAttribID = mDebugShadowMaterial->GetAttribID(mDebugShadowMaterial->mDepthMapLoc);
 
 		mTools = OGL::LearnOGLTools::Instance();
 
-		mPlane = mTools->MakePlane(0.5f);
+		mPlane = mTools->MakePlane(1.0f);
 		mPlane.mMaterials = mMaterial;
 		mPlane.mShadowMaterial = mShadowMaterial;
 
-		mDebugQuad = mTools->MakePlane(1.0f);
+		mDebugQuad = mTools->MakeQuad(1.0f);
 		mDebugQuad.mMaterials = mDebugShadowMaterial;
 
-		mCube = mTools->MakeCube(0.5f);
+		mCube = mTools->MakeCube(1.0f);
 		mCube.mMaterials = mMaterial;
+		mCube.mShadowMaterial = mShadowMaterial;
+
+		//mContext->AddRenderer(nullptr);
 	}
 
-	virtual void Render(double dt) override
+	virtual void Update(double dt) override
 	{
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
 
-		glEnable(GL_DEPTH_TEST);
+	virtual void Render(OGL::LearnOGLContext* context) override
+	{
+		mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight, 0);
+		mCommand->SetRenderTarget(mDepthAttribID);
+		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
 		RenderShadowPass();
 
-		//glClear(GL_DEPTH_BUFFER_BIT);
+		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
-		//RenderDebugShadowPass();
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
+
+		RenderDebugShadowPass();
 
 		//RenderPlanePass();
 		//RenderCubePass();
@@ -86,28 +101,27 @@ public:
 
 	void RenderShadowPass()
 	{
-		mDepthFBO->BindForWriting();
-
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 		pipeline.SetOrthographicInfo(mOrthoInfo);
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		pipeline.SetPos(-2.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
 
 		mPlane.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
 		mPlane.SetShadowTransform(pipeline.GetTransform());
 		mPlane.ShadowDraw();
 
-		mDepthFBO->UnbindForWriting();
+		pipeline.SetPos(2.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		mCube.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
+		mCube.SetShadowTransform(pipeline.GetTransform());
+		mCube.ShadowDraw();
 	}
 
 	void RenderDebugShadowPass()
 	{
-		mDebugQuad.mMaterials->mShader->Use();
-
-		mDepthFBO->BindForReading();
-		
 		mDebugQuad.Draw();
 	}
 
@@ -116,7 +130,7 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 		pipeline.SetPerspectiveInfo(mPersInfo);
-		pipeline.SetPos(-1.0f, 0.0f, 0.0f);
+		pipeline.SetPos(0.0f, -1.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 
@@ -147,6 +161,9 @@ public:
 	}
 
 private:
+	float mShadowWidth = 16.0f;
+	float mShadowHeight = 9.0f;
+	
 	OGL::LearnOGLCamera* mCamera;
 
 	test_material* mMaterial;
@@ -163,6 +180,11 @@ private:
 	OGL::LearnOGLBatch mCube;
 
 	OGL::LearnOGLDepthFBO* mDepthFBO;
+
+	OGL::LearnOGLCommand* mCommand;
+	OGL::LearnOGLContext* mContext;
+
+	GLuint mDepthAttribID;
 };
 
 DECLARE_MAIN(test)

@@ -7,13 +7,14 @@ namespace OGL
 {
 	LearnOGLApp* LearnOGLApp::mApp = nullptr;
 	
-	LearnOGLApp::LearnOGLApp()
+	LearnOGLApp::LearnOGLApp() :
+		info(),
+		mCameraType(CameraType::Perspective),
+		mPersInfo(),
+		mOrthoInfo(),
+		mContext(nullptr),
+		mWindow(nullptr)
 	{
-		info.title = "Default Window";
-		info.majorVersion = 3;
-		info.minorVersion = 3;
-		info.windowWidth = 1280;
-		info.windowHeight = 720;
 	}
 
 	LearnOGLApp::~LearnOGLApp()
@@ -22,6 +23,14 @@ namespace OGL
 
 	bool LearnOGLApp::Init()
 	{
+		info.title = "Default Window";
+		info.majorVersion = 3;
+		info.minorVersion = 3;
+		info.windowWidth = 1280;
+		info.windowHeight = 720;
+
+		mContext = new LearnOGLContext();
+
 		return true;
 	}
 
@@ -29,7 +38,11 @@ namespace OGL
 	{
 	}
 
-	void LearnOGLApp::Render(double dt)
+	void LearnOGLApp::Update(double dt)
+	{
+	}
+
+	void LearnOGLApp::Render(LearnOGLContext* context)
 	{
 	}
 
@@ -59,7 +72,9 @@ namespace OGL
 
 		do
 		{
-			Render(glfwGetTime());
+			Update(glfwGetTime());
+
+			Render(mContext);
 
 			glfwSwapBuffers(mWindow);
 			glfwPollEvents();

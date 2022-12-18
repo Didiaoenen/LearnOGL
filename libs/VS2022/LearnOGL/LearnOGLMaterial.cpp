@@ -2,12 +2,15 @@
 
 namespace OGL
 {
-	LearnOGLMaterial::LearnOGLMaterial()
+	LearnOGLMaterial::LearnOGLMaterial() :
+		mShader(nullptr),
+		mCommand(nullptr)
 	{
 	}
 
-	LearnOGLMaterial::LearnOGLMaterial(LearnOGLShader* shader)
-		: mShader(shader)
+	LearnOGLMaterial::LearnOGLMaterial(LearnOGLShader* shader) : 
+		mShader(shader),
+		mCommand(nullptr)
 	{
 	}
 
@@ -17,5 +20,10 @@ namespace OGL
 
 	void LearnOGLMaterial::Draw()
 	{
+	}
+
+	GLuint LearnOGLMaterial::GetAttribID(std::string strLoc)
+	{
+		return mShader->GetUniformLocation(strLoc);
 	}
 }

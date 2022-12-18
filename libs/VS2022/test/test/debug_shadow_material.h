@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../LearnOGL/LearnOGLMaterial.h"
+#include "../LearnOGL/LearnOGLDepthFBO.h"
 
 #include <string>
 
@@ -13,8 +14,11 @@ public:
 
 	virtual void Draw() override;
 
-private:
+public:
 	std::string	mDepthMapLoc = "depthMap";
+
+private:
+	GLuint mDepthAttribID;
 
 };
 

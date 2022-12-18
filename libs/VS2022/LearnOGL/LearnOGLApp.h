@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "LearnOGLDefine.h"
+#include "LearnOGLContext.h"
 
 #include <string>
 
@@ -20,7 +21,9 @@ namespace OGL
 
 		virtual void Setup();
 
-		virtual void Render(double dt);
+		virtual void Update(double dt);
+
+		virtual void Render(LearnOGLContext* context);
 
 		virtual void ShutDown();
 		
@@ -41,6 +44,8 @@ namespace OGL
 		OrthoProjInfo mOrthoInfo;
 
 		static LearnOGLApp* mApp;
+
+		LearnOGLContext* mContext;
 
 		GLFWwindow* mWindow;
 

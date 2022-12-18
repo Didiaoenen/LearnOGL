@@ -43,13 +43,13 @@ namespace OGL
 
 		void SetMat4(const std::string &name, const glm::mat4 &value) const;
 
+		GLuint GetUniformLocation(std::string locName) const;
+
 	public:
 		GLuint mID;
 
 	private:
 		void CheckCompileErrors(GLuint shader, CompileType type);
-	
-		GLuint GetUniformLocation(std::string locName) const;
 
 	};
 }
