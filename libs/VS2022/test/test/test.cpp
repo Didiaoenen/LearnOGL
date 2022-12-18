@@ -50,6 +50,9 @@ public:
 		mMaterial = new test_material(mShader);
 		mMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
 
+		mBoxMaterial = new test_material(mShader);
+		mBoxMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
+
 		mShadowShader = new OGL::LearnOGLShader("shadow_mapping_depth.vs.vert", "shadow_mapping_depth.fs.frag");
 		mShadowMaterial = new shadow_material(mShadowShader);
 
@@ -65,7 +68,7 @@ public:
 		mPlane.mMaterials = mMaterial;
 
 		mCube = mTools->MakeCube(0.5f);
-		mCube.mMaterials = mMaterial;
+		mCube.mMaterials = mBoxMaterial;
 
 		mShadowPlane = mTools->MakePlane(1.0f);
 		mShadowPlane.mShadowMaterial = mShadowMaterial;
@@ -85,24 +88,24 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		//mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight, 0);
-		//mCommand->SetRenderTarget(mDepthAttribID);
-		//mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		//mContext->ExecuteCommand(mCommand);
+		RenderPass();
+	}
 
-		//RenderShadowPass();
+	void RenderShadow()
+	{
+		mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight, 0);
+		mCommand->SetRenderTarget(mDepthAttribID);
+		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
-		//mCommand->ReleaseTemporaryRT(mDepthAttribID);
+		RenderShadowPass();
 
-		//mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		//mContext->ExecuteCommand(mCommand);
-
-		//RenderDebugShadowPass();
+		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
-		RenderPlanePass();
-		RenderCubePass();
+
+		RenderDebugShadowPass();
 	}
 
 	void RenderShadowPass()
@@ -110,10 +113,10 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 		pipeline.SetOrthographicInfo(mOrthoInfo);
+
 		pipeline.SetPos(-2.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
-
 		mShadowPlane.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
 		mShadowPlane.SetShadowTransform(pipeline.GetTransform());
 		mShadowPlane.ShadowDraw();
@@ -129,6 +132,14 @@ public:
 	void RenderDebugShadowPass()
 	{
 		mDebugQuad.Draw();
+	}
+
+	void RenderPass()
+	{
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
+		RenderPlanePass();
+		RenderCubePass();
 	}
 
 	void RenderPlanePass()
@@ -173,6 +184,7 @@ private:
 	OGL::LearnOGLCamera* mCamera;
 
 	test_material* mMaterial;
+	test_material* mBoxMaterial;
 	shadow_material* mShadowMaterial;
 	debug_shadow_material* mDebugShadowMaterial;
 
