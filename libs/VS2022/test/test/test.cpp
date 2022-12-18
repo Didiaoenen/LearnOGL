@@ -61,16 +61,20 @@ public:
 
 		mTools = OGL::LearnOGLTools::Instance();
 
-		mPlane = mTools->MakePlane(1.0f);
+		mPlane = mTools->MakePlane(3.0f);
 		mPlane.mMaterials = mMaterial;
-		mPlane.mShadowMaterial = mShadowMaterial;
+
+		mCube = mTools->MakeCube(0.5f);
+		mCube.mMaterials = mMaterial;
+
+		mShadowPlane = mTools->MakePlane(1.0f);
+		mShadowPlane.mShadowMaterial = mShadowMaterial;
+
+		mShadowCube = mTools->MakeCube(1.0f);
+		mShadowCube.mShadowMaterial = mShadowMaterial;
 
 		mDebugQuad = mTools->MakeQuad(1.0f);
 		mDebugQuad.mMaterials = mDebugShadowMaterial;
-
-		mCube = mTools->MakeCube(1.0f);
-		mCube.mMaterials = mMaterial;
-		mCube.mShadowMaterial = mShadowMaterial;
 
 		//mContext->AddRenderer(nullptr);
 	}
@@ -81,22 +85,24 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight, 0);
-		mCommand->SetRenderTarget(mDepthAttribID);
-		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		//mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight, 0);
+		//mCommand->SetRenderTarget(mDepthAttribID);
+		//mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		//mContext->ExecuteCommand(mCommand);
 
-		RenderShadowPass();
+		//RenderShadowPass();
 
-		mCommand->ReleaseTemporaryRT(mDepthAttribID);
+		//mCommand->ReleaseTemporaryRT(mDepthAttribID);
+
+		//mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		//mContext->ExecuteCommand(mCommand);
+
+		//RenderDebugShadowPass();
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
-
-		RenderDebugShadowPass();
-
-		//RenderPlanePass();
-		//RenderCubePass();
+		RenderPlanePass();
+		RenderCubePass();
 	}
 
 	void RenderShadowPass()
@@ -108,16 +114,16 @@ public:
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
 
-		mPlane.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
-		mPlane.SetShadowTransform(pipeline.GetTransform());
-		mPlane.ShadowDraw();
+		mShadowPlane.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
+		mShadowPlane.SetShadowTransform(pipeline.GetTransform());
+		mShadowPlane.ShadowDraw();
 
 		pipeline.SetPos(2.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mCube.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
-		mCube.SetShadowTransform(pipeline.GetTransform());
-		mCube.ShadowDraw();
+		mShadowCube.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
+		mShadowCube.SetShadowTransform(pipeline.GetTransform());
+		mShadowCube.ShadowDraw();
 	}
 
 	void RenderDebugShadowPass()
@@ -145,9 +151,9 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 		pipeline.SetPerspectiveInfo(mPersInfo);
-		pipeline.SetPos(1.0f, 0.0f, 0.0f);
+		pipeline.SetPos(0.0f, -0.5f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(45.0f, 45.0f, 0.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
 
 		mCube.SetProjection(pipeline.GetPerspectiveProjection());
 		mCube.SetCameraView(pipeline.GetCameraView());
@@ -176,8 +182,11 @@ private:
 
 	OGL::LearnOGLTools* mTools;
 	OGL::LearnOGLBatch mPlane;
-	OGL::LearnOGLBatch mDebugQuad;
 	OGL::LearnOGLBatch mCube;
+
+	OGL::LearnOGLBatch mShadowPlane;
+	OGL::LearnOGLBatch mShadowCube;
+	OGL::LearnOGLBatch mDebugQuad;
 
 	OGL::LearnOGLDepthFBO* mDepthFBO;
 
