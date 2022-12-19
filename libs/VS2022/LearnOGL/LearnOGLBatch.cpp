@@ -280,7 +280,7 @@ namespace OGL
 			return;
 		}
 
-		mMaterials->Draw();
+		mMaterial->Draw();
 
 		glBindVertexArray(mVAO);
 		glDrawArrays(mPrimitiveType, 0, mVerts);

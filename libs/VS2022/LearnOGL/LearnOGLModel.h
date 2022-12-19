@@ -38,7 +38,7 @@ namespace OGL
 		
 		std::vector<LearnOGLMesh*> mMeshs;
 	
-		LearnOGLMaterial* mMaterials;
+		LearnOGLMaterial* mMaterial;
 
 		LearnOGLMaterial* mShadowMaterial;
 

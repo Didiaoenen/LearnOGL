@@ -22,7 +22,6 @@ public:
 	{
 		OGL::LearnOGLApp::Init();
 
-		mCameraType = OGL::CameraType::Perspective;
 		mPersInfo.fov = 60.0f;
 		mPersInfo.width = info.windowWidth;
 		mPersInfo.height = info.windowHeight;
@@ -42,7 +41,6 @@ public:
 	virtual void Setup() override
 	{
 		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 5.0f));
-		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
 
 		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
@@ -60,15 +58,15 @@ public:
 		mDebugShadowMaterial = new debug_shadow_material(mDebugShadowShader);
 		mDebugShadowMaterial->mCommand = mCommand;
 
-		mDepthAttribID = mDebugShadowMaterial->GetAttribID(mDebugShadowMaterial->mDepthMapLoc);
+		mDepthAttribID = mDebugShadowShader->GetUniformLocation("depthMap");
 
 		mTools = OGL::LearnOGLTools::Instance();
 
 		mPlane = mTools->MakePlane(3.0f);
-		mPlane.mMaterials = mMaterial;
+		mPlane.mMaterial = mMaterial;
 
 		mCube = mTools->MakeCube(0.5f);
-		mCube.mMaterials = mBoxMaterial;
+		mCube.mMaterial = mBoxMaterial;
 
 		mShadowPlane = mTools->MakePlane(1.0f);
 		mShadowPlane.mShadowMaterial = mShadowMaterial;
@@ -77,7 +75,7 @@ public:
 		mShadowCube.mShadowMaterial = mShadowMaterial;
 
 		mDebugQuad = mTools->MakeQuad(1.0f);
-		mDebugQuad.mMaterials = mDebugShadowMaterial;
+		mDebugQuad.mMaterial = mDebugShadowMaterial;
 
 		//mContext->AddRenderer(nullptr);
 	}
@@ -110,21 +108,22 @@ public:
 
 	void RenderShadowPass()
 	{
+		mCamera->SetCameraInfo(OGL::CameraType::Orthographic, &mOrthoInfo);
+
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
-		pipeline.SetOrthographicInfo(mOrthoInfo);
 
 		pipeline.SetPos(-2.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
-		mShadowPlane.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
+		mShadowPlane.SetShadowProjection(pipeline.GetCameraProjection() * pipeline.GetCameraView());
 		mShadowPlane.SetShadowTransform(pipeline.GetTransform());
 		mShadowPlane.ShadowDraw();
 
 		pipeline.SetPos(2.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mShadowCube.SetShadowProjection(pipeline.GetOrthographicProjection() * pipeline.GetCameraView());
+		mShadowCube.SetShadowProjection(pipeline.GetCameraProjection() * pipeline.GetCameraView());
 		mShadowCube.SetShadowTransform(pipeline.GetTransform());
 		mShadowCube.ShadowDraw();
 	}
@@ -144,14 +143,15 @@ public:
 
 	void RenderPlanePass()
 	{
+		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
+
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
-		pipeline.SetPerspectiveInfo(mPersInfo);
 		pipeline.SetPos(0.0f, -1.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 
-		mPlane.SetProjection(pipeline.GetPerspectiveProjection());
+		mPlane.SetProjection(pipeline.GetCameraProjection());
 		mPlane.SetCameraView(pipeline.GetCameraView());
 		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
@@ -159,14 +159,15 @@ public:
 
 	void RenderCubePass()
 	{
+		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
+
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
-		pipeline.SetPerspectiveInfo(mPersInfo);
 		pipeline.SetPos(0.0f, -0.5f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
 
-		mCube.SetProjection(pipeline.GetPerspectiveProjection());
+		mCube.SetProjection(pipeline.GetCameraProjection());
 		mCube.SetCameraView(pipeline.GetCameraView());
 		mCube.SetTransform(pipeline.GetTransform());
 		mCube.Draw();

@@ -21,7 +21,7 @@ namespace OGL
 		return mInstance;
 	}
 
-	LearnOGLBatch LearnOGLTools::MakePlane(GLfloat radius, glm::vec4 color/* = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)*/)
+	LearnOGLBatch LearnOGLTools::MakePlane(GLfloat radius)
 	{
 		LearnOGLBatch batch;
 
@@ -61,7 +61,7 @@ namespace OGL
 		return batch;
 	}
 
-    LearnOGLBatch LearnOGLTools::MakeQuad(GLfloat radius, glm::vec4 color/* = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)*/)
+    LearnOGLBatch LearnOGLTools::MakeQuad(GLfloat radius)
     {
         LearnOGLBatch batch;
 
@@ -101,7 +101,7 @@ namespace OGL
         return batch;
     }
 
-    LearnOGLBatch LearnOGLTools::MakeCube(GLfloat radius, glm::vec4 color/* = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)*/)
+    LearnOGLBatch LearnOGLTools::MakeCube(GLfloat radius)
     {
         LearnOGLBatch batch;
 

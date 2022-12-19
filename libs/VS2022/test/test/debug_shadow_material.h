@@ -14,9 +14,6 @@ public:
 
 	virtual void Draw() override;
 
-public:
-	std::string	mDepthMapLoc = "depthMap";
-
 private:
 	GLuint mDepthAttribID;
 

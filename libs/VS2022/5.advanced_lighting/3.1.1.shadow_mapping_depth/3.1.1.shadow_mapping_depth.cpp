@@ -43,7 +43,12 @@ public:
 		mDepthFBO = new OGL::LearnOGLDepthFBO(info.windowWidth, info.windowHeight);
 	}
 
-	virtual void Render(double dt) override
+	virtual void Update(double dt) override
+	{
+
+	}
+
+	virtual void Render(OGL::LearnOGLContext* context) override
 	{
 		glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

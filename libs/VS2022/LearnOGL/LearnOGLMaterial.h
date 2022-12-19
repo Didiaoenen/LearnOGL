@@ -24,6 +24,5 @@ namespace OGL
 		LearnOGLShader* mShader;
 
 		LearnOGLCommand* mCommand;
-
 	};
 }

@@ -41,16 +41,8 @@ namespace OGL
 	void LearnOGLPipeline::SetCamera(LearnOGLCamera* camera)
 	{
 		mCamera = camera;
-	}
-
-	void LearnOGLPipeline::SetPerspectiveInfo(const PersProjInfo& info)
-	{
-		mPersInfo = info;
-	}
-
-	void LearnOGLPipeline::SetOrthographicInfo(const OrthoProjInfo& info)
-	{
-		mOrthoInfo = info;
+		mPersInfo = mCamera->mPersInfo;
+		mOrthoInfo = mCamera->mOrthoInfo;
 	}
 
 	glm::mat4 LearnOGLPipeline::GetTransform()
@@ -69,13 +61,31 @@ namespace OGL
 		return glm::lookAt(mCamera->mPosition, mCamera->mPosition + mCamera->mFront, mCamera->mUp);
 	}
 
-	glm::mat4 LearnOGLPipeline::GetPerspectiveProjection()
+	glm::mat4 LearnOGLPipeline::GetCameraProjection()
 	{
-		return glm::perspective(glm::radians(mPersInfo.fov), mPersInfo.width / mPersInfo.height, mPersInfo.zNear, mPersInfo.zFar);
+		if (mCamera->mCameraType == CameraType::Perspective)
+		{
+			return glm::perspective(glm::radians(mPersInfo->fov), mPersInfo->width / mPersInfo->height, mPersInfo->zNear, mPersInfo->zFar);
+		}
+		else if (mCamera && mCamera->mCameraType == CameraType::Orthographic)
+		{
+			return glm::ortho(mOrthoInfo->left, mOrthoInfo->right, mOrthoInfo->bottom, mOrthoInfo->top, mOrthoInfo->zNear, mOrthoInfo->zFar);
+		}
 	}
 
-	glm::mat4 LearnOGLPipeline::GetOrthographicProjection()
+	glm::mat4 LearnOGLPipeline::GetPerspectiveProjection(float fov, float aspect, float znear, float zfar)
 	{
-		return glm::ortho(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.bottom, mOrthoInfo.top, mOrthoInfo.zNear, mOrthoInfo.zFar);
+		return glm::perspective(glm::radians(fov), aspect, znear, zfar);
 	}
+
+	glm::mat4 LearnOGLPipeline::GetOrthographicProjection(float left, float right, float top, float bottom, float znear, float zfar)
+	{
+		return glm::ortho(left, right, top, bottom, znear, zfar);
+	}
+
+	glm::mat4 LearnOGLPipeline::GetViewMatrix(glm::vec3 eye, glm::vec3 center, glm::vec3 up)
+	{
+		return glm::lookAt(eye, center, up);
+	}
+
 }

@@ -19,7 +19,7 @@ namespace OGL
 
 	void LearnOGLModel::Draw()
 	{
-		mMaterials->Draw();
+		mMaterial->Draw();
 
 		for (uint32_t i = 0; i < mMeshs.size(); i++)
 		{
@@ -39,27 +39,27 @@ namespace OGL
 
 	void LearnOGLModel::SetCameraView(glm::mat4 cameraview)
 	{
-		mMaterials->mShader->Use();
-		mMaterials->mShader->SetMat4("view", cameraview);
+		mMaterial->mShader->Use();
+		mMaterial->mShader->SetMat4("view", cameraview);
 	}
 
 	void LearnOGLModel::SetProjection(glm::mat4 projection)
 	{
-		mMaterials->mShader->Use();
-		mMaterials->mShader->SetMat4("projection", projection);
+		mMaterial->mShader->Use();
+		mMaterial->mShader->SetMat4("projection", projection);
 	}
 
 	void LearnOGLModel::SetTransform(glm::mat4 transfrom)
 	{
 		mTransform = transfrom;
-		mMaterials->mShader->Use();
-		mMaterials->mShader->SetMat4("model", mTransform);
+		mMaterial->mShader->Use();
+		mMaterial->mShader->SetMat4("model", mTransform);
 	}
 
 	void LearnOGLModel::SetShadowProjection(glm::mat4 projection)
 	{
 		mShadowMaterial->mShader->Use();
-		mShadowMaterial->mShader->SetMat4("projection", projection);
+		mShadowMaterial->mShader->SetMat4("vpMatrix", projection);
 	}
 
 	void LearnOGLModel::SetShadowCameraView(glm::mat4 cameraview)

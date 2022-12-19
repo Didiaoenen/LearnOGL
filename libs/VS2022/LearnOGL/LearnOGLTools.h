@@ -17,9 +17,9 @@ namespace OGL
 
 		static LearnOGLTools* Instance();
 
-		LearnOGLBatch MakePlane(GLfloat radius, glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		LearnOGLBatch MakeQuad(GLfloat radius, glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-		LearnOGLBatch MakeCube(GLfloat radius, glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		LearnOGLBatch MakePlane(GLfloat radius);
+		LearnOGLBatch MakeQuad(GLfloat radius);
+		LearnOGLBatch MakeCube(GLfloat radius);
 
 	private:
 
