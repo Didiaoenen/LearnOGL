@@ -24,5 +24,7 @@ namespace OGL
 		LearnOGLShader* mShader;
 
 		LearnOGLCommand* mCommand;
+
+		std::string mDepthMapLoc = "depthMap";
 	};
 }

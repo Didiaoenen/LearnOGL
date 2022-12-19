@@ -20,6 +20,7 @@ public:
 	std::string mShadowMapLoc = "shadowMap";
 
 private:
+	GLuint mDepthAttribID;
 
 };
 

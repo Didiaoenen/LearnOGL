@@ -39,7 +39,7 @@ public:
 
 	virtual void Setup() override
 	{
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 3.0f));
+		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
@@ -50,15 +50,17 @@ public:
 	
 		mPlaneMaterial = new shadow_material(mShader);
 		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
+		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new shadow_material(mShader);
 		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
+		mCubeMaterial->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
 
 		mDepthAttribID = mShadowShader->GetUniformLocation("depthMap");
 
-		mPlane = mTools->MakePlane(1.0f);
+		mPlane = mTools->MakePlane(10.0f);
 		mPlane.mMaterial = mPlaneMaterial;
 
 		mCube = mTools->MakeCube(1.0f);
@@ -78,39 +80,68 @@ public:
 
 	void RenderShadow()
 	{
-		mCommand->GetTemporaryRT(mDepthAttribID, 1024, 1024, 0);
-		mCommand->SetRenderTarget(mDepthAttribID);
-		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-		mContext->ExecuteCommand(mCommand);
+		//mCommand->GetTemporaryRT(mDepthAttribID, 2048, 2048, 0);
+		//mCommand->SetRenderTarget(mDepthAttribID);
+		//mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+		//mContext->ExecuteCommand(mCommand);
 
 		OGL::LearnOGLPipeline pipeline;
 		glm::mat4 projection = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
 		glm::mat4 view = pipeline.GetViewMatrix(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
+		//
+		//pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		//pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		//pipeline.SetRotate(30.0f, 0.0f, 0.0f);
 
-		view = pipeline.GetTransform() * view;
+		//view = pipeline.GetTransform() * view;
 
-		pipeline.SetPos(0.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		//pipeline.SetPos(0.0f, 0.5f, 0.0f);
+		//pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		//pipeline.SetRotate(0.0f, 45.0f, 0.0f);
 
-		mCube.SetShadowProjection(projection * view);
-		mCube.SetShadowTransform(pipeline.GetTransform());
-		mCube.ShadowDraw();
+		//mCube.SetShadowProjection(projection * view);
+		//mCube.SetShadowTransform(pipeline.GetTransform());
+		//mCube.ShadowDraw();
 
-		mCommand->ReleaseTemporaryRT(mDepthAttribID);
+		//mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
 
 		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
+		
+		pipeline.SetCamera(mCamera);
 
+		glm::mat4 cameraView = pipeline.GetCameraView();
+
+		pipeline.SetPos(0.0f, -3.0f, -20.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		cameraView = pipeline.GetTransform() * cameraView;
+
+		pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 		mPlane.SetProjection(pipeline.GetCameraProjection());
-		mPlane.SetCameraView(pipeline.GetCameraView());
+		mPlane.SetCameraView(cameraView);
 		mPlane.SetTransform(pipeline.GetTransform());
+		mPlane.mMaterial->mShader->SetMat4("lightSpaceMatrix", projection * view);
+		mPlane.mMaterial->mShader->SetVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
+		mPlane.mMaterial->mShader->SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		mPlane.mMaterial->mShader->SetVec3("viewPos", mCamera->mPosition);
+		mPlane.Draw();
+
+		pipeline.SetPos(0.0f, 0.5f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube.mMaterial->mShader->SetMat4("lightSpaceMatrix", projection * view);
+		mCube.mMaterial->mShader->SetVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
+		mCube.mMaterial->mShader->SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		mCube.mMaterial->mShader->SetVec3("viewPos", mCamera->mPosition);
+		mCube.SetProjection(pipeline.GetCameraProjection());
+		mCube.SetCameraView(cameraView);
+		mCube.SetTransform(pipeline.GetTransform());
+		mCube.Draw();
 	}
 
 	virtual void ShutDown() override
