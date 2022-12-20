@@ -25,6 +25,8 @@ public:
 
 	virtual bool Init() override
 	{
+		OGL::LearnOGLApp::Init();
+
 		mCameraType = OGL::CameraType::Perspective;
 		mPersInfo.fov = 45.0f;
 		mPersInfo.width = info.windowWidth;
@@ -48,10 +50,10 @@ public:
 		mMaterial->mSpecularTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/specular.jpg", OGL::TextureType::Specular);
 
 		mModel = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
-		mModel->mMaterials.push_back(mMaterial);
+		mModel->mMaterial = mMaterial;
 	}
 
-	virtual void Render(double dt) override
+	virtual void Render(OGL::LearnOGLContext* context) override
 	{
 		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -63,13 +65,14 @@ public:
 	{
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
-		pipeline.SetPerspectiveInfo(mPersInfo);
+
+		mShader->Use();
+		mShader->SetMat4("projection", pipeline.GetCameraProjection());
+		mShader->SetMat4("view", pipeline.GetCameraView());
+
 		pipeline.SetPos(0.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-
-		mModel->SetProjection(pipeline.GetPerspectiveProjection());
-		mModel->SetCameraView(pipeline.GetCameraView());
 		mModel->SetTransform(pipeline.GetTransform());
 		mModel->Draw();
 	}

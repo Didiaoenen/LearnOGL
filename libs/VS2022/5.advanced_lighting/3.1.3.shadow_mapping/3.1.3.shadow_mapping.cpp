@@ -59,6 +59,10 @@ public:
 		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
+		mBackpackMaterial = new shadow_material(mShader);
+		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", OGL::TextureType::Diffuse);
+		mBackpackMaterial->mCommand = mCommand;
+
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
 
 		mDepthAttribID = mShader->GetUniformLocation("depthMap");
@@ -70,6 +74,10 @@ public:
 		mCube = mTools->MakeCube(0.5f);
 		mCube.mMaterial = mCubeMaterial;
 		mCube.mShadowMaterial = mDepthMaterial;
+
+		mBackpack = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
+		mBackpack->mMaterial = mBackpackMaterial;
+		mBackpack->mShadowMaterial = mDepthMaterial;
 	}
 
 	virtual void Update(double dt) override
@@ -104,11 +112,17 @@ public:
 		mPlane.SetShadowTransform(pipeline.GetTransform());
 		mPlane.ShadowDraw();
 
-		pipeline.SetPos(0.0f, 0.5f, 0.0f);
+		pipeline.SetPos(-2.0f, 0.5f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
 		mCube.SetShadowTransform(pipeline.GetTransform());
 		mCube.ShadowDraw();
+
+		pipeline.SetPos(2.0f, 2.0f, 0.0f);
+		pipeline.SetScale(0.5f, 0.5f, 0.5f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mBackpack->SetShadowTransform(pipeline.GetTransform());
+		mBackpack->ShadowDraw();
 
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
@@ -142,11 +156,17 @@ public:
 		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
 
-		pipeline.SetPos(0.0f, 0.5f, 0.0f);
+		pipeline.SetPos(-2.0f, 0.5f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
 		mCube.SetTransform(pipeline.GetTransform());
 		mCube.Draw();
+
+		pipeline.SetPos(2.0f, 2.0f, 0.0f);
+		pipeline.SetScale(0.5f, 0.5f, 0.5f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mBackpack->SetTransform(pipeline.GetTransform());
+		mBackpack->Draw();
 	}
 
 	virtual void ShutDown() override
@@ -164,11 +184,13 @@ private:
 
 	OGL::LearnOGLBatch mPlane;
 	OGL::LearnOGLBatch mCube;
+	OGL::LearnOGLModel* mBackpack;
 
 	GLuint mDepthAttribID;
 
 	shadow_material* mPlaneMaterial;
 	shadow_material* mCubeMaterial;
+	shadow_material* mBackpackMaterial;
 	shadow_depth_material* mDepthMaterial;
 
 	glm::vec3 mLightPos = glm::vec3(-3.0f, 3.0f, 0.0f);
