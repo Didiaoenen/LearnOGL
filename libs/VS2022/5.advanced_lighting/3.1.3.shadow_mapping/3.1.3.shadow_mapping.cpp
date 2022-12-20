@@ -13,7 +13,7 @@
 #include "shadow_material.h"
 #include "shadow_depth_material.h"
 
-class shaodw_mapping_base : public OGL::LearnOGLApp
+class shaodw_mapping : public OGL::LearnOGLApp
 {
 public:
 
@@ -48,9 +48,9 @@ public:
 
 		mTools = new OGL::LearnOGLTools();
 
-		mShader = new OGL::LearnOGLShader("3.1.2.shadow_mapping.vs.vert", "3.1.2.shadow_mapping.fs.frag");
-		mShadowShader = new OGL::LearnOGLShader("3.1.2.shadow_mapping_depth.vs.vert", "3.1.2.shadow_mapping_depth.fs.frag");
-	
+		mShader = new OGL::LearnOGLShader("3.1.3.shadow_mapping.vs.vert", "3.1.3.shadow_mapping.fs.frag");
+		mShadowShader = new OGL::LearnOGLShader("3.1.3.shadow_mapping_depth.vs.vert", "3.1.3.shadow_mapping_depth.fs.frag");
+
 		mPlaneMaterial = new shadow_material(mShader);
 		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
@@ -63,7 +63,7 @@ public:
 
 		mDepthAttribID = mShader->GetUniformLocation("depthMap");
 
-		mPlane = mTools->MakePlane(5.0f);
+		mPlane = mTools->MakePlane(15.0f);
 		mPlane.mMaterial = mPlaneMaterial;
 		mPlane.mShadowMaterial = mDepthMaterial;
 
@@ -94,21 +94,21 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
 		glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		
+
 		mShadowShader->Use();
 		mShadowShader->SetMat4("vpMatrix", lightProj * lightView);
-
-		pipeline.SetPos(0.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube.SetShadowTransform(pipeline.GetTransform());
-		mCube.ShadowDraw();
 
 		pipeline.SetPos(0.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 		mPlane.SetShadowTransform(pipeline.GetTransform());
 		mPlane.ShadowDraw();
+
+		pipeline.SetPos(0.0f, 0.5f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube.SetShadowTransform(pipeline.GetTransform());
+		mCube.ShadowDraw();
 
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
@@ -118,7 +118,7 @@ public:
 		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 
 		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
-		
+
 		pipeline.SetCamera(mCamera);
 
 		glm::mat4 cameraView = pipeline.GetCameraView();
@@ -178,4 +178,4 @@ private:
 	GLfloat mShadowAtlasHeight;
 };
 
-DECLARE_MAIN(shaodw_mapping_base)
+DECLARE_MAIN(shaodw_mapping)

@@ -33,5 +33,6 @@ namespace OGL
 		GLuint mFBO;
 		GLuint mDepthTex;
 
+		glm::vec4 mBoraderColor = glm::vec4(1.0);
 	};
 }

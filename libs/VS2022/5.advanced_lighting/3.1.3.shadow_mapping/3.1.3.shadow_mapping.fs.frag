@@ -24,7 +24,15 @@ float ShadowCalculation(vec4 lightSpacePos)
 {
 	vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
 	projCoords = projCoords * 0.5 + 0.5;
-	return projCoords.z > texture(depthMap, projCoords.xy).r ? 1.0f : 0.0f;
+	vec3 normal = normalize(fs_in.WNormal);
+	vec3 lightDir = normalize(lightPos - fs_in.WPos);
+	float bias = max(0.005 * (1.0 - dot(lightDir, normal)), 0.0005);
+
+	float shadow = projCoords.z - bias > texture(depthMap, projCoords.xy).r ? 1.0f : 0.0f;
+	if(projCoords.z > 1.0)
+        shadow = 0.0;
+
+	return shadow;
 }
 
 void main()

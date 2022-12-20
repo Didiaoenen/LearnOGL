@@ -75,6 +75,11 @@ namespace OGL
 	{
 	}
 
+	void LearnOGLCommand::SetViewport(GLfloat beginX, GLfloat beginY, GLfloat width, GLfloat height)
+	{
+		glViewport(beginX, beginY, width, height);
+	}
+
 	void LearnOGLCommand::ReleaseTemporaryRT(GLuint id)
 	{
 		if (mUintTexMap.find(id) != mUintTexMap.end())

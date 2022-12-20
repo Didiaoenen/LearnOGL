@@ -34,6 +34,8 @@ namespace OGL
 		void SetGlobalMatrix(GLuint id, glm::mat4 vec);
 		void SetGlobalMatrixArray(GLuint id, glm::mat4* vec);
 
+		void SetViewport(GLfloat beginX, GLfloat beginY, GLfloat width, GLfloat height);
+
 		void ReleaseTemporaryRT(GLuint id);
 
 		void Clear();
