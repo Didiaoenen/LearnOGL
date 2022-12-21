@@ -80,6 +80,11 @@ namespace OGL
 		glViewport(beginX, beginY, width, height);
 	}
 
+	void LearnOGLCommand::EnableCullFace(bool face)
+	{
+		return face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+	}
+
 	void LearnOGLCommand::ReleaseTemporaryRT(GLuint id)
 	{
 		if (mUintTexMap.find(id) != mUintTexMap.end())

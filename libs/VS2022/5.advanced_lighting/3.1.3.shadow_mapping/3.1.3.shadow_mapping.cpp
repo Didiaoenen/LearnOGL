@@ -42,7 +42,7 @@ public:
 
 	virtual void Setup() override
 	{
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 0.0f));
+		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
 
 		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
@@ -67,7 +67,7 @@ public:
 
 		mDepthAttribID = mShader->GetUniformLocation("depthMap");
 
-		mPlane = mTools->MakePlane(15.0f);
+		mPlane = mTools->MakePlane(10.0f);
 		mPlane.mMaterial = mPlaneMaterial;
 		mPlane.mShadowMaterial = mDepthMaterial;
 
@@ -78,6 +78,11 @@ public:
 		mBackpack = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
 		mBackpack->mMaterial = mBackpackMaterial;
 		mBackpack->mShadowMaterial = mDepthMaterial;
+	}
+
+	virtual void Input() override
+	{
+
 	}
 
 	virtual void Update(double dt) override
@@ -103,8 +108,10 @@ public:
 		glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
 		glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
+		glm::mat4 vpMatrix = lightProj * lightView;
+
 		mShadowShader->Use();
-		mShadowShader->SetMat4("vpMatrix", lightProj * lightView);
+		mShadowShader->SetMat4("vpMatrix", vpMatrix);
 
 		pipeline.SetPos(0.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
@@ -131,41 +138,20 @@ public:
 
 		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 
-		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
-
 		pipeline.SetCamera(mCamera);
-
-		glm::mat4 cameraView = pipeline.GetCameraView();
-
-		pipeline.SetPos(0.0f, -1.0f, -10.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
-		cameraView = pipeline.GetTransform() * cameraView;
 
 		mShader->Use();
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());
-		mShader->SetMat4("view", cameraView);
-		mShader->SetMat4("lightSpaceMatrix", lightProj * lightView);
+		mShader->SetMat4("view", pipeline.GetCameraView());
+		mShader->SetMat4("lightSpaceMatrix", vpMatrix);
 		mShader->SetVec3("lightPos", mLightPos);
 		mShader->SetVec3("lightColor", mLightColor);
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
 
-		pipeline.SetPos(-2.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube.SetTransform(pipeline.GetTransform());
 		mCube.Draw();
-
-		pipeline.SetPos(2.0f, 2.0f, 0.0f);
-		pipeline.SetScale(0.5f, 0.5f, 0.5f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mBackpack->SetTransform(pipeline.GetTransform());
+		
 		mBackpack->Draw();
 	}
 
@@ -175,7 +161,6 @@ public:
 	}
 
 private:
-	OGL::LearnOGLCamera* mCamera;
 	OGL::LearnOGLCommand* mCommand;
 	OGL::LearnOGLTools* mTools;
 

@@ -18,5 +18,36 @@
     <ClCompile Include="3.2.1.point_shadows.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="point_shadow_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="point_shadow_depth_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="point_shadow_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="point_shadow_depth_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="3.2.1.point_shadows.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.2.1.point_shadows.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.2.1.point_shadows_depth.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.2.1.point_shadows_depth.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="3.2.1.point_shadows_depth.gs.geom">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

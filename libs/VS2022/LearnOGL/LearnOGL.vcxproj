@@ -138,6 +138,7 @@
     <ClCompile Include="LearnOGLCamera.cpp" />
     <ClCompile Include="LearnOGLCommand.cpp" />
     <ClCompile Include="LearnOGLContext.cpp" />
+    <ClCompile Include="LearnOGLCubeFBO.cpp" />
     <ClCompile Include="LearnOGLDepthFBO.cpp" />
     <ClCompile Include="LearnOGLMaterial.cpp" />
     <ClCompile Include="LearnOGLMesh.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="LearnOGLCamera.h" />
     <ClInclude Include="LearnOGLCommand.h" />
     <ClInclude Include="LearnOGLContext.h" />
+    <ClInclude Include="LearnOGLCubeFBO.h" />
     <ClInclude Include="LearnOGLDefine.h" />
     <ClInclude Include="LearnOGLDepthFBO.h" />
     <ClInclude Include="LearnOGLMaterial.h" />

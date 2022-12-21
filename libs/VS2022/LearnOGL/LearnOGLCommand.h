@@ -36,6 +36,8 @@ namespace OGL
 
 		void SetViewport(GLfloat beginX, GLfloat beginY, GLfloat width, GLfloat height);
 
+		void EnableCullFace(bool face);
+
 		void ReleaseTemporaryRT(GLuint id);
 
 		void Clear();

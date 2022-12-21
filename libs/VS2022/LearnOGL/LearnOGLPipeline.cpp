@@ -65,7 +65,7 @@ namespace OGL
 	{
 		if (mCamera->mCameraType == CameraType::Perspective)
 		{
-			return glm::perspective(glm::radians(mPersInfo->fov), mPersInfo->width / mPersInfo->height, mPersInfo->zNear, mPersInfo->zFar);
+			return glm::perspective(glm::radians(mCamera->mZoom), mPersInfo->width / mPersInfo->height, mPersInfo->zNear, mPersInfo->zFar);
 		}
 		else if (mCamera && mCamera->mCameraType == CameraType::Orthographic)
 		{

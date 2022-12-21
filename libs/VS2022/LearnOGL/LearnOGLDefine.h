@@ -88,5 +88,12 @@ namespace OGL
 		TexCoord0x02,
 		TexCoord0x03,
 	};
+
+	enum class CameraMovement {
+		Forward,
+		Backward,
+		Left,
+		Right
+	};
 }
 

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "LearnOGLDefine.h"
+#include "LearnOGLCamera.h"
 #include "LearnOGLContext.h"
 
 #include <string>
@@ -27,13 +28,19 @@ namespace OGL
 
 		virtual void ShutDown();
 		
+		virtual void Input();
+
 		virtual void WindowSizeCallback(GLFWwindow* window, int width, int height);
+		virtual void MouseCallback(GLFWwindow* window, double xpos, double ypos);
+		virtual void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 		void Run(LearnOGLApp* app);
 
 		bool InitGLAD();
 
 		bool WindowHint();
+
+		void ProcessInput(GLFWwindow* window);
 
 	public:
 
@@ -45,11 +52,24 @@ namespace OGL
 
 		static LearnOGLApp* mApp;
 
+		LearnOGLCamera* mCamera;
+
 		LearnOGLContext* mContext;
 
 		GLFWwindow* mWindow;
 
 		static void GLFWWindowSizeCallback(GLFWwindow* window, int width, int height);
+
+		static void GLFWWindowMouseCallback(GLFWwindow* window, double xpos, double ypos);
+		static void GLFWWindowScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
+
+	private:
+		bool mFirstMouse = true;
+		double mLastX = 0;
+		double mLastY = 0;
+
+		double mDT = 0;
+		double mLastTime = 0;
 	};
 }
 

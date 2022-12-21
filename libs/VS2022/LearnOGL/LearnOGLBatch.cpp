@@ -282,6 +282,8 @@ namespace OGL
 
 		mMaterial->Draw();
 
+		mMaterial->mShader->SetMat4("model", mTransform);
+
 		glBindVertexArray(mVAO);
 		glDrawArrays(mPrimitiveType, 0, mVerts);
 		glBindVertexArray(0);

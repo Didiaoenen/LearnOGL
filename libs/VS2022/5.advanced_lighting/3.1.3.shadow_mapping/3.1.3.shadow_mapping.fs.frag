@@ -20,6 +20,8 @@ uniform vec3 viewPos;
 float colorValue = 0.3;
 float specularValue = 64.0;
 
+int pcfLevel = 3;
+
 float ShadowCalculation(vec4 lightSpacePos)
 {
 	vec3 projCoords = lightSpacePos.xyz / lightSpacePos.w;
@@ -28,7 +30,21 @@ float ShadowCalculation(vec4 lightSpacePos)
 	vec3 lightDir = normalize(lightPos - fs_in.WPos);
 	float bias = max(0.05 * (1.0 - dot(lightDir, normal)), 0.005);
 
-	float shadow = projCoords.z - bias > texture(depthMap, projCoords.xy).r ? 1.0f : 0.0f;
+//	float shadow = projCoords.z - bias > texture(depthMap, projCoords.xy).r ? 1.0f : 0.0f;
+	
+	//pcf
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(depthMap, 0);
+	for (int x = -pcfLevel / 2; x <= pcfLevel / 2; x++)
+	{
+		for (int y = -pcfLevel / 2; y <= pcfLevel / 2; y++)
+		{
+			float pcfDepth = texture(depthMap, projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += projCoords.z - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+	shadow /= pcfLevel * pcfLevel;
+
 	if(projCoords.z > 1.0)
         shadow = 0.0;
 
@@ -40,22 +56,20 @@ void main()
 	vec3 color = texture(diffuseTex, fs_in.TexCoords).rgb;
 	vec3 normal = normalize(fs_in.WNormal);
 
-	//
+	//ambient
 	vec3 ambient = colorValue * lightColor;
 
-	//
+	//diffuse
 	vec3 lightDir = normalize(lightPos - fs_in.WPos);
 	vec3 diffuse = max(dot(lightDir, normal), 0.0) * lightColor;
 
-	//
+	//specular
 	vec3 viewDir = normalize(viewPos - fs_in.WPos);
-	vec3 reflectDir = reflect(-lightDir, normal);
 	vec3 halfDir = normalize(lightDir + viewDir);
 	vec3 specular = pow(max(dot(normal, halfDir), 0.0), specularValue) * lightColor;
 
 	//
 	float shadow = ShadowCalculation(fs_in.LightSpacePos);
 	vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
-
 	FragColor = vec4(lighting, 1.0);
 }

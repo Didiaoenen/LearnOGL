@@ -27,12 +27,71 @@ namespace OGL
 			case OGL::CameraType::Perspective:
 			{
 				mPersInfo = (PersProjInfo*)info;
+				mZoom = mPersInfo->fov;
 			}
 			break;
 			case OGL::CameraType::Orthographic:
 			{
 				mOrthoInfo = (OrthoProjInfo*)info;
 			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	void LearnOGLCamera::ProcessMouseMovement(double xoffset, double yoffset, bool constrainPitch)
+	{
+		xoffset *= mMouseSenesitivity;
+		yoffset *= mMouseSenesitivity;
+
+		mYaw += xoffset;
+		mPitch -= yoffset;
+
+		if (constrainPitch)
+		{
+			if (mPitch > 89.0f)
+			{
+				mPitch = 89.0f;
+			}
+			if (mPitch < -89.0f)
+			{
+				mPitch = -89.0f;
+			}
+		}
+
+		UpdateCameraVectors();
+	}
+
+	void LearnOGLCamera::ProcessMouseScroll(double yoffset)
+	{
+		mZoom -= yoffset;
+		if (mZoom < 1.0f)
+		{
+			mZoom = 1.0f;
+		}
+		if (mZoom > 60.0f)
+		{
+			mZoom = 60.0f;
+		}
+	}
+
+	void LearnOGLCamera::ProcessKeyboard(CameraMovement dir, double dt)
+	{
+		float velocity = mMovementSpeed * dt;
+		switch (dir)
+		{
+		case OGL::CameraMovement::Forward:
+			mPosition += mFront * velocity;
+			break;
+		case OGL::CameraMovement::Backward:
+			mPosition -= mFront * velocity;
+			break;
+		case OGL::CameraMovement::Left:
+			mPosition -= mRight * velocity;
+			break;
+		case OGL::CameraMovement::Right:
+			mPosition += mRight * velocity;
 			break;
 		default:
 			break;

@@ -18,6 +18,10 @@ namespace OGL
 
 		void SetCameraInfo(CameraType type, const ProjInfo* info);
 
+		void ProcessMouseMovement(double xoffset, double yoffset, bool constrainPitch = true);
+		void ProcessMouseScroll(double yoffset);
+		void ProcessKeyboard(CameraMovement dir, double dt);
+
 	public:
 		glm::vec3 mPosition;
 		glm::vec3 mFront;
@@ -27,6 +31,8 @@ namespace OGL
 
 		float mYaw;
 		float mPitch;
+	
+		float mZoom;
 	
 		float mMovementSpeed;
 		float mMouseSenesitivity;

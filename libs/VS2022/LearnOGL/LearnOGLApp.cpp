@@ -12,6 +12,7 @@ namespace OGL
 		mCameraType(CameraType::Perspective),
 		mPersInfo(),
 		mOrthoInfo(),
+		mCamera(nullptr),
 		mContext(nullptr),
 		mWindow(nullptr)
 	{
@@ -29,6 +30,7 @@ namespace OGL
 		info.windowWidth = 1280;
 		info.windowHeight = 720;
 
+		mCamera = new LearnOGLCamera();
 		mContext = new LearnOGLContext();
 
 		return true;
@@ -47,6 +49,10 @@ namespace OGL
 	}
 
 	void LearnOGLApp::ShutDown()
+	{
+	}
+
+	void LearnOGLApp::Input()
 	{
 	}
 
@@ -72,13 +78,20 @@ namespace OGL
 
 		do
 		{
-			Update(glfwGetTime());
+			double time = glfwGetTime();
+			mDT = time - mLastTime;
+			mLastTime = time;
+			
+			ProcessInput(mWindow);
+
+			Update(time);
 
 			Render(mContext);
 
 			glfwSwapBuffers(mWindow);
 			glfwPollEvents();
 
+			running = !glfwWindowShouldClose(mWindow);
 		} while (running);
 
 		ShutDown();
@@ -89,6 +102,60 @@ namespace OGL
 
 	void LearnOGLApp::WindowSizeCallback(GLFWwindow* window, int width, int height)
 	{
+		glViewport(0, 0, width, height);
+	}
+
+	void LearnOGLApp::MouseCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+		if (mFirstMouse)
+		{
+			mLastX = xpos;
+			mLastY = ypos;
+			mFirstMouse = false;
+		}
+
+		double xoffset = xpos - mLastX;
+		double yoffset = ypos - mLastY;
+
+		mLastX = xpos;
+		mLastY = ypos;
+
+		mCamera->ProcessMouseMovement(xoffset, yoffset);
+	}
+
+	void LearnOGLApp::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		mCamera->ProcessMouseScroll(yoffset);
+	}
+
+	void LearnOGLApp::ProcessInput(GLFWwindow* window)
+	{
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		{
+			glfwSetWindowShouldClose(window, true);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			mCamera->ProcessKeyboard(CameraMovement::Forward, mDT);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			mCamera->ProcessKeyboard(CameraMovement::Backward, mDT);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			mCamera->ProcessKeyboard(CameraMovement::Left, mDT);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			mCamera->ProcessKeyboard(CameraMovement::Right, mDT);
+		}
+
+		Input();
 	}
 
 	void LearnOGLApp::GLFWWindowSizeCallback(GLFWwindow* window, int width, int height)
@@ -96,6 +163,22 @@ namespace OGL
 		if (mApp)
 		{
 			mApp->WindowSizeCallback(window, width, height);
+		}
+	}
+
+	void LearnOGLApp::GLFWWindowScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		if (mApp)
+		{
+			mApp->ScrollCallback(window, xoffset, yoffset);
+		}
+	}
+
+	void LearnOGLApp::GLFWWindowMouseCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+		if (mApp)
+		{
+			mApp->MouseCallback(window, xpos, ypos);
 		}
 	}
 
@@ -120,6 +203,11 @@ namespace OGL
 
 		glfwSetWindowSizeCallback(mWindow, LearnOGLApp::GLFWWindowSizeCallback);
 		
+		glfwSetScrollCallback(mWindow, LearnOGLApp::GLFWWindowScrollCallback);
+		glfwSetCursorPosCallback(mWindow, LearnOGLApp::GLFWWindowMouseCallback);
+
+		glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 		return true;
 	}
 }

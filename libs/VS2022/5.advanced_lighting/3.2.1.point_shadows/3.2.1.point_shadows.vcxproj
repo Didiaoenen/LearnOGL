@@ -132,6 +132,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="3.2.1.point_shadows.cpp" />
+    <ClCompile Include="point_shadow_depth_material.cpp" />
+    <ClCompile Include="point_shadow_material.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\LearnOGL\LearnOGL.vcxproj">
+      <Project>{d76a5803-2985-4185-a091-544972987d5c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="point_shadow_depth_material.h" />
+    <ClInclude Include="point_shadow_material.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="3.2.1.point_shadows.fs.frag" />
+    <None Include="3.2.1.point_shadows.vs.vert" />
+    <None Include="3.2.1.point_shadows_depth.fs.frag" />
+    <None Include="3.2.1.point_shadows_depth.gs.geom" />
+    <None Include="3.2.1.point_shadows_depth.vs.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
