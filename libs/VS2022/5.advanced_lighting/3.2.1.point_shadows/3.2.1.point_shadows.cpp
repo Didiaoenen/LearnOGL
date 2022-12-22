@@ -13,6 +13,8 @@
 
 #include <vector>
 
+#define NUM_LAYERS 6
+
 class point_shadows : public OGL::LearnOGLApp
 {
 public:
@@ -25,13 +27,6 @@ public:
 		mPersInfo.height = info.windowHeight;
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
-
-		mOrthoInfo.left = -info.windowWidth / 200.0f;
-		mOrthoInfo.right = info.windowWidth / 200.0f;
-		mOrthoInfo.bottom = -info.windowHeight / 200.0f;
-		mOrthoInfo.top = info.windowHeight / 200.0f;
-		mOrthoInfo.zNear = -10.0f;
-		mOrthoInfo.zFar = 10.0f;
 
 		mShadowAtlasWidth = info.windowWidth * 4;
 		mShadowAtlasHeight = info.windowHeight * 4;
@@ -66,9 +61,13 @@ public:
 		mPlane.mMaterial = mPlaneMaterial;
 		mPlane.mShadowMaterial = mShadowMaterial;
 
-		mCube = mTool->MakeCube(0.5f);
-		mPlane.mMaterial = mPlaneMaterial;
-		mPlane.mShadowMaterial = mShadowMaterial;
+		for (int i = 0; i < 4; i++)
+		{
+			auto cube = mTool->MakeCube(0.5f);
+			cube.mMaterial = mCubeMaterial;
+			cube.mShadowMaterial = mShadowMaterial;
+			mCubes.push_back(cube);
+		}
 	}
 
 	virtual void Input() override
@@ -90,8 +89,49 @@ public:
 
 		float zFar = 25.0f;
 		glm::mat4 shadowProj = pipeline.GetPerspectiveProjection(90.0f, mShadowAtlasWidth / mShadowAtlasHeight, 1.0f, zFar);
-		std::vector<glm::mat4> shadowTrans;
-		shadowTrans.push_back(shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	
+		//mShadowShader->Use();
+		//for (uint32_t i = 0; i < NUM_LAYERS; i++)
+		//{
+		//	mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp));
+		//}
+		//mShadowShader->SetFloat("farPlane", zFar);
+		//mShadowShader->SetVec3("lightPos", mLightPos);
+
+		pipeline.SetPos(0.0f, -1.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		mPlane.SetTransform(pipeline.GetTransform());
+		//mPlane.ShadowDraw();
+
+		std::vector<glm::vec3> mPos;
+		mPos.push_back(glm::vec3( 5.0f, 0.5f,  0.0f));
+		mPos.push_back(glm::vec3(-5.0f, 0.5f,  0.0f));
+		mPos.push_back(glm::vec3( 0.0f, 0.5f,  5.0f));
+		mPos.push_back(glm::vec3( 0.0f, 0.5f, -5.0f));
+
+		for (int i = 0; i < 4; i++)
+		{
+			pipeline.SetPos(mPos[i].x, mPos[i].y, mPos[i].z);
+			mCubes[i].SetTransform(pipeline.GetTransform());
+			//mCubes[i].ShadowDraw();
+		}
+
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
+
+		pipeline.SetCamera(mCamera);
+
+		mShader->Use();
+		mShader->SetMat4("projection", pipeline.GetCameraProjection());
+		mShader->SetMat4("view", pipeline.GetCameraView());
+
+		mPlane.Draw();
+
+		for (int i = 0; i < 4; i++)
+		{
+			mCubes[i].Draw();
+		}
 	}
 
 	virtual void ShutDown() override
@@ -102,7 +142,7 @@ public:
 private:
 	OGL::LearnOGLTools* mTool;
 	OGL::LearnOGLBatch mPlane;
-	OGL::LearnOGLBatch mCube;
+	std::vector<OGL::LearnOGLBatch> mCubes;
 
 	OGL::LearnOGLCommand* mCommand;
 
@@ -117,6 +157,22 @@ private:
 
 	float mShadowAtlasWidth;
 	float mShadowAtlasHeight;
+
+	struct CameraDirection
+	{
+		glm::vec3 mCenter;
+		glm::vec3 mUp;
+	};
+
+	CameraDirection mCameraDirs[NUM_LAYERS] =
+	{
+		{ glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+		{ glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+		{ glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,   0.0f,  1.0f) },
+		{ glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,   0.0f, -1.0f) },
+		{ glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+		{ glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+	};
 
 	glm::vec3 mLightPos = glm::vec3(0.0f);
 };

@@ -15,4 +15,5 @@ point_shadow_depth_material::~point_shadow_depth_material()
 
 void point_shadow_depth_material::Draw()
 {
+	mShader->Use();
 }
