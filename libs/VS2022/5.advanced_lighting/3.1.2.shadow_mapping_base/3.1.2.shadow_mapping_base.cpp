@@ -42,7 +42,7 @@ public:
 
 	virtual void Setup() override
 	{
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 0.0f));
+		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
 
 		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
@@ -55,21 +55,45 @@ public:
 		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
-		mCubeMaterial = new shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
-		mCubeMaterial->mCommand = mCommand;
+		mCubeMaterial1 = new shadow_material(mShader);
+		mCubeMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
+		mCubeMaterial1->mCommand = mCommand;
+
+		mCubeMaterial2 = new shadow_material(mShader);
+		mCubeMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2.png", OGL::TextureType::Diffuse);
+		mCubeMaterial2->mCommand = mCommand;
+
+		mCubeMaterial3 = new shadow_material(mShader);
+		mCubeMaterial3->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular.png", OGL::TextureType::Diffuse);
+		mCubeMaterial3->mCommand = mCommand;
+
+		mCubeMaterial4 = new shadow_material(mShader);
+		mCubeMaterial4->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular_colored.png", OGL::TextureType::Diffuse);
+		mCubeMaterial4->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
 
 		mDepthAttribID = mShader->GetUniformLocation("depthMap");
 
-		mPlane = mTools->MakePlane(5.0f);
+		mPlane = mTools->MakePlane(10.0f);
 		mPlane.mMaterial = mPlaneMaterial;
 		mPlane.mShadowMaterial = mDepthMaterial;
 
-		mCube = mTools->MakeCube(0.5f);
-		mCube.mMaterial = mCubeMaterial;
-		mCube.mShadowMaterial = mDepthMaterial;
+		mCube1 = mTools->MakeCube(0.5f);
+		mCube1.mMaterial = mCubeMaterial1;
+		mCube1.mShadowMaterial = mDepthMaterial;
+
+		mCube2 = mTools->MakeCube(0.5f);
+		mCube2.mMaterial = mCubeMaterial2;
+		mCube2.mShadowMaterial = mDepthMaterial;
+
+		mCube3 = mTools->MakeCube(0.5f);
+		mCube3.mMaterial = mCubeMaterial3;
+		mCube3.mShadowMaterial = mDepthMaterial;
+
+		mCube4 = mTools->MakeCube(0.5f);
+		mCube4.mMaterial = mCubeMaterial4;
+		mCube4.mShadowMaterial = mDepthMaterial;
 	}
 
 	virtual void Update(double dt) override
@@ -98,11 +122,29 @@ public:
 		mShadowShader->Use();
 		mShadowShader->SetMat4("vpMatrix", lightProj * lightView);
 
-		pipeline.SetPos(0.0f, 0.5f, 0.0f);
+		pipeline.SetPos(5.0f, 0.5f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube.SetShadowTransform(pipeline.GetTransform());
-		mCube.ShadowDraw();
+		mCube1.SetShadowTransform(pipeline.GetTransform());
+		mCube1.ShadowDraw();
+
+		pipeline.SetPos(-5.0f, 0.5f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube2.SetShadowTransform(pipeline.GetTransform());
+		mCube2.ShadowDraw();
+
+		pipeline.SetPos(0.0f, 0.5f, 5.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube3.SetShadowTransform(pipeline.GetTransform());
+		mCube3.ShadowDraw();
+
+		pipeline.SetPos(0.0f, 0.5f, -5.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube4.SetShadowTransform(pipeline.GetTransform());
+		mCube4.ShadowDraw();
 
 		pipeline.SetPos(0.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
@@ -116,16 +158,14 @@ public:
 		mContext->ExecuteCommand(mCommand);
 
 		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
-
-		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
 		
 		pipeline.SetCamera(mCamera);
 
 		glm::mat4 cameraView = pipeline.GetCameraView();
 
-		pipeline.SetPos(0.0f, -1.0f, -10.0f);
+		pipeline.SetPos(0.0f, -1.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(30.0f, 0.0f, 0.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 		cameraView = pipeline.GetTransform() * cameraView;
 
 		mShader->Use();
@@ -136,17 +176,12 @@ public:
 		mShader->SetVec3("lightColor", mLightColor);
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
 
-		pipeline.SetPos(0.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube.SetTransform(pipeline.GetTransform());
-		mCube.Draw();
+		mCube1.Draw();
+		mCube2.Draw();
+		mCube3.Draw();
+		mCube4.Draw();
 	}
 
 	virtual void ShutDown() override
@@ -155,7 +190,6 @@ public:
 	}
 
 private:
-	OGL::LearnOGLCamera* mCamera;
 	OGL::LearnOGLCommand* mCommand;
 	OGL::LearnOGLTools* mTools;
 
@@ -163,12 +197,18 @@ private:
 	OGL::LearnOGLShader* mShadowShader;
 
 	OGL::LearnOGLBatch mPlane;
-	OGL::LearnOGLBatch mCube;
+	OGL::LearnOGLBatch mCube1;
+	OGL::LearnOGLBatch mCube2;
+	OGL::LearnOGLBatch mCube3;
+	OGL::LearnOGLBatch mCube4;
 
 	GLuint mDepthAttribID;
 
 	shadow_material* mPlaneMaterial;
-	shadow_material* mCubeMaterial;
+	shadow_material* mCubeMaterial1;
+	shadow_material* mCubeMaterial2;
+	shadow_material* mCubeMaterial3;
+	shadow_material* mCubeMaterial4;
 	shadow_depth_material* mDepthMaterial;
 
 	glm::vec3 mLightPos = glm::vec3(-3.0f, 3.0f, 0.0f);
