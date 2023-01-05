@@ -2,28 +2,21 @@
 
 namespace OGL
 {
-	OGL::LearnOGLDepthFBO::LearnOGLDepthFBO() :
-		mWidth(0),
-		mHeight(0),
-		mFBO(0),
-		mDepthTex(0)
+	LearnOGLDepthFBO::LearnOGLDepthFBO()
 	{
 	}
 
-	OGL::LearnOGLDepthFBO::LearnOGLDepthFBO(uint32_t width, uint32_t height) :
-		mWidth(width),
-		mHeight(height),
-		mFBO(0),
-		mDepthTex(0)
+	LearnOGLDepthFBO::LearnOGLDepthFBO(uint32_t width, uint32_t height) :
+		LearnOGLFBO(width, height)
 	{
 		Init(width, height);
 	}
 
-	OGL::LearnOGLDepthFBO::~LearnOGLDepthFBO()
+	LearnOGLDepthFBO::~LearnOGLDepthFBO()
 	{
 	}
 
-	void OGL::LearnOGLDepthFBO::BindForWriting()
+	void LearnOGLDepthFBO::BindForWriting()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 	}
@@ -33,13 +26,13 @@ namespace OGL
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OGL::LearnOGLDepthFBO::BindForReading(GLenum textureUnit/* = GL_TEXTURE0*/)
+	void LearnOGLDepthFBO::BindForReading(GLenum textureUnit/* = GL_TEXTURE0*/)
 	{
 		glActiveTexture(textureUnit);
 		glBindTexture(GL_TEXTURE_2D, mDepthTex);
 	}
 
-	bool OGL::LearnOGLDepthFBO::Init(uint32_t width, uint32_t height)
+	bool LearnOGLDepthFBO::Init(uint32_t width, uint32_t height)
 	{
 		glGenFramebuffers(1, &mFBO);
 

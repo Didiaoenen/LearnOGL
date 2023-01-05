@@ -3,7 +3,9 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include "LearnOGLFBO.h"
 #include "LearnOGLDepthFBO.h"
+#include "LearnOGLCubeMapFBO.h"
 
 #include <map>
 #include <string>
@@ -17,7 +19,8 @@ namespace OGL
 		LearnOGLCommand(std::string name);
 		~LearnOGLCommand();
 
-		void GetTemporaryRT(GLuint id, GLuint width, GLuint height, GLuint depth);
+		void GetTemporaryRT(GLuint id, GLuint width, GLuint height);
+		void GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height);
 		void ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor);
 
 		void SetRenderTarget(GLuint id);
@@ -50,7 +53,7 @@ namespace OGL
 
 		glm::vec4 mBackgroundColor = glm::vec4(0.0f);
 
-		std::map<GLuint, LearnOGLDepthFBO*> mUintTexMap;
+		std::map<GLuint, LearnOGLFBO*> mUintTexMap;
 	
 	private:
 

@@ -20,11 +20,19 @@ namespace OGL
 	{
 	}
 
-	void LearnOGLCommand::GetTemporaryRT(GLuint id, GLuint width, GLuint height, GLuint depth)
+	void LearnOGLCommand::GetTemporaryRT(GLuint id, GLuint width, GLuint height)
 	{
 		if (mUintTexMap.find(id) == mUintTexMap.end())
 		{
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLDepthFBO*>(id, new LearnOGLDepthFBO(width, height)));
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, new LearnOGLDepthFBO(width, height)));
+		}
+	}
+
+	void LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
+	{
+		if (mUintTexMap.find(id) == mUintTexMap.end())
+		{
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, new LearnOGLCubeMapFBO(width, height)));
 		}
 	}
 
