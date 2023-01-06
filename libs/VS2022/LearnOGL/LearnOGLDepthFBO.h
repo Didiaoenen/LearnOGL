@@ -25,7 +25,7 @@ namespace OGL
 		bool Init(uint32_t width, uint32_t height);
 
 	private:
-		GLuint mDepthTex{0};
+		GLuint mDepthTex{ 0 };
 
 		glm::vec4 mBoraderColor = glm::vec4(1.0);
 	};

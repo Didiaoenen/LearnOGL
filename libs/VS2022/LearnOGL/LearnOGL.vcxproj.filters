@@ -54,7 +54,10 @@
     <ClCompile Include="LearnOGLContext.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="LearnOGLCubeFBO.cpp">
+    <ClCompile Include="LearnOGLCubeMapFBO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="LearnOGLFBO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,7 +104,10 @@
     <ClInclude Include="LearnOGLContext.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="LearnOGLCubeFBO.h">
+    <ClInclude Include="LearnOGLCubeMapFBO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLFBO.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

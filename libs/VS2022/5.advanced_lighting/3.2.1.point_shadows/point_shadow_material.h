@@ -12,13 +12,13 @@ public:
 	virtual void Draw() override;
 
 public:
-	OGL::LearnOGLTexture* mDiffuseTex;
+	OGL::LearnOGLTexture* mDiffuseTex{nullptr};
 
 	std::string mDiffuseTexLoc = "diffuseTex";
 	std::string mShadowMapLoc = "depthMap";
 
 private:
-	GLuint mDepthAttribID;
+	GLuint mDepthAttribID{0};
 
 };
 

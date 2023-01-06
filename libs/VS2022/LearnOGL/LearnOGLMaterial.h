@@ -21,9 +21,8 @@ namespace OGL
 		GLuint GetAttribID(std::string strLoc);
 
 	public:
-		LearnOGLShader* mShader;
-
-		LearnOGLCommand* mCommand;
+		LearnOGLShader* mShader{ nullptr };
+		LearnOGLCommand* mCommand{ nullptr };
 
 		std::string mDepthMapLoc = "depthMap";
 	};

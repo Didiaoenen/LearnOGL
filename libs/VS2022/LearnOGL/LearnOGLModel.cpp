@@ -2,10 +2,7 @@
 
 namespace OGL
 {
-	LearnOGLModel::LearnOGLModel() :
-		mTransform(),
-		mMaterial(nullptr),
-		mShadowMaterial(nullptr)
+	LearnOGLModel::LearnOGLModel()
 	{
 	}
 

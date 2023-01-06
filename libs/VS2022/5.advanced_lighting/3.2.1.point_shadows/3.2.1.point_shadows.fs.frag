@@ -17,9 +17,8 @@ uniform vec3 lightColor;
 uniform vec3 viewPos;
 
 uniform float farPlane;
-uniform bool shadows;
 
-float colorValue = 0.3;
+float colorValue = 0.1;
 float specularValue = 64.0;
 
 float ShadowCalculation(vec3 fragPos)
@@ -48,7 +47,7 @@ void main()
 
 	//
 	float shadow = ShadowCalculation(fs_in.WPos);
-	vec3 lighting = (ambient + (1,0 - shadow) * (diffuse + specular)) * color;
+	vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;
 
 	FragColor = vec4(lighting, 1.0);
 }

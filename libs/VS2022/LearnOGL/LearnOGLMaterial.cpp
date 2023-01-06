@@ -2,15 +2,12 @@
 
 namespace OGL
 {
-	LearnOGLMaterial::LearnOGLMaterial() :
-		mShader(nullptr),
-		mCommand(nullptr)
+	LearnOGLMaterial::LearnOGLMaterial()
 	{
 	}
 
 	LearnOGLMaterial::LearnOGLMaterial(LearnOGLShader* shader) : 
-		mShader(shader),
-		mCommand(nullptr)
+		mShader(shader)
 	{
 	}
 

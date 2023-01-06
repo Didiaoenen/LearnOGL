@@ -6,7 +6,7 @@ namespace OGL
 	{
 	}
 
-	LearnOGLCubeMapFBO::LearnOGLCubeMapFBO(GLfloat width, GLfloat height) :
+	LearnOGLCubeMapFBO::LearnOGLCubeMapFBO(uint32_t width, uint32_t height) :
 		LearnOGLFBO(width, height)
 	{
 		Init(width, height);
@@ -29,7 +29,7 @@ namespace OGL
 	void LearnOGLCubeMapFBO::BindForReading(GLenum textureUnit)
 	{
 		glActiveTexture(textureUnit);
-		glBindTexture(GL_TEXTURE_2D, mCubeMapTex);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, mCubeMapTex);
 	}
 
 	bool LearnOGLCubeMapFBO::Init(uint32_t width, uint32_t height)

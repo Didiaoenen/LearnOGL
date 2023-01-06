@@ -99,7 +99,7 @@ public:
 	{
 		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
 
-		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight, 0);
+		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
 		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 		mContext->ExecuteCommand(mCommand);

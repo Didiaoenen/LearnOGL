@@ -48,8 +48,8 @@ namespace OGL
 	public:
 		std::string mName;
 
-		bool mDepthBit;
-		bool mColorBit;
+		bool mDepthBit{ false };
+		bool mColorBit{ false };
 
 		glm::vec4 mBackgroundColor = glm::vec4(0.0f);
 

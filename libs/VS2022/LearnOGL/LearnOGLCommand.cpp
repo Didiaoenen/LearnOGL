@@ -2,18 +2,13 @@
 
 namespace OGL
 {
-	LearnOGLCommand::LearnOGLCommand() :
-		mDepthBit(false),
-		mColorBit(false)
+	LearnOGLCommand::LearnOGLCommand()
 	{
 	}
 
 	LearnOGLCommand::LearnOGLCommand(std::string name) :
-		mName(name),
-		mDepthBit(false),
-		mColorBit(false)
+		mName(name)
 	{
-		mName = name;
 	}
 
 	LearnOGLCommand::~LearnOGLCommand()

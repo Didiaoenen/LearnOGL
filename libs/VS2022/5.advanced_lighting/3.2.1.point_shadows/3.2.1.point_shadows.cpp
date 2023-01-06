@@ -28,8 +28,8 @@ public:
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
 
-		mShadowAtlasWidth = info.windowWidth * 4;
-		mShadowAtlasHeight = info.windowHeight * 4;
+		mShadowAtlasWidth = 1024 * 4;
+		mShadowAtlasHeight = 1024 * 4;
 
 		return true;
 	}
@@ -82,6 +82,10 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
+		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
+
+		mCommand->GetTemporaryCubeMapRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
+		mCommand->SetRenderTarget(mDepthAttribID);
 		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0));
 		mContext->ExecuteCommand(mCommand);
 
@@ -90,41 +94,49 @@ public:
 		float zFar = 25.0f;
 		glm::mat4 shadowProj = pipeline.GetPerspectiveProjection(90.0f, mShadowAtlasWidth / mShadowAtlasHeight, 1.0f, zFar);
 	
-		//mShadowShader->Use();
-		//for (uint32_t i = 0; i < NUM_LAYERS; i++)
-		//{
-		//	mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp));
-		//}
-		//mShadowShader->SetFloat("farPlane", zFar);
-		//mShadowShader->SetVec3("lightPos", mLightPos);
+		mShadowShader->Use();
+		for (uint32_t i = 0; i < NUM_LAYERS; i++)
+		{
+			mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp));
+		}
+		mShadowShader->SetFloat("farPlane", zFar);
+		mShadowShader->SetVec3("lightPos", mLightPos);
 
-		pipeline.SetPos(0.0f, -1.0f, 0.0f);
+		pipeline.SetPos(0.0f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mPlane.SetTransform(pipeline.GetTransform());
-		//mPlane.ShadowDraw();
+		mPlane.SetShadowTransform(pipeline.GetTransform());
+		mPlane.ShadowDraw();
 
 		std::vector<glm::vec3> mPos;
-		mPos.push_back(glm::vec3( 5.0f, 0.5f,  0.0f));
-		mPos.push_back(glm::vec3(-5.0f, 0.5f,  0.0f));
-		mPos.push_back(glm::vec3( 0.0f, 0.5f,  5.0f));
-		mPos.push_back(glm::vec3( 0.0f, 0.5f, -5.0f));
+		mPos.push_back(glm::vec3( 3.0f, 0.5f,  0.0f));
+		mPos.push_back(glm::vec3(-3.0f, 0.5f,  0.0f));
+		mPos.push_back(glm::vec3( 0.0f, 0.5f,  3.0f));
+		mPos.push_back(glm::vec3( 0.0f, 0.5f, -3.0f));
 
 		for (int i = 0; i < 4; i++)
 		{
 			pipeline.SetPos(mPos[i].x, mPos[i].y, mPos[i].z);
-			mCubes[i].SetTransform(pipeline.GetTransform());
-			//mCubes[i].ShadowDraw();
+			mCubes[i].SetShadowTransform(pipeline.GetTransform());
+			mCubes[i].ShadowDraw();
 		}
+
+		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
+
+		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 
 		pipeline.SetCamera(mCamera);
 
 		mShader->Use();
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());
 		mShader->SetMat4("view", pipeline.GetCameraView());
+		mShader->SetVec3("lightPos", mLightPos);
+		mShader->SetVec3("lightColor", mLightColor);
+		mShader->SetVec3("viewPos", mCamera->mPosition);
+		mShader->SetFloat("farPlane", zFar);
 
 		mPlane.Draw();
 
@@ -174,7 +186,8 @@ private:
 		{ glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
 	};
 
-	glm::vec3 mLightPos = glm::vec3(0.0f);
+	glm::vec3 mLightPos = glm::vec3(0.0f, 0.5f, 0.0f);
+	glm::vec3 mLightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 };
 
 DECLARE_MAIN(point_shadows)

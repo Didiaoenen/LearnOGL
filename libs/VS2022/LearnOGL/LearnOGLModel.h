@@ -38,11 +38,11 @@ namespace OGL
 		
 		std::vector<LearnOGLMesh*> mMeshs;
 	
-		LearnOGLMaterial* mMaterial;
+		LearnOGLMaterial* mMaterial{ nullptr };
 
-		LearnOGLMaterial* mShadowMaterial;
+		LearnOGLMaterial* mShadowMaterial{ nullptr };
 
-		glm::mat4 mTransform;
+		glm::mat4 mTransform{};
 
 	private:
 		void LoadModel();

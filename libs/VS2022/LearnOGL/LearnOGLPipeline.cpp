@@ -5,10 +5,7 @@ namespace OGL
 	LearnOGLPipeline::LearnOGLPipeline() :
 		mPos(glm::vec3(0.0f)),
 		mScale(glm::vec3(1.0f)),
-		mRotate(glm::vec3(0.0f)),
-		mCamera(nullptr),
-		mPersInfo(),
-		mOrthoInfo()
+		mRotate(glm::vec3(0.0f))
 	{
 
 	}
@@ -71,6 +68,8 @@ namespace OGL
 		{
 			return glm::ortho(mOrthoInfo->left, mOrthoInfo->right, mOrthoInfo->bottom, mOrthoInfo->top, mOrthoInfo->zNear, mOrthoInfo->zFar);
 		}
+
+		return glm::mat4(1.0);
 	}
 
 	glm::mat4 LearnOGLPipeline::GetPerspectiveProjection(float fov, float aspect, float znear, float zfar)

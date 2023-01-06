@@ -2,18 +2,7 @@
 
 namespace OGL
 {
-	LearnOGLBatch::LearnOGLBatch() :
-		mPrimitiveType(0),
-		mVerts(0),
-		mVAO(0),
-		pVertCount(0),
-		mBatchDone(false),
-		mVertexArray(0),
-		mNormalArray(0),
-		mTexCoordArray(0),
-		pVerts(nullptr),
-		pNorms(nullptr),
-		pTexCoord(nullptr)
+	LearnOGLBatch::LearnOGLBatch()
 	{
 	}
 

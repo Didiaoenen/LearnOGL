@@ -7,14 +7,7 @@ namespace OGL
 {
 	LearnOGLApp* LearnOGLApp::mApp = nullptr;
 	
-	LearnOGLApp::LearnOGLApp() :
-		info(),
-		mCameraType(CameraType::Perspective),
-		mPersInfo(),
-		mOrthoInfo(),
-		mCamera(nullptr),
-		mContext(nullptr),
-		mWindow(nullptr)
+	LearnOGLApp::LearnOGLApp()
 	{
 	}
 

@@ -17,7 +17,7 @@ uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform vec3 viewPos;
 
-float colorValue = 0.3;
+float colorValue = 0.1;
 float specularValue = 64.0;
 
 int pcfLevel = 3;
@@ -30,7 +30,7 @@ float ShadowCalculation(vec4 lightSpacePos)
 	vec3 lightDir = normalize(lightPos - fs_in.WPos);
 	float bias = max(0.05 * (1.0 - dot(lightDir, normal)), 0.005);
 
-//	float shadow = projCoords.z - bias > texture(depthMap, projCoords.xy).r ? 1.0f : 0.0f;
+//	float shadow = projCoords.z - bias > texture(depthMap, projCoords.xy).r ? 1.0 : 0.0;
 	
 	//pcf
 	float shadow = 0.0;

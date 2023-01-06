@@ -34,9 +34,9 @@ namespace OGL
 		glm::vec3 mScale;
 		glm::vec3 mRotate;
 
-		LearnOGLCamera* mCamera;
+		LearnOGLCamera* mCamera{ nullptr };
 
-		PersProjInfo* mPersInfo;
-		OrthoProjInfo* mOrthoInfo;
+		PersProjInfo* mPersInfo{ nullptr };
+		OrthoProjInfo* mOrthoInfo{ nullptr };
 	};
 }

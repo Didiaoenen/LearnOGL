@@ -1,15 +1,11 @@
 #include "shadow_material.h"
 
-shadow_material::shadow_material() :
-	mDiffuseTex(nullptr),
-	mDepthAttribID(0)
+shadow_material::shadow_material()
 {
 }
 
 shadow_material::shadow_material(OGL::LearnOGLShader* shader) :
-	OGL::LearnOGLMaterial(shader),
-	mDiffuseTex(nullptr),
-	mDepthAttribID(0)
+	OGL::LearnOGLMaterial(shader)
 {
 	mShader->Use();
 	mShader->SetTexUnit(mDiffuseTexLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x00);

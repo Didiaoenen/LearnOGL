@@ -10,7 +10,7 @@ namespace OGL
 	{
 	public:
 		LearnOGLCubeMapFBO();
-		LearnOGLCubeMapFBO(GLfloat width, GLfloat height);
+		LearnOGLCubeMapFBO(uint32_t width, uint32_t height);
 		~LearnOGLCubeMapFBO();
 
 		virtual void BindForWriting() override;
@@ -22,7 +22,7 @@ namespace OGL
 		bool Init(uint32_t width, uint32_t height);
 
 	private:
-		GLuint mCubeMapTex{0};
+		GLuint mCubeMapTex{ 0 };
 
 	};
 }

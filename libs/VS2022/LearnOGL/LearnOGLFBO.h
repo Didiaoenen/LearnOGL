@@ -19,11 +19,11 @@ namespace OGL
 		virtual void BindForReading(GLenum textureUnit = GL_TEXTURE0) = 0;
 
 	public:
-		uint32_t mWidth;
-		uint32_t mHeight;
+		uint32_t mWidth{ 0 };
+		uint32_t mHeight{ 0 };
 
 	protected:
-		GLuint mFBO;
+		GLuint mFBO{ 0 };
 
 	};
 }
