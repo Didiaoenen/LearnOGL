@@ -1,23 +1,16 @@
 ﻿
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
-#include "../LearnOGL/LearnOGLApp.h"
-#include "../LearnOGL/LearnOGLTools.h"
-#include "../LearnOGL/LearnOGLCamera.h"
-#include "../LearnOGL/LearnOGLMaterial.h"
-#include "../LearnOGL/LearnOGLDepthFBO.h"
-
-#include <iostream>
+#include <LearnOGLApp.h>
+#include <LearnOGLTools.h>
+#include <LearnOGLCommand.h>
+#include <LearnOGLMaterial.h>
+#include <LearnOGLDepthFBO.h>
 
 class shadow_mapping_depth : public OGL::LearnOGLApp
 {
 public:
 	virtual bool Init() override
 	{
-		mCameraType = OGL::CameraType::Perspective;
-		mPersInfo.fov = 45.0f;
+		mPersInfo.fov = 60.0f;
 		mPersInfo.width = info.windowWidth;
 		mPersInfo.height = info.windowHeight;
 		mPersInfo.zFar = 100.0f;
@@ -27,8 +20,7 @@ public:
 
 	virtual void Setup() override
 	{
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 10.0f));
-		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
+		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
 
 		mSimpleDepthShader = new OGL::LearnOGLShader("3.1.1.shadow_mapping_depth.vs.vert", "3.1.1.shadow_mapping_depth.fs.frag");
 		mDebugDepthShader = new OGL::LearnOGLShader("3.1.1.debug_quad_depth.vs.vert", "3.1.1.debug_quad_depth.fs.frag");
@@ -69,9 +61,6 @@ public:
 	}
 
 private:
-
-	OGL::LearnOGLCamera* mCamera;
-
 	OGL::LearnOGLMaterial* mSimpleDepthMaterial;
 	OGL::LearnOGLMaterial* mDepthDepthMaterial;
 
@@ -79,9 +68,7 @@ private:
 	OGL::LearnOGLShader* mDebugDepthShader;
 
 	OGL::LearnOGLTools* mTools;
-
 	OGL::LearnOGLBatch mPlane;
-
 	OGL::LearnOGLDepthFBO* mDepthFBO;
 };
 

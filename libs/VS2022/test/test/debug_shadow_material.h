@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../LearnOGL/LearnOGLMaterial.h"
-#include "../LearnOGL/LearnOGLDepthFBO.h"
+#include <LearnOGLMaterial.h>
 
 #include <string>
 

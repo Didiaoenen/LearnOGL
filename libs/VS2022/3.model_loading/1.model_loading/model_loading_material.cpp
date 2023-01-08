@@ -1,4 +1,4 @@
-#include "1.model_loading_material.h"
+#include "model_loading_material.h"
 
 model_loading_material::model_loading_material() :
 	mDiffuseTexture(nullptr),

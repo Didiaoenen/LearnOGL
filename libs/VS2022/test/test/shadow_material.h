@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../LearnOGL/LearnOGLMaterial.h"
+#include <LearnOGLMaterial.h>
 
 class shadow_material : public OGL::LearnOGLMaterial
 {

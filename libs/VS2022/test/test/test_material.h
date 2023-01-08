@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../LearnOGL/LearnOGLMaterial.h"
+#include <LearnOGLMaterial.h>
 
 class test_material : public OGL::LearnOGLMaterial
 {

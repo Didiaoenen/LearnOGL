@@ -1,14 +1,10 @@
 ﻿
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-
-#include "../LearnOGL/LearnOGLApp.h"
-#include "../LearnOGL/LearnOGLCamera.h"
-#include "../LearnOGL/LearnOGLMaterial.h"
-#include "../LearnOGL/LearnOGLCommand.h"
-#include "../LearnOGL/LearnOGLPipeline.h"
-#include "../LearnOGL/LearnOGLTools.h"
-#include "../LearnOGL/LearnOGLBatch.h"
+#include <LearnOGLApp.h>
+#include <LearnOGLMaterial.h>
+#include <LearnOGLCommand.h>
+#include <LearnOGLPipeline.h>
+#include <LearnOGLTools.h>
+#include <LearnOGLBatch.h>
 
 #include "shadow_material.h"
 #include "shadow_depth_material.h"

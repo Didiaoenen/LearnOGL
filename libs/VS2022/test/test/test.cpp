@@ -1,18 +1,12 @@
 ﻿
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-#include "../LearnOGL/LearnOGLApp.h"
-#include "../LearnOGL/LearnOGLCamera.h"
-#include "../LearnOGL/LearnOGLTools.h"
-#include "../LearnOGL/LearnOGLPipeline.h"
-#include "../LearnOGL/LearnOGLDepthFBO.h"
+#include <LearnOGLApp.h>
+#include <LearnOGLTools.h>
+#include <LearnOGLPipeline.h>
+#include <LearnOGLDepthFBO.h>
 
 #include "test_material.h"
 #include "shadow_material.h"
 #include "debug_shadow_material.h"
-
-#include <iostream>
 
 class test : public OGL::LearnOGLApp
 {
@@ -40,8 +34,6 @@ public:
 
 	virtual void Setup() override
 	{
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 5.0f));
-
 		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
 		mShader = new OGL::LearnOGLShader("test.vs.vert", "test.fs.frag");
@@ -91,7 +83,7 @@ public:
 
 	void RenderShadow()
 	{
-		mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight, 0);
+		mCommand->GetTemporaryRT(mDepthAttribID, info.windowWidth, info.windowHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
 		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
@@ -182,8 +174,6 @@ private:
 	float mShadowWidth = 16.0f;
 	float mShadowHeight = 9.0f;
 	
-	OGL::LearnOGLCamera* mCamera;
-
 	test_material* mMaterial;
 	test_material* mBoxMaterial;
 	shadow_material* mShadowMaterial;

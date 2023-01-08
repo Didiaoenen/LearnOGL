@@ -15,24 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="1.model_loading.cpp">
+    <ClCompile Include="4.normal_mapping.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="model_loading_material.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="1.model_loading.fs.frag">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="1.model_loading.vs.vert">
-      <Filter>资源文件</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="model_loading_material.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

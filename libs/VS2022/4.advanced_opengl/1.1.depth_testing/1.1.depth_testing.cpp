@@ -1,13 +1,11 @@
 ﻿
-#include <iostream>
+#include <LearnOGLApp.h>
 
-class depth_testing
+class depth_testing : public OGL::LearnOGLApp
 {
 public:
 
-	depth_testing()
-	{
-	}
-
 private:
 };
+
+DECLARE_MAIN(depth_testing)

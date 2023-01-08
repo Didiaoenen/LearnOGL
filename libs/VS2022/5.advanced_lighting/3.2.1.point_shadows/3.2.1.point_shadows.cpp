@@ -1,12 +1,9 @@
 ﻿
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-
-#include "../LearnOGL/LearnOGLApp.h"
-#include "../LearnOGL/LearnOGLTools.h"
-#include "../LearnOGL/LearnOGLCommand.h"
-#include "../LearnOGL/LearnOGLPipeline.h"
-#include "../LearnOGL/LearnOGLMaterial.h"
+#include <LearnOGLApp.h>
+#include <LearnOGLTools.h>
+#include <LearnOGLCommand.h>
+#include <LearnOGLPipeline.h>
+#include <LearnOGLMaterial.h>
 
 #include "point_shadow_material.h"
 #include "point_shadow_depth_material.h"

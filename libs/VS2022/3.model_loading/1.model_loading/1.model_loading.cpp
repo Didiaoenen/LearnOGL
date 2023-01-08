@@ -1,34 +1,19 @@
 ﻿
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <LearnOGLApp.h>
+#include <LearnOGLModel.h>
+#include <LearnOGLCommand.h>
+#include <LearnOGLPipeline.h>
 
-#include "../LearnOGL/LearnOGLApp.h"
-#include "../LearnOGL/LearnOGLModel.h"
-#include "../LearnOGL/LearnOGLCamera.h"
-#include "../LearnOGL/LearnOGLPipeline.h"
-
-#include "1.model_loading_material.h"
-
-#include <iostream>
+#include "model_loading_material.h"
 
 class model_loading : public OGL::LearnOGLApp
 {
 public:
-
-	model_loading() :
-		mMaterial(nullptr),
-		mCamera(nullptr),
-		mShader(nullptr),
-		mModel(nullptr)
-	{
-	}
-
 	virtual bool Init() override
 	{
 		OGL::LearnOGLApp::Init();
 
-		mCameraType = OGL::CameraType::Perspective;
-		mPersInfo.fov = 45.0f;
+		mPersInfo.fov = 60.0f;
 		mPersInfo.width = info.windowWidth;
 		mPersInfo.height = info.windowHeight;
 		mPersInfo.zFar = 100.0f;
@@ -39,8 +24,9 @@ public:
 
 	virtual void Setup() override
 	{
-		mCamera = new OGL::LearnOGLCamera(glm::vec3(0.0f, 0.0f, 10.0f));
-		mCamera->SetCameraInfo(mCameraType, &mPersInfo);
+		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
+
+		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
 		mShader = new OGL::LearnOGLShader("1.model_loading.vs.vert", "1.model_loading.fs.frag");
 		mMaterial = new model_loading_material(mShader);
@@ -55,8 +41,10 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
+
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+		mContext->ExecuteCommand(mCommand);
 
 		RenderModel();
 	}
@@ -80,7 +68,8 @@ public:
 private:
 	model_loading_material* mMaterial;
 
-	OGL::LearnOGLCamera* mCamera;
+	OGL::LearnOGLCommand* mCommand;
+
 	OGL::LearnOGLShader* mShader;
 	OGL::LearnOGLModel* mModel;
 };

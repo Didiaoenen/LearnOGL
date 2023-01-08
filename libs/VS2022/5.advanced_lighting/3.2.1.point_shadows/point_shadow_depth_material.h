@@ -2,8 +2,6 @@
 
 #include <LearnOGLMaterial.h>
 
-#include <string>
-
 class point_shadow_depth_material : public OGL::LearnOGLMaterial
 {
 public:
