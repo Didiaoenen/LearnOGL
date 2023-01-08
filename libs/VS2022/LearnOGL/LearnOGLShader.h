@@ -46,7 +46,7 @@ namespace OGL
 		GLuint GetUniformLocation(std::string locName) const;
 
 	public:
-		GLuint mID;
+		GLuint mID{ 0 };
 
 	private:
 		void CheckCompileErrors(GLuint shader, CompileType type);

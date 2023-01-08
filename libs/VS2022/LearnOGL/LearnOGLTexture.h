@@ -27,7 +27,7 @@ namespace OGL
 		
 
 	public:
-		GLuint mID;
+		GLuint mID{ 0 };
 		std::string mPath;
 		GLenum mTargetType;
 		TextureType mTextureType;

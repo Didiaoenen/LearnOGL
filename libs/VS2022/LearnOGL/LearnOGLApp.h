@@ -45,18 +45,18 @@ namespace OGL
 	public:
 
 	protected:
-		AppInfo info;
-		CameraType mCameraType;
-		PersProjInfo mPersInfo;
-		OrthoProjInfo mOrthoInfo;
+		AppInfo info{};
+		CameraType mCameraType{};
+		PersProjInfo mPersInfo{};
+		OrthoProjInfo mOrthoInfo{};
 
 		static LearnOGLApp* mApp;
 
-		LearnOGLCamera* mCamera;
+		LearnOGLCamera* mCamera{ nullptr };
 
-		LearnOGLContext* mContext;
+		LearnOGLContext* mContext{ nullptr };
 
-		GLFWwindow* mWindow;
+		GLFWwindow* mWindow{ nullptr };
 
 		static void GLFWWindowSizeCallback(GLFWwindow* window, int width, int height);
 

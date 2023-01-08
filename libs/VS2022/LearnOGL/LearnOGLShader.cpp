@@ -8,7 +8,6 @@
 namespace OGL
 {
 	LearnOGLShader::LearnOGLShader(const char* vertexPath, const char* fragmentPath, const char* geometryPath/* = nullptr*/)
-		: mID(0)
 	{
 		std::string vertexCode;
 		std::string fragmentCode;
