@@ -40,11 +40,25 @@ namespace OGL
 			pNorms = nullptr;
 		}
 
-		if (pTexCoord)
+		if (pTexCoords)
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
 			glUnmapBuffer(GL_ARRAY_BUFFER);
-			pTexCoord = nullptr;
+			pTexCoords = nullptr;
+		}
+
+		if (pTangs)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+			pTangs = nullptr;
+		}
+
+		if (pBitangs)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+			pBitangs = nullptr;
 		}
 
 		glBindVertexArray(mVAO);
@@ -63,11 +77,25 @@ namespace OGL
 			glVertexAttribPointer((GLuint)VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
-		if (mTexCoordArray > 0)
+		if (mTexCoordsArray > 0)
 		{
 			glEnableVertexAttribArray((GLuint)VertAttrib::TexCoord);
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
 			glVertexAttribPointer((GLuint)VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		}
+
+		if (mTangentArray > 0)
+		{
+			glEnableVertexAttribArray((GLuint)VertAttrib::Tangent);
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			glVertexAttribPointer((GLuint)VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		}
+
+		if (mBitangentArray > 0)
+		{
+			glEnableVertexAttribArray((GLuint)VertAttrib::Bitangent);
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			glVertexAttribPointer((GLuint)VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		}
 
 		mBatchDone = true;
@@ -104,18 +132,48 @@ namespace OGL
 		}
 	}
 
-	void LearnOGLBatch::CopyTexCoordData2f(glm::vec2* texcoord)
+	void LearnOGLBatch::CopyTexCoordData2f(glm::vec2* texcoords)
 	{
-		if (mTexCoordArray == 0)
+		if (mTexCoordsArray == 0)
 		{
-			glGenBuffers(1, &mTexCoordArray);
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * mVerts, texcoord, GL_DYNAMIC_DRAW);
+			glGenBuffers(1, &mTexCoordsArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * mVerts, texcoords, GL_DYNAMIC_DRAW);
 		}
 		else
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 4 * mVerts, texcoord);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 4 * mVerts, texcoords);
+		}
+	}
+
+	void LearnOGLBatch::CopyTangentData3f(glm::vec3* tangents)
+	{
+		if (mTangentArray == 0)
+		{
+			glGenBuffers(1, &mTangentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * mVerts, tangents, GL_DYNAMIC_DRAW);
+		}
+		else
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 3 * mVerts, tangents);
+		}
+	}
+
+	void LearnOGLBatch::CopyBitangentData3f(glm::vec3* bitangents)
+	{
+		if (mBitangentArray == 0)
+		{
+			glGenBuffers(1, &mBitangentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * mVerts, bitangents, GL_DYNAMIC_DRAW);
+		}
+		else
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(GLfloat) * 3 * mVerts, bitangents);
 		}
 	}
 
@@ -217,17 +275,17 @@ namespace OGL
 
 	void LearnOGLBatch::TexCoord2f(GLclampf s, GLclampf t)
 	{
-		if (mTexCoordArray == 0)
+		if (mTexCoordsArray == 0)
 		{
-			glGenBuffers(1, &mTexCoordArray);
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
+			glGenBuffers(1, &mTexCoordsArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * mVerts, NULL, GL_DYNAMIC_DRAW);
 		}
 
-		if (!pTexCoord)
+		if (!pTexCoords)
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
-			pTexCoord = (glm::vec2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
+			pTexCoords = (glm::vec2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		}
 
 		if (pVertCount >= mVerts)
@@ -235,23 +293,23 @@ namespace OGL
 			return;
 		}
 
-		pTexCoord[pVertCount].s = s;
-		pTexCoord[pVertCount].t = t;
+		pTexCoords[pVertCount].s = s;
+		pTexCoords[pVertCount].t = t;
 	}
 
 	void LearnOGLBatch::TexCoord2fv(glm::vec2 texcoord)
 	{
-		if (mTexCoordArray == 0)
+		if (mTexCoordsArray == 0)
 		{
-			glGenBuffers(1, &mTexCoordArray);
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
+			glGenBuffers(1, &mTexCoordsArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 2 * mVerts, NULL, GL_DYNAMIC_DRAW);
 		}
 
-		if (!pTexCoord)
+		if (!pTexCoords)
 		{
-			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordArray);
-			pTexCoord = (glm::vec2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+			glBindBuffer(GL_ARRAY_BUFFER, mTexCoordsArray);
+			pTexCoords = (glm::vec2*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		}
 
 		if (pVertCount >= mVerts)
@@ -259,7 +317,103 @@ namespace OGL
 			return;
 		}
 
-		pTexCoord = &texcoord;
+		pTexCoords = &texcoord;
+	}
+
+	void LearnOGLBatch::Tangent3f(GLfloat x, GLfloat y, GLfloat z)
+	{
+		if (mTangentArray == 0)
+		{
+			glGenBuffers(1, &mTangentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * mVerts, NULL, GL_DYNAMIC_DRAW);
+		}
+
+		if (!pTangs)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			pTangs = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		}
+
+		if (pVertCount >= mVerts)
+		{
+			return;
+		}
+
+		pTangs[pVertCount].x = x;
+		pTangs[pVertCount].y = y;
+		pTangs[pVertCount].z = z;
+	}
+
+	void LearnOGLBatch::Tangent3fv(glm::vec3 tangent)
+	{
+		if (mTangentArray == 0)
+		{
+			glGenBuffers(1, &mTangentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * mVerts, NULL, GL_DYNAMIC_DRAW);
+		}
+
+		if (!pTangs)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mTangentArray);
+			pTangs = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		}
+
+		if (pVertCount >= mVerts)
+		{
+			return;
+		}
+
+		pTangs = &tangent;
+	}
+
+	void LearnOGLBatch::Bitangent3f(GLfloat x, GLfloat y, GLfloat z)
+	{
+		if (mBitangentArray == 0)
+		{
+			glGenBuffers(1, &mBitangentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * mVerts, NULL, GL_DYNAMIC_DRAW);
+		}
+
+		if (!pBitangs)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			pBitangs = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		}
+
+		if (pVertCount >= mVerts)
+		{
+			return;
+		}
+
+		pBitangs[pVertCount].x = x;
+		pBitangs[pVertCount].y = y;
+		pBitangs[pVertCount].z = z;
+	}
+
+	void LearnOGLBatch::Bitangent3fv(glm::vec3 bitangent)
+	{
+		if (mBitangentArray == 0)
+		{
+			glGenBuffers(1, &mBitangentArray);
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * mVerts, NULL, GL_DYNAMIC_DRAW);
+		}
+
+		if (!pBitangs)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, mBitangentArray);
+			pBitangs = (glm::vec3*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		}
+
+		if (pVertCount >= mVerts)
+		{
+			return;
+		}
+
+		pBitangs = &bitangent;
 	}
 
 	void LearnOGLBatch::Draw()
@@ -270,8 +424,6 @@ namespace OGL
 		}
 
 		mMaterial->Draw();
-
-		mMaterial->mShader->SetMat4("model", mTransform);
 
 		glBindVertexArray(mVAO);
 		glDrawArrays(mPrimitiveType, 0, mVerts);

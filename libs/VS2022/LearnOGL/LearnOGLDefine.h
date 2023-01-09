@@ -78,7 +78,7 @@ namespace OGL
 		Normal,
 		TexCoord,
 		Tangent,
-		BitTangent,
+		Bitangent,
 	};
 
 	enum class TexCoordIndex

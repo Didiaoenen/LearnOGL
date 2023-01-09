@@ -24,7 +24,9 @@ namespace OGL
 
 		void CopyVertexData3f(glm::vec3* vertexs);
 		void CopyNormalData3f(glm::vec3* normals);
-		void CopyTexCoordData2f(glm::vec2* texcoord);
+		void CopyTexCoordData2f(glm::vec2* texcoords);
+		void CopyTangentData3f(glm::vec3* tangents);
+		void CopyBitangentData3f(glm::vec3* bitangents);
 
 		void Vertex3f(GLfloat x, GLfloat y, GLfloat z);
 		void Vertex3fv(glm::vec3 vertex);
@@ -34,6 +36,12 @@ namespace OGL
 
 		void TexCoord2f(GLclampf s, GLclampf t);
 		void TexCoord2fv(glm::vec2 texcoord);
+
+		void Tangent3f(GLfloat x, GLfloat y, GLfloat z);
+		void Tangent3fv(glm::vec3 tangent);
+
+		void Bitangent3f(GLfloat x, GLfloat y, GLfloat z);
+		void Bitangent3fv(glm::vec3 bitangent);
 
 		virtual void Draw() override;
 
@@ -50,10 +58,14 @@ namespace OGL
 
 		GLuint mVertexArray;
 		GLuint mNormalArray;
-		GLuint mTexCoordArray;
+		GLuint mTexCoordsArray;
+		GLuint mTangentArray;
+		GLuint mBitangentArray;
 
 		glm::vec3* pVerts;
 		glm::vec3* pNorms;
-		glm::vec2* pTexCoord;
+		glm::vec2* pTexCoords;
+		glm::vec3* pTangs;
+		glm::vec3* pBitangs;
 	};
 }

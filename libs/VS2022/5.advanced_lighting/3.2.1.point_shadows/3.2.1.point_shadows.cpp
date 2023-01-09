@@ -135,10 +135,12 @@ public:
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 		mShader->SetFloat("farPlane", zFar);
 
+		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
 
 		for (int i = 0; i < 4; i++)
 		{
+			mCubes[i].SetTransform(pipeline.GetTransform());
 			mCubes[i].Draw();
 		}
 	}

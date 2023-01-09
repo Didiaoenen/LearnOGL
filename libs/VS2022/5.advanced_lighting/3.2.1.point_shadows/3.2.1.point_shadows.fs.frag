@@ -25,7 +25,7 @@ float ShadowCalculation(vec3 fragPos)
 {
 	vec3 fragToLight = fragPos - lightPos;
 	float depth = texture(depthMap, fragToLight).r;
-	return length(fragToLight) - 0.05f > depth * farPlane ? 1.0 : 0.0;
+	return length(fragToLight) - 0.05 > depth * farPlane ? 1.0 : 0.0;
 }
 
 void main()

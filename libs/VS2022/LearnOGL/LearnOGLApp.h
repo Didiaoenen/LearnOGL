@@ -58,6 +58,9 @@ namespace OGL
 
 		GLFWwindow* mWindow{ nullptr };
 
+		double mDT = 0;
+		double mLastTime = 0;
+
 		static void GLFWWindowSizeCallback(GLFWwindow* window, int width, int height);
 
 		static void GLFWWindowMouseCallback(GLFWwindow* window, double xpos, double ypos);
@@ -68,8 +71,6 @@ namespace OGL
 		double mLastX = 0;
 		double mLastY = 0;
 
-		double mDT = 0;
-		double mLastTime = 0;
 	};
 }
 
