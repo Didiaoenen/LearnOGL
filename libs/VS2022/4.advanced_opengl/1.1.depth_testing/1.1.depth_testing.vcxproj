@@ -132,10 +132,6 @@
   <ItemGroup>
     <ClCompile Include="1.1.depth_testing.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="1.model_loading.fs.frag" />
-    <None Include="1.model_loading.vs.vert" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

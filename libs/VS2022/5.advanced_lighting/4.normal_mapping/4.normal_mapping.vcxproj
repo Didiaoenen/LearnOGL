@@ -131,6 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="4.normal_mapping.cpp" />
+    <ClCompile Include="normal_material.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="4.normal_mapping.fs.frag" />
+    <None Include="4.normal_mapping.vs.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="normal_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

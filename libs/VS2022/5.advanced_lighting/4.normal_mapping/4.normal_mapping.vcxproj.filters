@@ -18,5 +18,21 @@
     <ClCompile Include="4.normal_mapping.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="normal_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="4.normal_mapping.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="4.normal_mapping.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="normal_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

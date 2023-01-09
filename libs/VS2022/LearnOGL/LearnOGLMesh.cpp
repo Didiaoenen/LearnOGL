@@ -45,7 +45,7 @@ namespace OGL
 		glVertexAttribPointer((GLuint)VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::tangent));
 
 		glEnableVertexAttribArray((GLuint)VertAttrib::Bitangent);
-		glVertexAttribPointer((GLuint)VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::bittangent));
+		glVertexAttribPointer((GLuint)VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Vertex::bitangent));
 
 		glBindVertexArray(0);
 	}

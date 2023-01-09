@@ -146,7 +146,7 @@ namespace OGL
 				vec3.x = mesh->mBitangents[i].x;
 				vec3.y = mesh->mBitangents[i].y;
 				vec3.z = mesh->mBitangents[i].z;
-				vertex.bittangent = vec3;
+				vertex.bitangent = vec3;
 			}
 			else
 			{

@@ -19,6 +19,7 @@ public:
 		mPersInfo.height = info.windowHeight;
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
+		return true;
 	}
 
 	virtual void Setup() override

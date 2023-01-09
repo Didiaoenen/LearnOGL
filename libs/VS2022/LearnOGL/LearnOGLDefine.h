@@ -69,7 +69,7 @@ namespace OGL
 		glm::vec3 normal;
 		glm::vec2 texcoords;
 		glm::vec3 tangent;
-		glm::vec3 bittangent;
+		glm::vec3 bitangent;
 	};
 
 	enum class VertAttrib

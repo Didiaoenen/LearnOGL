@@ -26,4 +26,16 @@ void main()
 	vs_out.WPos = vec3(model * vec4(aPos, 1.0));
 	vs_out.TexCoords = aTexCoords;
 
+	mat3 normalMatrix = transpose(inverse(mat3(model)));
+	vec3 T = normalize(normalMatrix * aTangent);
+	vec3 N = normalize(normalMatrix * aNormal);
+	T = normalize(T - dot(T, N) * N);
+	vec3 B = cross(N, T);
+
+	mat3 TBN = transpose(mat3(T, B, N));
+	vs_out.TangentLightPos = TBN * lightPos;
+	vs_out.TangentViewPos = TBN * viewPos;
+	vs_out.TangentPos = TBN * vs_out.WPos;
+
+	gl_Position = projection * view * model * vec4(aPos, 1.0);
 }
