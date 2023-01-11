@@ -20,7 +20,7 @@ namespace OGL
 	class LearnOGLTexture
 	{
 	public:
-		LearnOGLTexture(const std::string path, TextureType textureType = TextureType::Diffuse, GLenum targetType = GL_TEXTURE_2D);
+		LearnOGLTexture(const std::string path, bool flip = false, TextureType textureType = TextureType::Diffuse, GLenum targetType = GL_TEXTURE_2D);
 		~LearnOGLTexture();
 
 		void Bind(GLenum textureUnit = GL_TEXTURE0);

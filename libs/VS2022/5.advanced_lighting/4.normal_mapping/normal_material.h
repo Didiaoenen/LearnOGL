@@ -2,7 +2,7 @@
 
 #include <LearnOGLMaterial.h>
 
-class normal_material : OGL::LearnOGLMaterial
+class normal_material : public OGL::LearnOGLMaterial
 {
 public:
 	normal_material();

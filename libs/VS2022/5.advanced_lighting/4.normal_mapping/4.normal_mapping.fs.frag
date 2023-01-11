@@ -14,26 +14,20 @@ in VS_OUT
 uniform sampler2D diffuseTex;
 uniform sampler2D normalTex;
 
-uniform vec3 lightPos;
 uniform vec3 lightColor;
-uniform vec3 viewPos;
 
 float colorValue = 0.1;
-float specularValue = 64;
+float specularValue = 32;
 
 void main()
 {
 	//
-	vec3 normal = texture(normalTex, fs_in.TexCoords).rgb;
-
-	//
-	normal = normalize(normal * 2.0f - 1.0);
-
-	//
 	vec3 color = texture(diffuseTex, fs_in.TexCoords).rgb;
+	vec3 normal = texture(normalTex, fs_in.TexCoords).rgb;
+	normal = normalize(normal * 2.0 - 1.0);
 
 	//
-	vec3 ambient = colorValue * color;
+	vec3 ambient = colorValue * lightColor;
 
 	//
 	vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentPos);

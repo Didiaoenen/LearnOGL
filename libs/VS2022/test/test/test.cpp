@@ -78,7 +78,7 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		RenderPass();
+		RenderShadow();
 	}
 
 	void RenderShadow()
@@ -88,21 +88,22 @@ public:
 		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
 
-		RenderShadowPass();
+		OGL::LearnOGLPipeline pipeline;
+
+		RenderShadowPass(pipeline);
 
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
 
-		RenderDebugShadowPass();
+		RenderDebugShadowPass(pipeline);
 	}
 
-	void RenderShadowPass()
+	void RenderShadowPass(OGL::LearnOGLPipeline pipeline)
 	{
 		mCamera->SetCameraInfo(OGL::CameraType::Orthographic, &mOrthoInfo);
 
-		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 
 		pipeline.SetPos(-2.0f, 0.0f, 0.0f);
@@ -120,7 +121,7 @@ public:
 		mShadowCube.ShadowDraw();
 	}
 
-	void RenderDebugShadowPass()
+	void RenderDebugShadowPass(OGL::LearnOGLPipeline pipeline)
 	{
 		mDebugQuad.Draw();
 	}

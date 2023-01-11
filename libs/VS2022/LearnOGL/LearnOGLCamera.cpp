@@ -19,6 +19,11 @@ namespace OGL
 	{
 	}
 
+	void LearnOGLCamera::SetCameraPos(glm::vec3 position)
+	{
+		mPosition = position;
+	}
+
 	void LearnOGLCamera::SetCameraInfo(CameraType type, const ProjInfo* info)
 	{
 		mCameraType = type;

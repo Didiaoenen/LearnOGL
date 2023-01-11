@@ -18,8 +18,8 @@ namespace OGL
 		static LearnOGLTools* Instance();
 
 		LearnOGLBatch MakePlane(GLfloat radius);
-		LearnOGLBatch MakeQuad(GLfloat radius);
 		LearnOGLBatch MakeCube(GLfloat radius);
+		LearnOGLBatch MakeQuad(GLfloat radius, bool tangent = false, bool bitangent = false);
 
 	private:
 

@@ -222,7 +222,7 @@ namespace OGL
 			return;
 		}
 
-		pVerts = &vertex;
+		pVerts[pVertCount] = vertex;
 	}
 
 	void LearnOGLBatch::Normal3f(GLfloat x, GLfloat y, GLfloat z)
@@ -270,7 +270,7 @@ namespace OGL
 			return;
 		}
 
-		pNorms = &normal;
+		pNorms[pVertCount] = normal;
 	}
 
 	void LearnOGLBatch::TexCoord2f(GLclampf s, GLclampf t)
@@ -317,7 +317,7 @@ namespace OGL
 			return;
 		}
 
-		pTexCoords = &texcoord;
+		pTexCoords[pVertCount] = texcoord;
 	}
 
 	void LearnOGLBatch::Tangent3f(GLfloat x, GLfloat y, GLfloat z)
@@ -365,7 +365,7 @@ namespace OGL
 			return;
 		}
 
-		pTangs = &tangent;
+		pTangs[pVertCount] = tangent;
 	}
 
 	void LearnOGLBatch::Bitangent3f(GLfloat x, GLfloat y, GLfloat z)
@@ -413,7 +413,7 @@ namespace OGL
 			return;
 		}
 
-		pBitangs = &bitangent;
+		pBitangs[pVertCount] = bitangent;
 	}
 
 	void LearnOGLBatch::Draw()

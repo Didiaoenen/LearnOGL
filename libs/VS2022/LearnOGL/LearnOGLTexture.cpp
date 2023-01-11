@@ -2,10 +2,10 @@
 
 namespace OGL
 {
-	LearnOGLTexture::LearnOGLTexture(const std::string path, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
+	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
 		mPath(path), mTextureType(textureType), mTargetType(targetType)
 	{
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(flip);
 
 		auto imageData = stbi_load(path.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
 		if (!imageData)
