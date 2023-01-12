@@ -13,6 +13,7 @@ namespace OGL
 		None = 0,
 		Diffuse,
 		Normal,
+		Parallax,
 		Roughness,
 		Specular,
 	};

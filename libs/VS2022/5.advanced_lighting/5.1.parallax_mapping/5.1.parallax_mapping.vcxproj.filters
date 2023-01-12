@@ -19,4 +19,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="parallax_mapping.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="parallax_mapping.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>
