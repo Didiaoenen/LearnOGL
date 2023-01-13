@@ -131,10 +131,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="5.1.parallax_mapping.cpp" />
+    <ClCompile Include="parallax_material.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="parallax_mapping.fs.frag" />
-    <None Include="parallax_mapping.vs.vert" />
+    <None Include="5.1.parallax_mapping.fs.frag" />
+    <None Include="5.1.parallax_mapping.vs.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="parallax_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

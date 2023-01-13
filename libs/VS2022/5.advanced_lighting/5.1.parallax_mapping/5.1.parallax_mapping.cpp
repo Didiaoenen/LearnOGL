@@ -38,6 +38,7 @@ public:
 
 		mTools = new OGL::LearnOGLTools();
 		mQuad = mTools->MakeQuad(1.0f, true, true);
+		mQuad.mMaterial = mMaterial;
 	}
 
 	virtual void Update(double dt) override

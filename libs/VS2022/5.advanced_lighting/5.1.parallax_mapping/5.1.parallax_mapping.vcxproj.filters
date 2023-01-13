@@ -18,13 +18,21 @@
     <ClCompile Include="5.1.parallax_mapping.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="parallax_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="parallax_mapping.vs.vert">
+    <None Include="5.1.parallax_mapping.vs.vert">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="parallax_mapping.fs.frag">
+    <None Include="5.1.parallax_mapping.fs.frag">
       <Filter>资源文件</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="parallax_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
