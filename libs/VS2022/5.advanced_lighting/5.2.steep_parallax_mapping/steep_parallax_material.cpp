@@ -1,10 +1,10 @@
-#include "parallax_material.h"
+#include "steep_parallax_material.h"
 
-parallax_material::parallax_material()
+steep_parallax_material::steep_parallax_material()
 {
 }
 
-parallax_material::parallax_material(OGL::LearnOGLShader* shader) :
+steep_parallax_material::steep_parallax_material(OGL::LearnOGLShader* shader) :
 	OGL::LearnOGLMaterial(shader)
 {
 	mShader->Use();
@@ -13,14 +13,14 @@ parallax_material::parallax_material(OGL::LearnOGLShader* shader) :
 	mShader->SetTexUnit(mDepthTexLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x02);
 }
 
-parallax_material::~parallax_material()
+steep_parallax_material::~steep_parallax_material()
 {
 }
 
-void parallax_material::Draw()
+void steep_parallax_material::Draw()
 {
 	mShader->Use();
-
+	
 	if (mDiffuseTex)
 	{
 		mDiffuseTex->Bind(GL_TEXTURE0);

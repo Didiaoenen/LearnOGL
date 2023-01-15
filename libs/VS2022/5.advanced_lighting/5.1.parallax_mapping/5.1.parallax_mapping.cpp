@@ -5,6 +5,7 @@
 #include <LearnOGLPipeline.h>
 #include <LearnOGLTools.h>
 
+#include "normal_material.h"
 #include "parallax_material.h"
 
 class parallax_mapping : public OGL::LearnOGLApp
@@ -30,15 +31,23 @@ public:
 
 		mCommand = new OGL::LearnOGLCommand("TestCommand");
 
-		mShader = new OGL::LearnOGLShader("5.1.parallax_mapping.vs.vert", "5.1.parallax_mapping.fs.frag");
-		mMaterial = new parallax_material(mShader);
-		mMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
-		mMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
-		mMaterial->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_disp.jpg", false, OGL::TextureType::Parallax);
+		mNormalShader = new OGL::LearnOGLShader("5.1.parallax_mapping.vs.vert", "5.1.parallax_mapping.fs.frag");
+		mNormalMaterial = new normal_material(mNormalShader);
+		mNormalMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
+		mNormalMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
+
+		mParallaxShader = new OGL::LearnOGLShader("5.1.parallax_mapping.vs.vert", "5.1.parallax_mapping.fs.frag");
+		mParallaxMaterial = new parallax_material(mParallaxShader);
+		mParallaxMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
+		mParallaxMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
+		mParallaxMaterial->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_disp.jpg", false, OGL::TextureType::Parallax);
 
 		mTools = new OGL::LearnOGLTools();
-		mQuad = mTools->MakeQuad(1.0f, true, true);
-		mQuad.mMaterial = mMaterial;
+		mNormalQuad = mTools->MakeQuad(1.0f, true, true);
+		mNormalQuad.mMaterial = mNormalMaterial;
+
+		mParallaxQuad = mTools->MakeQuad(1.0f, true, true);
+		mParallaxQuad.mMaterial = mParallaxMaterial;
 	}
 
 	virtual void Update(double dt) override
@@ -56,21 +65,35 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 
-		mShader->Use();
-		mShader->SetMat4("projection", pipeline.GetCameraProjection());
-		mShader->SetMat4("view", pipeline.GetCameraView());
-		mShader->SetVec3("lightPos", mLightPos);
-		mShader->SetVec3("lightColor", mLightColor);
-		mShader->SetVec3("viewPos", mCamera->mPosition);
-		mShader->SetFloat("heightScale", mheightScale);
+		mNormalShader->Use();
+		mNormalShader->SetMat4("projection", pipeline.GetCameraProjection());
+		mNormalShader->SetMat4("view", pipeline.GetCameraView());
+		mNormalShader->SetVec3("lightPos", mLightPos1);
+		mNormalShader->SetVec3("lightColor", mLightColor);
+		mNormalShader->SetVec3("viewPos", mCamera->mPosition);
 
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		pipeline.SetPos(-1.5f, 0.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		//pipeline.SetRotate(mLastTime * -10.0f, 0.0f, mLastTime * -10.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 
-		mQuad.SetTransform(pipeline.GetTransform());
-		mQuad.Draw();
+		mNormalQuad.SetTransform(pipeline.GetTransform());
+		mNormalQuad.Draw();
+
+		mParallaxShader->Use();
+		mParallaxShader->SetMat4("projection", pipeline.GetCameraProjection());
+		mParallaxShader->SetMat4("view", pipeline.GetCameraView());
+		mParallaxShader->SetVec3("lightPos", mLightPos2);
+		mParallaxShader->SetVec3("lightColor", mLightColor);
+		mParallaxShader->SetVec3("viewPos", mCamera->mPosition);
+		mParallaxShader->SetFloat("heightScale", mheightScale);
+
+		pipeline.SetPos(1.5f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		//pipeline.SetRotate(mLastTime * -10.0f, 0.0f, mLastTime * -10.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		mParallaxQuad.SetTransform(pipeline.GetTransform());
+		mParallaxQuad.Draw();
 	}
 
 	virtual void ShutDown() override
@@ -85,14 +108,18 @@ public:
 
 private:
 	OGL::LearnOGLCommand* mCommand;
-	OGL::LearnOGLShader* mShader;
+	OGL::LearnOGLShader* mNormalShader;
+	OGL::LearnOGLShader* mParallaxShader;
 
 	OGL::LearnOGLTools* mTools;
-	OGL::LearnOGLBatch mQuad;
+	OGL::LearnOGLBatch mNormalQuad;
+	OGL::LearnOGLBatch mParallaxQuad;
 
-	parallax_material* mMaterial;
+	normal_material* mNormalMaterial;
+	parallax_material* mParallaxMaterial;
 
-	glm::vec3 mLightPos = glm::vec3(0.5f, 1.0f, 0.3f);
+	glm::vec3 mLightPos1 = glm::vec3(-1.0f, 1.0f, 0.3f);
+	glm::vec3 mLightPos2 = glm::vec3(2.0f, 1.0f, 0.3f);
 	glm::vec3 mLightColor = glm::vec3(0.2f, 0.2f, 0.2f);
 
 	float mheightScale = 0.1f;

@@ -33,6 +33,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4.normal_mapping", "5.advan
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5.1.parallax_mapping", "5.advanced_lighting\5.1.parallax_mapping\5.1.parallax_mapping.vcxproj", "{F628A420-1FE4-461D-89C3-FE42156283F3}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5.2.steep_parallax_mapping", "5.advanced_lighting\5.2.steep_parallax_mapping\5.2.steep_parallax_mapping.vcxproj", "{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -129,6 +131,14 @@ Global
 		{F628A420-1FE4-461D-89C3-FE42156283F3}.Release|x64.Build.0 = Release|x64
 		{F628A420-1FE4-461D-89C3-FE42156283F3}.Release|x86.ActiveCfg = Release|Win32
 		{F628A420-1FE4-461D-89C3-FE42156283F3}.Release|x86.Build.0 = Release|Win32
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Debug|x64.ActiveCfg = Debug|x64
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Debug|x64.Build.0 = Debug|x64
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Debug|x86.ActiveCfg = Debug|Win32
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Debug|x86.Build.0 = Debug|Win32
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Release|x64.ActiveCfg = Release|x64
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Release|x64.Build.0 = Release|x64
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Release|x86.ActiveCfg = Release|Win32
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,6 +154,7 @@ Global
 		{494CB6EC-5688-4342-92F0-BC34463E5E67} = {70E417F0-02FB-4CD3-9770-86055BC36A45}
 		{F8957A00-076C-4277-805B-851DECEE9136} = {70E417F0-02FB-4CD3-9770-86055BC36A45}
 		{F628A420-1FE4-461D-89C3-FE42156283F3} = {70E417F0-02FB-4CD3-9770-86055BC36A45}
+		{39C9AFC3-A1A1-41A8-969C-6A0F23CA5259} = {70E417F0-02FB-4CD3-9770-86055BC36A45}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9F91B1D-DCEE-4CF4-84EA-B3EE1F242270}

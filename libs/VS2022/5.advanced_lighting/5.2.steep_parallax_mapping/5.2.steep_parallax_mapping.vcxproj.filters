@@ -15,29 +15,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="5.1.parallax_mapping.cpp">
+    <ClCompile Include="5.2.steep_parallax_mapping.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="parallax_material.cpp">
+    <ClCompile Include="steep_normal_material.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="normal_material.cpp">
+    <ClCompile Include="steep_parallax_material.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="5.1.parallax_mapping.vs.vert">
+    <None Include="5.2.steep_parallax_mapping.vs.vert">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="5.1.parallax_mapping.fs.frag">
+    <None Include="5.2.steep_parallax_mapping.fs.frag">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="parallax_material.h">
+    <ClInclude Include="steep_normal_material.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="normal_material.h">
+    <ClInclude Include="steep_parallax_material.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
