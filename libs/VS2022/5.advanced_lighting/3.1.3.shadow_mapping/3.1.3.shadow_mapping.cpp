@@ -48,15 +48,15 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.1.3.shadow_mapping_depth.vs.vert", "3.1.3.shadow_mapping_depth.fs.frag");
 
 		mPlaneMaterial = new shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
+		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
 		mBackpackMaterial = new shadow_material(mShader);
-		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", OGL::TextureType::Diffuse);
+		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", false, OGL::TextureType::Diffuse);
 		mBackpackMaterial->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);

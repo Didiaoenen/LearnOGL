@@ -48,23 +48,23 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.1.2.shadow_mapping_depth.vs.vert", "3.1.2.shadow_mapping_depth.fs.frag");
 	
 		mPlaneMaterial = new shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial1 = new shadow_material(mShader);
-		mCubeMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
+		mCubeMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, OGL::TextureType::Diffuse);
 		mCubeMaterial1->mCommand = mCommand;
 
 		mCubeMaterial2 = new shadow_material(mShader);
-		mCubeMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2.png", OGL::TextureType::Diffuse);
+		mCubeMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2.png", false, OGL::TextureType::Diffuse);
 		mCubeMaterial2->mCommand = mCommand;
 
 		mCubeMaterial3 = new shadow_material(mShader);
-		mCubeMaterial3->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular.png", OGL::TextureType::Diffuse);
+		mCubeMaterial3->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular.png", false, OGL::TextureType::Diffuse);
 		mCubeMaterial3->mCommand = mCommand;
 
 		mCubeMaterial4 = new shadow_material(mShader);
-		mCubeMaterial4->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular_colored.png", OGL::TextureType::Diffuse);
+		mCubeMaterial4->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular_colored.png", false, OGL::TextureType::Diffuse);
 		mCubeMaterial4->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
@@ -106,7 +106,7 @@ public:
 	{
 		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
 
-		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight, 0);
+		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
 		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
 		mContext->ExecuteCommand(mCommand);

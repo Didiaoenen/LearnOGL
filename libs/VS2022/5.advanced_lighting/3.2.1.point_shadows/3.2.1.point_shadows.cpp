@@ -41,11 +41,11 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.2.1.point_shadows_depth.vs.vert", "3.2.1.point_shadows_depth.fs.frag", "3.2.1.point_shadows_depth.gs.geom");
 		
 		mPlaneMaterial = new point_shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new point_shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", OGL::TextureType::Diffuse);
+		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
 		mShadowMaterial = new point_shadow_depth_material(mShadowShader);

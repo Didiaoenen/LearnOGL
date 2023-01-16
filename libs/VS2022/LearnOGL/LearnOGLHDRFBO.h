@@ -1,17 +1,15 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 #include "LearnOGLFBO.h"
 
 namespace OGL
 {
-	class LearnOGLDepthFBO : public LearnOGLFBO
+	class LearnOGLHDRFBO : public LearnOGLFBO
 	{
 	public:
-		LearnOGLDepthFBO();
-		LearnOGLDepthFBO(uint32_t width, uint32_t height);
-		~LearnOGLDepthFBO();
+		LearnOGLHDRFBO();
+		LearnOGLHDRFBO(uint32_t weight, uint32_t height);
+		~LearnOGLHDRFBO();
 
 		virtual void BindForWriting() override;
 		virtual void UnbindForWriting() override;
@@ -22,8 +20,8 @@ namespace OGL
 		bool Init(uint32_t width, uint32_t height);
 
 	private:
-		GLuint mDepthTex{ 0 };
+		GLuint mColorTex{ 0 };
+		GLuint mDepthRBO{ 0 };
 
-		glm::vec4 mBoraderColor = glm::vec4(1.0);
 	};
 }

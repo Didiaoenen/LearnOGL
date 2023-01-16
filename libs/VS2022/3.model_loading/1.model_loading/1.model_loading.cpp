@@ -30,10 +30,10 @@ public:
 
 		mShader = new OGL::LearnOGLShader("1.model_loading.vs.vert", "1.model_loading.fs.frag");
 		mMaterial = new model_loading_material(mShader);
-		mMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", OGL::TextureType::Diffuse);
-		mMaterial->mNormalTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/normal.png", OGL::TextureType::Normal);
-		mMaterial->mRoughnessTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/roughness.jpg", OGL::TextureType::Roughness);
-		mMaterial->mSpecularTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/specular.jpg", OGL::TextureType::Specular);
+		mMaterial->mDiffuseTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", false, OGL::TextureType::Diffuse);
+		mMaterial->mNormalTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/normal.png", false, OGL::TextureType::Normal);
+		mMaterial->mRoughnessTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/roughness.jpg", false, OGL::TextureType::Roughness);
+		mMaterial->mSpecularTexture = new OGL::LearnOGLTexture("../../../resources/objects/backpack/specular.jpg", false, OGL::TextureType::Specular);
 
 		mModel = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
 		mModel->mMaterial = mMaterial;
