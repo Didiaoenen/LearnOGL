@@ -11,6 +11,12 @@ public:
 
 	virtual void Draw() override;
 
+public:
+	OGL::LearnOGLTexture* mHDRTex{ nullptr };
+
+	std::string mHDRTexLoc = "hdrTex";
+
 private:
+	GLuint mHDRAttribID{ 0 };
 
 };

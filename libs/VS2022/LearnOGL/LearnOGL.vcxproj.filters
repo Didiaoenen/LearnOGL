@@ -60,6 +60,9 @@
     <ClCompile Include="LearnOGLFBO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LearnOGLHDRFBO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -108,6 +111,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LearnOGLFBO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLHDRFBO.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

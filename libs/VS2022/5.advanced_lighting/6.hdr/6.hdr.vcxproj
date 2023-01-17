@@ -131,6 +131,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="6.hdr.cpp" />
+    <ClCompile Include="hdr_material.cpp" />
+    <ClCompile Include="lighting_material.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="6.hdr.fs.frag" />
+    <None Include="6.hdr.vs.vert" />
+    <None Include="6.lighting.fs.frag" />
+    <None Include="6.lighting.vs.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hdr_material.h" />
+    <ClInclude Include="lighting_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

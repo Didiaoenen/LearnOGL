@@ -23,6 +23,14 @@ namespace OGL
 		}
 	}
 
+	void LearnOGLCommand::GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height)
+	{
+		if (mUintTexMap.find(id) == mUintTexMap.end())
+		{
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, new LearnOGLHDRFBO(width, height)));
+		}
+	}
+
 	void LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
 	{
 		if (mUintTexMap.find(id) == mUintTexMap.end())

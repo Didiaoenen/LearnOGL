@@ -141,6 +141,7 @@
     <ClCompile Include="LearnOGLCubeMapFBO.cpp" />
     <ClCompile Include="LearnOGLDepthFBO.cpp" />
     <ClCompile Include="LearnOGLFBO.cpp" />
+    <ClCompile Include="LearnOGLHDRFBO.cpp" />
     <ClCompile Include="LearnOGLMaterial.cpp" />
     <ClCompile Include="LearnOGLMesh.cpp" />
     <ClCompile Include="LearnOGLModel.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="LearnOGLDefine.h" />
     <ClInclude Include="LearnOGLDepthFBO.h" />
     <ClInclude Include="LearnOGLFBO.h" />
+    <ClInclude Include="LearnOGLHDRFBO.h" />
     <ClInclude Include="LearnOGLMaterial.h" />
     <ClInclude Include="LearnOGLMesh.h" />
     <ClInclude Include="LearnOGLModel.h" />

@@ -6,6 +6,7 @@
 #include "LearnOGLFBO.h"
 #include "LearnOGLDepthFBO.h"
 #include "LearnOGLCubeMapFBO.h"
+#include "LearnOGLHDRFBO.h"
 
 #include <map>
 #include <string>
@@ -20,6 +21,7 @@ namespace OGL
 		~LearnOGLCommand();
 
 		void GetTemporaryRT(GLuint id, GLuint width, GLuint height);
+		void GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height);
 		void GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height);
 		void ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor);
 
