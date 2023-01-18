@@ -45,11 +45,11 @@ namespace OGL
 	glm::mat4 LearnOGLPipeline::GetTransform()
 	{
 		glm::mat4 transform = glm::mat4(1.0);
-		transform = glm::scale(transform, mScale);
 		transform = glm::translate(transform, mPos);
 		transform = glm::rotate(transform, glm::radians(mRotate.x), glm::vec3(1.0, 0.0, 0.0));
 		transform = glm::rotate(transform, glm::radians(mRotate.y), glm::vec3(0.0, 1.0, 0.0));
 		transform = glm::rotate(transform, glm::radians(mRotate.z), glm::vec3(0.0, 0.0, 1.0));
+		transform = glm::scale(transform, mScale);
 		return transform;
 	}
 

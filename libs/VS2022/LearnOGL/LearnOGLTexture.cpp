@@ -2,7 +2,7 @@
 
 namespace OGL
 {
-	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
+	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, bool gammaCorrection/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
 		mPath(path), mTextureType(textureType), mTargetType(targetType)
 	{
 		stbi_set_flip_vertically_on_load(flip);
@@ -14,19 +14,23 @@ namespace OGL
 			stbi_image_free(imageData);
 			return;
 		}
-		GLenum format = 0;
+
+		GLenum format;
+		GLenum dataFormat;
 		switch (imageChannels)
 		{
 		case 1:
-			format = GL_RED;
+			format = dataFormat = GL_RED;
 			break;
 
 		case 3:
-			format = GL_RGB;
+			format = gammaCorrection ? GL_SRGB : GL_RGB;
+			dataFormat = GL_RGB;
 			break;
 
 		case 4:
-			format = GL_RGBA;
+			format = gammaCorrection ? GL_SRGB_ALPHA : GL_RGBA;
+			dataFormat = GL_RGBA;
 			break;
 
 		default:
@@ -40,7 +44,7 @@ namespace OGL
 			{
 			case GL_TEXTURE_2D:
 			{
-				glTexImage2D(targetType, 0, format, imageWidth, imageHeight, 0, format, GL_UNSIGNED_BYTE, imageData);
+				glTexImage2D(targetType, 0, format, imageWidth, imageHeight, 0, dataFormat, GL_UNSIGNED_BYTE, imageData);
 			}
 				break;
 
@@ -48,9 +52,11 @@ namespace OGL
 				break;
 			}
 
+			glGenerateMipmap(GL_TEXTURE_2D);
+
 			glTexParameteri(targetType, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(targetType, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(targetType, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(targetType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameteri(targetType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 		glBindTexture(targetType, 0);
