@@ -16,7 +16,7 @@ namespace OGL
 		virtual void BindForWriting() = 0;
 		virtual void UnbindForWriting() = 0;
 
-		virtual void BindForReading(GLenum textureUnit = GL_TEXTURE0) = 0;
+		virtual void BindForReading(GLenum textureUnit = GL_TEXTURE0, uint32_t colorIndex = 0) = 0;
 
 	public:
 		uint32_t mWidth{ 0 };

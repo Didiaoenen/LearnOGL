@@ -18,6 +18,8 @@ public:
 	std::string mSceneTexLoc = "sceneTex";
 	std::string mBloomBlurTexLoc = "bloomBlurTex";
 
+	std::string mTexLoc = "bloomBlurTex";
 private:
+	GLuint mSceneTexAttribID{ 0 };
 
 };

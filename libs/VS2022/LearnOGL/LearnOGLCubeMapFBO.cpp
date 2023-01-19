@@ -26,7 +26,7 @@ namespace OGL
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void LearnOGLCubeMapFBO::BindForReading(GLenum textureUnit)
+	void LearnOGLCubeMapFBO::BindForReading(GLenum textureUnit/* = GL_TEXTURE0*/, uint32_t colorCount/* = 0*/)
 	{
 		glActiveTexture(textureUnit);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, mCubeMapTex);

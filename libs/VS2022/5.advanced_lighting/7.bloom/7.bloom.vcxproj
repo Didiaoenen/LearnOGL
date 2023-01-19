@@ -104,10 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>./../../../includes;./../../LearnOGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>./../../../lib;./../../LearnOGL/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;assimp.lib;STB_IMAGE.lib;GLAD.lib;LearnOGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,6 +131,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="7.bloom.cpp" />
+    <ClCompile Include="bloom_material.cpp" />
+    <ClCompile Include="blur_material.cpp" />
+    <ClCompile Include="final_material.cpp" />
+    <ClCompile Include="light_material.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="7.bloom.fs.frag" />
+    <None Include="7.bloom.vs.vert" />
+    <None Include="7.blur.fs.frag" />
+    <None Include="7.blur.vs.vert" />
+    <None Include="7.final.fs.frag" />
+    <None Include="7.final.vs.vert" />
+    <None Include="7.light.fs.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bloom_material.h" />
+    <ClInclude Include="blur_material.h" />
+    <ClInclude Include="final_material.h" />
+    <ClInclude Include="light_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

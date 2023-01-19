@@ -7,6 +7,7 @@
 #include "LearnOGLDepthFBO.h"
 #include "LearnOGLCubeMapFBO.h"
 #include "LearnOGLHDRFBO.h"
+#include "LearnOGLCustomFBO.h"
 
 #include <map>
 #include <string>
@@ -20,9 +21,10 @@ namespace OGL
 		LearnOGLCommand(std::string name);
 		~LearnOGLCommand();
 
-		void GetTemporaryRT(GLuint id, GLuint width, GLuint height);
-		void GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height);
-		void GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height);
+		LearnOGLFBO* GetTemporaryRT(GLuint id, GLuint width, GLuint height);
+		LearnOGLFBO* GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height);
+		LearnOGLFBO* GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height);
+		LearnOGLFBO* GetTemporaryCustomRT(GLuint id, GLuint width, GLuint height, uint32_t colorAttachCount = 1, bool depthAttch = false, bool stencilAttach = false);
 		void ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor);
 
 		void SetRenderTarget(GLuint id);

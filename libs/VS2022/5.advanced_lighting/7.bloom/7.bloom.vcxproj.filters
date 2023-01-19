@@ -18,5 +18,54 @@
     <ClCompile Include="7.bloom.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="light_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="final_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="blur_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bloom_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="7.light.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="7.blur.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="7.blur.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="7.bloom.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="7.bloom.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="7.final.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="7.final.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="light_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="final_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="blur_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bloom_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

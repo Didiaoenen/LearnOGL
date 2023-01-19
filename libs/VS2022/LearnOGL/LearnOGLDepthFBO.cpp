@@ -26,7 +26,7 @@ namespace OGL
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void LearnOGLDepthFBO::BindForReading(GLenum textureUnit/* = GL_TEXTURE0*/)
+	void LearnOGLDepthFBO::BindForReading(GLenum textureUnit/* = GL_TEXTURE0*/, uint32_t colorIndex/* = 0*/)
 	{
 		glActiveTexture(textureUnit);
 		glBindTexture(GL_TEXTURE_2D, mDepthTex);

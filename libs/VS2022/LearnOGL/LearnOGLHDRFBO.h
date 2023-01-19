@@ -14,7 +14,7 @@ namespace OGL
 		virtual void BindForWriting() override;
 		virtual void UnbindForWriting() override;
 
-		virtual void BindForReading(GLenum textureUnit = GL_TEXTURE0) override;
+		virtual void BindForReading(GLenum textureUnit = GL_TEXTURE0, uint32_t colorIndex = 0) override;
 
 	private:
 		bool Init(uint32_t width, uint32_t height);

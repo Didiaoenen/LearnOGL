@@ -15,28 +15,48 @@ namespace OGL
 	{
 	}
 
-	void LearnOGLCommand::GetTemporaryRT(GLuint id, GLuint width, GLuint height)
+	LearnOGLFBO* LearnOGLCommand::GetTemporaryRT(GLuint id, GLuint width, GLuint height)
 	{
 		if (mUintTexMap.find(id) == mUintTexMap.end())
 		{
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, new LearnOGLDepthFBO(width, height)));
+			auto fbo = new LearnOGLDepthFBO(width, height);
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			return fbo;
 		}
+		return nullptr;
 	}
 
-	void LearnOGLCommand::GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height)
+	LearnOGLFBO* LearnOGLCommand::GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height)
 	{
 		if (mUintTexMap.find(id) == mUintTexMap.end())
 		{
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, new LearnOGLHDRFBO(width, height)));
+			auto fbo = new LearnOGLHDRFBO(width, height);
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			return fbo;
 		}
+		return nullptr;
 	}
 
-	void LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
+	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
 	{
 		if (mUintTexMap.find(id) == mUintTexMap.end())
 		{
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, new LearnOGLCubeMapFBO(width, height)));
+			auto fbo = new LearnOGLCubeMapFBO(width, height);
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			return fbo;
 		}
+		return nullptr;
+	}
+
+	LearnOGLFBO* LearnOGLCommand::GetTemporaryCustomRT(GLuint id, GLuint width, GLuint height, uint32_t colorAttachCount, bool depthAttch, bool stencilAttach)
+	{
+		if (mUintTexMap.find(id) == mUintTexMap.end())
+		{
+			auto fbo = new LearnOGLCustomFBO(width, height, colorAttachCount, depthAttch, stencilAttach);
+			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			return fbo;
+		}
+		return nullptr;
 	}
 
 	void LearnOGLCommand::ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor)
