@@ -416,6 +416,18 @@ namespace OGL
 		pBitangs[pVertCount] = bitangent;
 	}
 
+	void LearnOGLBatch::DrawArrays()
+	{
+		if (!mBatchDone)
+		{
+			return;
+		}
+
+		glBindVertexArray(mVAO);
+		glDrawArrays(mPrimitiveType, 0, mVerts);
+		glBindVertexArray(0);
+	}
+
 	void LearnOGLBatch::Draw()
 	{
 		if (!mBatchDone)

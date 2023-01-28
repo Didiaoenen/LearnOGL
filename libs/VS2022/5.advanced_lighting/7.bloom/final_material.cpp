@@ -21,8 +21,20 @@ void final_material::Draw()
 {
 	mShader->Use();
 
-	if (mCommand->mUintTexMap.find(mSceneTexAttribID) != mCommand->mUintTexMap.end())
+	auto unitTex = mCommand->mUnitTexMap.find(mSceneTexAttribID);
+	if (unitTex != mCommand->mUnitTexMap.end())
 	{
-		mCommand->mUintTexMap.find(mSceneTexAttribID)->second->BindForReading(GL_TEXTURE0, 0);
+		unitTex->second->BindForReading(GL_TEXTURE0, 0);
 	}
+
+	unitTex = mCommand->mUnitTexMap.find(mAttribID);
+	if (unitTex != mCommand->mUnitTexMap.end())
+	{
+		unitTex->second->BindForReading(GL_TEXTURE1, 1);
+	}
+}
+
+void final_material::SetAttribID(GLuint attribID)
+{
+	mAttribID = attribID;
 }

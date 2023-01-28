@@ -45,6 +45,8 @@ namespace OGL
 
 		GLuint GetUniformLocation(std::string locName) const;
 
+		GLuint GetAttribID(std::string locName) const;
+
 	public:
 		GLuint mID{ 0 };
 

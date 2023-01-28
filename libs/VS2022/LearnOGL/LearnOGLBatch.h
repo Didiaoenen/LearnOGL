@@ -43,6 +43,7 @@ namespace OGL
 		void Bitangent3f(GLfloat x, GLfloat y, GLfloat z);
 		void Bitangent3fv(glm::vec3 bitangent);
 
+		void DrawArrays();
 		virtual void Draw() override;
 
 		virtual void ShadowDraw() override;

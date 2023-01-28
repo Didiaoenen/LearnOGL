@@ -17,10 +17,10 @@ namespace OGL
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryRT(GLuint id, GLuint width, GLuint height)
 	{
-		if (mUintTexMap.find(id) == mUintTexMap.end())
+		if (mUnitTexMap.find(id) == mUnitTexMap.end())
 		{
 			auto fbo = new LearnOGLDepthFBO(width, height);
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
 		return nullptr;
@@ -28,10 +28,10 @@ namespace OGL
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height)
 	{
-		if (mUintTexMap.find(id) == mUintTexMap.end())
+		if (mUnitTexMap.find(id) == mUnitTexMap.end())
 		{
 			auto fbo = new LearnOGLHDRFBO(width, height);
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
 		return nullptr;
@@ -39,10 +39,10 @@ namespace OGL
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
 	{
-		if (mUintTexMap.find(id) == mUintTexMap.end())
+		if (mUnitTexMap.find(id) == mUnitTexMap.end())
 		{
 			auto fbo = new LearnOGLCubeMapFBO(width, height);
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
 		return nullptr;
@@ -50,10 +50,10 @@ namespace OGL
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryCustomRT(GLuint id, GLuint width, GLuint height, uint32_t colorAttachCount, bool depthAttch, bool stencilAttach)
 	{
-		if (mUintTexMap.find(id) == mUintTexMap.end())
+		if (mUnitTexMap.find(id) == mUnitTexMap.end())
 		{
 			auto fbo = new LearnOGLCustomFBO(width, height, colorAttachCount, depthAttch, stencilAttach);
-			mUintTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
+			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
 		return nullptr;
@@ -68,9 +68,9 @@ namespace OGL
 
 	void LearnOGLCommand::SetRenderTarget(GLuint id)
 	{
-		if (mUintTexMap.find(id) != mUintTexMap.end())
+		if (mUnitTexMap.find(id) != mUnitTexMap.end())
 		{
-			mUintTexMap.find(id)->second->BindForWriting();
+			mUnitTexMap.find(id)->second->BindForWriting();
 		}
 	}
 
@@ -116,11 +116,16 @@ namespace OGL
 		return face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 	}
 
+	void LearnOGLCommand::UnBindFramebuffer()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void LearnOGLCommand::ReleaseTemporaryRT(GLuint id)
 	{
-		if (mUintTexMap.find(id) != mUintTexMap.end())
+		if (mUnitTexMap.find(id) != mUnitTexMap.end())
 		{
-			mUintTexMap.find(id)->second->UnbindForWriting();
+			mUnitTexMap.find(id)->second->UnbindForWriting();
 		}
 	}
 

@@ -45,6 +45,7 @@ namespace OGL
 
 		void EnableCullFace(bool face);
 
+		void UnBindFramebuffer();
 		void ReleaseTemporaryRT(GLuint id);
 
 		void Clear();
@@ -57,8 +58,8 @@ namespace OGL
 
 		glm::vec4 mBackgroundColor = glm::vec4(0.0f);
 
-		std::map<GLuint, LearnOGLFBO*> mUintTexMap;
-	
+		std::map<GLuint, LearnOGLFBO*> mUnitTexMap;
+
 	private:
 
 	};

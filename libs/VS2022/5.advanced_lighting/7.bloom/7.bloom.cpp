@@ -30,7 +30,7 @@ public:
 		mLightPositions.push_back(glm::vec3(0.0f, 0.5f, 1.5f));
 		mLightPositions.push_back(glm::vec3(-4.0f, 0.5f, -3.0f));
 		mLightPositions.push_back(glm::vec3(3.0f, 0.5f, 1.0f));
-		mLightPositions.push_back(glm::vec3(-.8f, 2.4f, -1.0f));
+		mLightPositions.push_back(glm::vec3(-0.8f, 2.4f, -1.0f));
 
 		mLightColors.push_back(glm::vec3(5.0f, 5.0f, 5.0f));
 		mLightColors.push_back(glm::vec3(10.0f, 0.0f, 0.0f));
@@ -59,14 +59,17 @@ public:
 		mFinalMaterial = new final_material(mFinalShader);
 		mLightMaterial = new light_material(mLightShader);
 
+		mBlurMaterial1->mCommand = mCommand;
+		mBlurMaterial2->mCommand = mCommand;
+
 		mFinalMaterial->mCommand = mCommand;
 
 		mTexture1 = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, true, OGL::TextureType::Diffuse);
 		mTexture2 = new OGL::LearnOGLTexture("./../../../resources/textures/container2.png", false, true, OGL::TextureType::Diffuse);
 
-		mSceneTexAttribID = mFinalShader->GetUniformLocation("sceneTex");
-		mImageTex1AttribID = mBlurShader1->GetUniformLocation("imageTex");
-		mImageTex2AttribID = mBlurShader2->GetUniformLocation("imageTex");
+		mSceneTexAttribID = mFinalShader->GetAttribID("sceneTex");
+		mImageTex1AttribID = mBlurShader1->GetAttribID("imageTex");
+		mImageTex2AttribID = mBlurShader2->GetAttribID("imageTex");
 
 		mTools = new OGL::LearnOGLTools();
 		for (uint32_t i = 0; i < CUBE_COUNT; i++)
@@ -98,7 +101,7 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 
-		//mFBO1 = mCommand->GetTemporaryCustomRT(mSceneTexAttribID, info.windowWidth, info.windowHeight);
+		//mCommand->GetTemporaryCustomRT(mSceneTexAttribID, info.windowWidth, info.windowHeight, 2, true);
 		//mCommand->SetRenderTarget(mSceneTexAttribID);
 		{
 			mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
@@ -197,7 +200,6 @@ public:
 		}
 		//mCommand->ReleaseTemporaryRT(mSceneTexAttribID);
 
-
 		//uint32_t amount = 10;
 		//bool horizontal = true, firstIteration = true;
 		//GLuint attribs[2] = { mImageTex1AttribID, mImageTex2AttribID };
@@ -206,7 +208,7 @@ public:
 		//for (uint32_t i = 0; i < amount; i++)
 		//{
 		//	shaders[horizontal]->Use();
-		//	mFBO2 = mCommand->GetTemporaryCustomRT(attribs[horizontal], info.windowWidth, info.windowHeight);
+		//	mCommand->GetTemporaryCustomRT(attribs[horizontal], info.windowWidth, info.windowHeight);
 		//	mCommand->SetRenderTarget(attribs[horizontal]);
 
 		//	shaders[horizontal]->SetInt("horizontal", horizontal);
@@ -215,18 +217,20 @@ public:
 		//	
 		//	if (firstIteration)
 		//	{
-		//		mFBO1->BindForReading(GL_TEXTURE0, 1);
+		//		mQuads[i].mMaterial->SetAttribID(mSceneTexAttribID);
+		//		dynamic_cast<blur_material*>(mQuads[i].mMaterial)->FirstDraw();
+		//		mQuads[i].DrawArrays();
 		//	}
 		//	else
 		//	{
+		//		mQuads[i].mMaterial->SetAttribID(attribs[!horizontal]);
 		//		mQuads[i].Draw();
 		//	}
 
 		//	horizontal = !horizontal;
 		//	firstIteration = false;
 		//}
-		//mCommand->ReleaseTemporaryRT(mImageTex1AttribID);
-		//mCommand->ReleaseTemporaryRT(mImageTex2AttribID);
+		//mCommand->UnBindFramebuffer();
 
 		//mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		//mContext->ExecuteCommand(mCommand);
@@ -235,9 +239,8 @@ public:
 		//mFinalShader->SetInt("bloom", mBloom);
 		//mFinalShader->SetFloat("exposure", mExposure);
 		//
-		//mFBO2->BindForReading(GL_TEXTURE1, 0);
-
 		//mQuads[amount].mMaterial = mFinalMaterial;
+		//mQuads[amount].mMaterial->SetAttribID(attribs[!horizontal]);
 		//mQuads[amount].Draw();
 	}
 
@@ -260,9 +263,6 @@ private:
 
 	OGL::LearnOGLTexture* mTexture1;
 	OGL::LearnOGLTexture* mTexture2;
-
-	OGL::LearnOGLFBO* mFBO1;
-	OGL::LearnOGLFBO* mFBO2;
 
 	bloom_material* mBloomMaterial;
 	blur_material* mBlurMaterial1;

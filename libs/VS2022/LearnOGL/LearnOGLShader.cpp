@@ -116,6 +116,12 @@ namespace OGL
 		return location;
 	}
 
+	GLuint LearnOGLShader::GetAttribID(std::string locName) const
+	{
+		GLuint id = GetUniformLocation(locName);
+		return atoi((std::to_string(mID) + std::to_string(id)).c_str());
+	}
+
 	void LearnOGLShader::SetBool(const std::string& name, bool value) const
 	{
 		glUniform1i(GetUniformLocation(name), (int)value);

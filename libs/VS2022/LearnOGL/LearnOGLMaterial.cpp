@@ -23,4 +23,8 @@ namespace OGL
 	{
 		return mShader->GetUniformLocation(strLoc);
 	}
+
+	void LearnOGLMaterial::SetAttribID(GLuint attribID)
+	{
+	}
 }

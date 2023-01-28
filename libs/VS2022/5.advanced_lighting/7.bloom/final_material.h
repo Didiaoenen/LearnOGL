@@ -10,6 +10,7 @@ public:
 	~final_material();
 
 	virtual void Draw() override;
+	virtual void SetAttribID(GLuint attribID) override;
 
 public:
 	OGL::LearnOGLTexture* mSceneTex{ nullptr };
@@ -21,5 +22,5 @@ public:
 	std::string mTexLoc = "bloomBlurTex";
 private:
 	GLuint mSceneTexAttribID{ 0 };
-
+	GLuint mAttribID{ 0 };
 };

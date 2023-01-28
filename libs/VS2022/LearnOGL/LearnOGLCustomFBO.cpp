@@ -46,7 +46,7 @@ namespace OGL
 		glGenFramebuffers(1, &mFBO);
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
 
-		glGenTextures(2, mColorTexs);
+		glGenTextures(mColorAttchCount, mColorTexs);
 		for (uint32_t i = 0; i < mColorAttchCount; i++)
 		{
 			glBindTexture(GL_TEXTURE_2D, mColorTexs[i]);
