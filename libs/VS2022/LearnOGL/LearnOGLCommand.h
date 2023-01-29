@@ -28,6 +28,8 @@ namespace OGL
 		void ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor);
 
 		void SetRenderTarget(GLuint id);
+		void SetReadTarget(GLuint id);
+		void SetUnWriteTarget(GLuint id);
 
 		void SetGloablInt(GLuint id, GLint value);
 		void SetGloablIntArray(GLuint id, GLint* value);
@@ -47,6 +49,8 @@ namespace OGL
 
 		void UnBindFramebuffer();
 		void ReleaseTemporaryRT(GLuint id);
+
+		void BlitDepthFBO(GLfloat width, GLfloat height);
 
 		void Clear();
 

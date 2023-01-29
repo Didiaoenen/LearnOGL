@@ -74,6 +74,22 @@ namespace OGL
 		}
 	}
 
+	void LearnOGLCommand::SetReadTarget(GLuint id)
+	{
+		if (mUnitTexMap.find(id) != mUnitTexMap.end())
+		{
+			mUnitTexMap.find(id)->second->BindForRead();
+		}
+	}
+
+	void LearnOGLCommand::SetUnWriteTarget(GLuint id)
+	{
+		if (mUnitTexMap.find(id) != mUnitTexMap.end())
+		{
+			mUnitTexMap.find(id)->second->UnBindForWrite();
+		}
+	}
+
 	void LearnOGLCommand::SetGloablInt(GLuint id, GLint value)
 	{
 	}
@@ -127,6 +143,11 @@ namespace OGL
 		{
 			mUnitTexMap.find(id)->second->UnbindForWriting();
 		}
+	}
+
+	void LearnOGLCommand::BlitDepthFBO(GLfloat width, GLfloat height)
+	{
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 	}
 
 	void LearnOGLCommand::Clear()

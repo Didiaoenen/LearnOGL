@@ -15,4 +15,14 @@ namespace OGL
 	LearnOGLFBO::~LearnOGLFBO()
 	{
 	}
+	
+	void LearnOGLFBO::BindForRead()
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, mFBO);
+	}
+
+	void LearnOGLFBO::UnBindForWrite()
+	{
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	}
 }
