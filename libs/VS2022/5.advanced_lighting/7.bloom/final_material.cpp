@@ -10,7 +10,7 @@ final_material::final_material(OGL::LearnOGLShader* shader) :
 	mShader->Use();
 	mShader->SetTexUnit(mSceneTexLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x00);
 	mShader->SetTexUnit(mBloomBlurTexLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x01);
-	mSceneTexAttribID = mShader->GetUniformLocation(mSceneTexLoc);
+	mSceneTexAttribID = mShader->GetAttribID(mSceneTexLoc);
 }
 
 final_material::~final_material()
@@ -30,7 +30,7 @@ void final_material::Draw()
 	unitTex = mCommand->mUnitTexMap.find(mAttribID);
 	if (unitTex != mCommand->mUnitTexMap.end())
 	{
-		unitTex->second->BindForReading(GL_TEXTURE1, 1);
+		unitTex->second->BindForReading(GL_TEXTURE1, 0);
 	}
 }
 

@@ -75,7 +75,15 @@ public:
 		for (uint32_t i = 0; i < CUBE_COUNT; i++)
 		{
 			mCubes[i] = mTools->MakeCube(1.0f);
-			mCubes[i].mMaterial = mBloomMaterial;
+			if (i < 7)
+			{
+				mCubes[i].mMaterial = mBloomMaterial;
+
+			}
+			else
+			{
+				mCubes[i].mMaterial = mLightMaterial;
+			}
 		}
 
 		for (uint32_t i = 0; i < CUBE_COUNT; i++)
@@ -101,8 +109,8 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 
-		//mCommand->GetTemporaryCustomRT(mSceneTexAttribID, info.windowWidth, info.windowHeight, 2, true);
-		//mCommand->SetRenderTarget(mSceneTexAttribID);
+		mCommand->GetTemporaryCustomRT(mSceneTexAttribID, info.windowWidth, info.windowHeight, 2, true);
+		mCommand->SetRenderTarget(mSceneTexAttribID);
 		{
 			mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 			mContext->ExecuteCommand(mCommand);
@@ -187,8 +195,6 @@ public:
 			for (uint32_t i = 0; i < mLightPositions.size(); i++)
 			{
 				mLightShader->SetVec3("lightColor", mLightColors[i]);
-
-				dynamic_cast<bloom_material*>(mCubes[7 + i].mMaterial)->mDiffuseTex = mTexture2;
 				{
 					pipeline.SetPos(mLightPositions[i].x, mLightPositions[i].y, mLightPositions[i].z);
 					pipeline.SetRotate(0.0f, 0.0f, 0.0f);
@@ -198,50 +204,50 @@ public:
 				mCubes[7 + i].Draw();
 			}
 		}
-		//mCommand->ReleaseTemporaryRT(mSceneTexAttribID);
+		mCommand->ReleaseTemporaryRT(mSceneTexAttribID);
 
-		//uint32_t amount = 10;
-		//bool horizontal = true, firstIteration = true;
-		//GLuint attribs[2] = { mImageTex1AttribID, mImageTex2AttribID };
-		//OGL::LearnOGLShader* shaders[2] = { mBlurShader1, mBlurShader2 };
-		//OGL::LearnOGLMaterial* materials[2] = { mBlurMaterial1, mBlurMaterial2 };
-		//for (uint32_t i = 0; i < amount; i++)
-		//{
-		//	shaders[horizontal]->Use();
-		//	mCommand->GetTemporaryCustomRT(attribs[horizontal], info.windowWidth, info.windowHeight);
-		//	mCommand->SetRenderTarget(attribs[horizontal]);
+		uint32_t amount = 10;
+		bool horizontal = true, firstIteration = true;
+		GLuint attribs[2] = { mImageTex1AttribID, mImageTex2AttribID };
+		OGL::LearnOGLShader* shaders[2] = { mBlurShader1, mBlurShader2 };
+		OGL::LearnOGLMaterial* materials[2] = { mBlurMaterial1, mBlurMaterial2 };
+		for (uint32_t i = 0; i < amount; i++)
+		{
+			mQuads[i].mMaterial = materials[horizontal];
+			
+			shaders[horizontal]->Use();
+			mCommand->GetTemporaryCustomRT(attribs[horizontal], info.windowWidth, info.windowHeight);
+			mCommand->SetRenderTarget(attribs[horizontal]);
 
-		//	shaders[horizontal]->SetInt("horizontal", horizontal);
+			shaders[horizontal]->SetInt("horizontal", horizontal);
+			
+			if (firstIteration)
+			{
+				mQuads[i].mMaterial->SetAttribID(mSceneTexAttribID);
+				dynamic_cast<blur_material*>(mQuads[i].mMaterial)->FirstDraw();
+				mQuads[i].DrawArrays();
+			}
+			else
+			{
+				mQuads[i].mMaterial->SetAttribID(attribs[!horizontal]);
+				mQuads[i].Draw();
+			}
 
-		//	mQuads[i].mMaterial = materials[horizontal];
-		//	
-		//	if (firstIteration)
-		//	{
-		//		mQuads[i].mMaterial->SetAttribID(mSceneTexAttribID);
-		//		dynamic_cast<blur_material*>(mQuads[i].mMaterial)->FirstDraw();
-		//		mQuads[i].DrawArrays();
-		//	}
-		//	else
-		//	{
-		//		mQuads[i].mMaterial->SetAttribID(attribs[!horizontal]);
-		//		mQuads[i].Draw();
-		//	}
+			horizontal = !horizontal;
+			firstIteration = false;
+		}
+		mCommand->UnBindFramebuffer();
 
-		//	horizontal = !horizontal;
-		//	firstIteration = false;
-		//}
-		//mCommand->UnBindFramebuffer();
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
-		//mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		//mContext->ExecuteCommand(mCommand);
-
-		//mFinalShader->Use();
-		//mFinalShader->SetInt("bloom", mBloom);
-		//mFinalShader->SetFloat("exposure", mExposure);
-		//
-		//mQuads[amount].mMaterial = mFinalMaterial;
-		//mQuads[amount].mMaterial->SetAttribID(attribs[!horizontal]);
-		//mQuads[amount].Draw();
+		mFinalShader->Use();
+		mFinalShader->SetInt("bloom", mBloom);
+		mFinalShader->SetFloat("exposure", mExposure);
+		
+		mQuads[amount].mMaterial = mFinalMaterial;
+		mQuads[amount].mMaterial->SetAttribID(attribs[!horizontal]);
+		mQuads[amount].Draw();
 	}
 
 	virtual void ShutDown() override
