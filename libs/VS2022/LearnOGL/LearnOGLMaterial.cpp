@@ -19,6 +19,10 @@ namespace OGL
 	{
 	}
 
+	void LearnOGLMaterial::DrawByIndex(GLuint index)
+	{
+	}
+
 	GLuint LearnOGLMaterial::GetAttribID(std::string strLoc)
 	{
 		return mShader->GetUniformLocation(strLoc);

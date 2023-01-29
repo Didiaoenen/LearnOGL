@@ -15,42 +15,33 @@ blur_material::~blur_material()
 {
 }
 
-void blur_material::FirstDraw()
+void blur_material::Draw()
 {
 	mShader->Use();
 
-	DrawByIndex(1);
+	CommandDrawByIndex(0);
 }
 
-uint32_t blur_material::DrawByIndex(uint32_t index)
+void blur_material::DrawByIndex(GLuint index)
 {
-	int textureIndex = 0;
+	mShader->Use();
+
+	CommandDrawByIndex(index);
+}
+
+void blur_material::SetAttribID(GLuint attribID)
+{
+	mAttribID = attribID;
+}
+
+void blur_material::CommandDrawByIndex(GLuint index)
+{
 	if (mCommand)
 	{
 		auto unitText = mCommand->mUnitTexMap.find(mAttribID);
 		if (unitText != mCommand->mUnitTexMap.end())
 		{
 			unitText->second->BindForReading(GL_TEXTURE0, index);
-			textureIndex++;
 		}
 	}
-	return textureIndex;
-}
-
-void blur_material::Draw()
-{
-	mShader->Use();
-
-	int textureIndex = 0;
-	textureIndex += DrawByIndex(0);
-
-	if (mImageTex)
-	{
-		mImageTex->Bind(GL_TEXTURE0 + textureIndex);
-	}
-}
-
-void blur_material::SetAttribID(GLuint attribID)
-{
-	mAttribID = attribID;
 }

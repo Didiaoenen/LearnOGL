@@ -418,14 +418,21 @@ namespace OGL
 
 	void LearnOGLBatch::DrawArrays()
 	{
+		glBindVertexArray(mVAO);
+		glDrawArrays(mPrimitiveType, 0, mVerts);
+		glBindVertexArray(0);
+	}
+
+	void LearnOGLBatch::DrawByIndex(GLuint index)
+	{
 		if (!mBatchDone)
 		{
 			return;
 		}
 
-		glBindVertexArray(mVAO);
-		glDrawArrays(mPrimitiveType, 0, mVerts);
-		glBindVertexArray(0);
+		mMaterial->DrawByIndex(index);
+
+		DrawArrays();
 	}
 
 	void LearnOGLBatch::Draw()
@@ -437,9 +444,7 @@ namespace OGL
 
 		mMaterial->Draw();
 
-		glBindVertexArray(mVAO);
-		glDrawArrays(mPrimitiveType, 0, mVerts);
-		glBindVertexArray(0);
+		DrawArrays();
 	}
 
 	void LearnOGLBatch::ShadowDraw()
@@ -451,8 +456,6 @@ namespace OGL
 
 		mShadowMaterial->Draw();
 
-		glBindVertexArray(mVAO);
-		glDrawArrays(mPrimitiveType, 0, mVerts);
-		glBindVertexArray(0);
+		DrawArrays();
 	}
 }

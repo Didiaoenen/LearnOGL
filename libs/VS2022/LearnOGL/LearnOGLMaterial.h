@@ -17,6 +17,7 @@ namespace OGL
 		virtual ~LearnOGLMaterial();
 
 		virtual void Draw();
+		virtual void DrawByIndex(GLuint index);
 		virtual void SetAttribID(GLuint attribID);
 
 		GLuint GetAttribID(std::string strLoc);

@@ -99,7 +99,31 @@ public:
 
 	virtual void Input() override
 	{
+		if (glfwGetKey(mWindow, GLFW_KEY_SPACE) == GLFW_PRESS && !mBloomKeyPressed)
+		{
+			mBloom = !mBloom;
+			mBloomKeyPressed = true;
+		}
+		if (glfwGetKey(mWindow, GLFW_KEY_SPACE) == GLFW_RELEASE)
+		{
+			mBloomKeyPressed = false;
+		}
 
+		if (glfwGetKey(mWindow, GLFW_KEY_Q) == GLFW_PRESS)
+		{
+			if (mExposure > 0.0f)
+			{
+				mExposure -= 0.01f;
+			}
+			else
+			{
+				mExposure = 0.0f;
+			}
+		}
+		else if (glfwGetKey(mWindow, GLFW_KEY_E) == GLFW_PRESS)
+		{
+			mExposure += 0.01f;
+		}
 	}
 
 	virtual void Render(OGL::LearnOGLContext* context) override
@@ -224,8 +248,7 @@ public:
 			if (firstIteration)
 			{
 				mQuads[i].mMaterial->SetAttribID(mSceneTexAttribID);
-				dynamic_cast<blur_material*>(mQuads[i].mMaterial)->FirstDraw();
-				mQuads[i].DrawArrays();
+				mQuads[i].DrawByIndex(1);
 			}
 			else
 			{
@@ -284,7 +307,8 @@ private:
 	GLuint mImageTex2AttribID;
 
 	bool mBloom = true;
-	bool mExposure = 1.0f;
+	bool mBloomKeyPressed = false;
+	float mExposure = 1.0f;
 };
 
 DECLARE_MAIN(bloom)

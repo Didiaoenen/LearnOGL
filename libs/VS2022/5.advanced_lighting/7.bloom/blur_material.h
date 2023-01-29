@@ -10,15 +10,13 @@ public:
 	blur_material(OGL::LearnOGLShader* shader);
 	~blur_material();
 
-	void FirstDraw();
-	uint32_t DrawByIndex(uint32_t index);
 	virtual void Draw() override;
-
+	virtual void DrawByIndex(GLuint index) override;
 	virtual void SetAttribID(GLuint attribID) override;
 
-public:
-	OGL::LearnOGLTexture* mImageTex{ nullptr };
+	void CommandDrawByIndex(GLuint index);
 
+public:
 	std::string mImageTexLoc = "imageTex";
 
 private:
