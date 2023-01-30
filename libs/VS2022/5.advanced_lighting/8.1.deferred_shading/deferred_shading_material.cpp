@@ -22,11 +22,11 @@ void deferred_shading_material::Draw()
 	mShader->Use();
 }
 
-void deferred_shading_material::DrawByIndex(GLuint index)
+void deferred_shading_material::DrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
 {
 	mShader->Use();
 
-	CommandDrawByIndex(index);
+	CommandDrawByIndex(index, texIndex);
 }
 
 void deferred_shading_material::SetAttribID(GLuint attrib)
@@ -34,14 +34,14 @@ void deferred_shading_material::SetAttribID(GLuint attrib)
 	mAttribID = attrib;
 }
 
-void deferred_shading_material::CommandDrawByIndex(GLuint index)
+void deferred_shading_material::CommandDrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
 {
 	if (mCommand)
 	{
 		auto unitText = mCommand->mUnitTexMap.find(mAttribID);
 		if (unitText != mCommand->mUnitTexMap.end())
 		{
-			unitText->second->BindForReading(GL_TEXTURE0, index);
+			unitText->second->BindForReading(texIndex, index);
 		}
 	}
 }

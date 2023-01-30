@@ -11,7 +11,14 @@ public:
 
 	virtual void Draw() override;
 
+public:
+	OGL::LearnOGLTexture* mDiffuseTex{ nullptr };
+	OGL::LearnOGLTexture* mSpecularTex{ nullptr };
+
 private:
+	std::string mDiffuseLoc = "diffuseTex";
+	std::string mSpecularLoc = "specularTex";
+
 
 };
 

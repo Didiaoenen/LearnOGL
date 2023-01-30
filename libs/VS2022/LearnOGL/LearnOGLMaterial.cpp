@@ -19,7 +19,7 @@ namespace OGL
 	{
 	}
 
-	void LearnOGLMaterial::DrawByIndex(GLuint index)
+	void LearnOGLMaterial::DrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
 	{
 	}
 

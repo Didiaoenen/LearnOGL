@@ -45,6 +45,7 @@ namespace OGL
 
 		void DrawArrays();
 		void DrawByIndex(GLuint index);
+		void DrawByIndexs(GLuint* index, uint32_t count);
 		virtual void Draw() override;
 
 		virtual void ShadowDraw() override;

@@ -435,6 +435,21 @@ namespace OGL
 		DrawArrays();
 	}
 
+	void LearnOGLBatch::DrawByIndexs(GLuint* index, uint32_t count)
+	{
+		if (!mBatchDone)
+		{
+			return;
+		}
+
+		for (uint32_t i = 0; i < count; i++)
+		{
+			mMaterial->DrawByIndex(i, GL_TEXTURE0 + i);
+		}
+
+		DrawArrays();
+	}
+
 	void LearnOGLBatch::Draw()
 	{
 		if (!mBatchDone)

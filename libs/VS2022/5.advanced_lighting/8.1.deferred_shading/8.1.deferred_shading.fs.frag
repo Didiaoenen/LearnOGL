@@ -11,7 +11,6 @@ uniform sampler2D gAlbedo;
 struct Light {
     vec3 Position;
     vec3 Color;
-    
     float Linear;
     float Quadratic;
 };
@@ -31,9 +30,9 @@ void main()
     vec3 Diffuse = texture(gAlbedo, TexCoords).rgb;
     float Specular = texture(gAlbedo, TexCoords).a;
 
-    vec3 lighting  = Diffuse * value;
+    vec3 lighting = Diffuse * value;
     vec3 viewDir  = normalize(viewPos - WPos);
-    for(int i = 0; i < lightCount; ++i)
+    for(int i = 0; i < lightCount; i++)
     {
         //
         vec3 lightDir = normalize(lights[i].Position - WPos);
@@ -41,7 +40,7 @@ void main()
 
         //
         vec3 halfwayDir = normalize(lightDir + viewDir);  
-        vec3 specular = pow(max(dot(Normal, halfwayDir), 0.0), specularValue) * lights[i].Color * Specular;
+        vec3 specular = pow(max(dot(Normal, halfwayDir), 0.0), specularValue) * Specular * lights[i].Color;
         
         //
         float dis = length(lights[i].Position - WPos);

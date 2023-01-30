@@ -27,15 +27,15 @@ public:
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
 
-		mObjectPositions.push_back(glm::vec3(-3.0, -0.5, -3.0));
-		mObjectPositions.push_back(glm::vec3(0.0, -0.5, -3.0));
-		mObjectPositions.push_back(glm::vec3(3.0, -0.5, -3.0));
-		mObjectPositions.push_back(glm::vec3(-3.0, -0.5, 0.0));
-		mObjectPositions.push_back(glm::vec3(0.0, -0.5, 0.0));
-		mObjectPositions.push_back(glm::vec3(3.0, -0.5, 0.0));
-		mObjectPositions.push_back(glm::vec3(-3.0, -0.5, 3.0));
-		mObjectPositions.push_back(glm::vec3(0.0, -0.5, 3.0));
-		mObjectPositions.push_back(glm::vec3(3.0, -0.5, 3.0));
+		mObjectPositions.push_back(glm::vec3(-3.0f, -0.5f, -3.0f));
+		mObjectPositions.push_back(glm::vec3(0.0f, -0.5f, -3.0f));
+		mObjectPositions.push_back(glm::vec3(3.0f, -0.5f, -3.0f));
+		mObjectPositions.push_back(glm::vec3(-3.0f, -0.5f, 0.0f));
+		mObjectPositions.push_back(glm::vec3(0.0f, -0.5f, 0.0f));
+		mObjectPositions.push_back(glm::vec3(3.0f, -0.5f, 0.0f));
+		mObjectPositions.push_back(glm::vec3(-3.0f, -0.5f, 3.0f));
+		mObjectPositions.push_back(glm::vec3(0.0f, -0.5f, 3.0f));
+		mObjectPositions.push_back(glm::vec3(3.0f, -0.5f, 3.0f));
 
 		srand(13);
 		for (uint32_t i = 0; i < LIGHT_COUNT; i++)
@@ -63,11 +63,15 @@ public:
 
 		mLightShader = new OGL::LearnOGLShader("8.1.deferred_light_box.vs.vert", "8.1.deferred_light_box.fs.frag");
 		mDeferredShader = new OGL::LearnOGLShader("8.1.deferred_shading.vs.vert", "8.1.deferred_shading.fs.frag");
-		mGShader = new OGL::LearnOGLShader("8.1.g_buffer.vs.vert", "8.1.g_buffer.vs.frag");
+		mGShader = new OGL::LearnOGLShader("8.1.g_buffer.vs.vert", "8.1.g_buffer.fs.frag");
 
 		mLightMaterial = new deferred_light_box_material(mLightShader);
 		mDeferredMaterial = new deferred_shading_material(mDeferredShader);
 		mGMaterial = new g_buffer_material(mGShader);
+		mGMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", true, false, OGL::TextureType::Diffuse);
+		mGMaterial->mSpecularTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/specular.jpg", true, false, OGL::TextureType::Specular);
+
+		mDeferredMaterial->mCommand = mCommand;
 
 		mAttribID = mDeferredShader->GetAttribID("gPos");
 
@@ -128,20 +132,16 @@ public:
 		{
 			mDeferredShader->SetVec3("lights[" + std::to_string(i) + "].Position", mLightPositions[i]);
 			mDeferredShader->SetVec3("lights[" + std::to_string(i) + "].Color", mLightColors[i]);
-			
 			mDeferredShader->SetFloat("lights[" + std::to_string(i) + "].Linear", 0.7f);
 			mDeferredShader->SetFloat("lights[" + std::to_string(i) + "].Quadratic", 1.8f);
 		}
 		mDeferredShader->SetVec3("viewPos", mCamera->mPosition);
 		
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		mQuad.SetTransform(pipeline.GetTransform());
-		mQuad.DrawByIndex((GLuint)OGL::TexCoordIndex::TexCoord0x00);
-		mQuad.DrawByIndex((GLuint)OGL::TexCoordIndex::TexCoord0x01);
-		mQuad.DrawByIndex((GLuint)OGL::TexCoordIndex::TexCoord0x02);
+		GLuint drawArray[] = {0, 1, 2};
+		mQuad.mMaterial->SetAttribID(mAttribID);
+		mQuad.DrawByIndexs(drawArray, 3);
 
+		//
 		mCommand->SetReadTarget(mAttribID);
 		mCommand->SetUnWriteTarget(mAttribID);
 		mCommand->BlitDepthFBO(info.windowWidth, info.windowHeight);

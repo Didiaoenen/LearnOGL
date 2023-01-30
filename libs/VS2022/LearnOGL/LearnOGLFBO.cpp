@@ -23,6 +23,6 @@ namespace OGL
 
 	void LearnOGLFBO::UnBindForWrite()
 	{
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }
