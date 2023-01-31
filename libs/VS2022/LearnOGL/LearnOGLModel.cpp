@@ -20,8 +20,6 @@ namespace OGL
 	{
 		mMaterial->Draw();
 
-		mMaterial->mShader->SetMat4("model", mTransform);
-
 		for (uint32_t i = 0; i < mMeshs.size(); i++)
 		{
 			mMeshs[i]->Draw();
@@ -31,8 +29,6 @@ namespace OGL
 	void LearnOGLModel::ShadowDraw()
 	{
 		mShadowMaterial->Draw();
-
-		mShadowMaterial->mShader->SetMat4("model", mTransform);
 
 		for (uint32_t i = 0; i < mMeshs.size(); i++)
 		{

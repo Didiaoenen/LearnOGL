@@ -36,7 +36,9 @@ public:
 		{
 			glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
 			sample = glm::normalize(sample);
+			sample *= randomFloats(generator);
 			float scale = float(i) / SAMPLE_COUNT;
+
 			scale = lerp(0.1f, 1.0f, scale * scale);
 			sample *= scale;
 			mSSAOKernel.push_back(sample);
@@ -123,18 +125,20 @@ public:
 			mGeometryShader->SetInt("invertedNormal", 0);
 
 			pipeline.SetPos(0.0f, 0.5f, 0.0f);
-			pipeline.SetRotate(-90.0f, 0.0f, 0.0f);
+			pipeline.SetRotate(-90.0f, 0.0f, 90.0f);
 			pipeline.SetScale(1.0f, 1.0f, 1.0f);
 			mBackpack->SetTransform(pipeline.GetTransform());
 			mBackpack->Draw();
 		}
 		mCommand->ReleaseTemporaryRT(mGeometryAttribID);
 
-		mCommand->GetTemporaryCustomRT(mAttribID, info.windowWidth, info.windowHeight);
-		mCommand->SetRenderTarget(mAttribID);
+		//mCommand->GetTemporaryCustomRT(mAttribID, info.windowWidth, info.windowHeight);
+		//mCommand->SetRenderTarget(mAttribID);
 		{
-			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
-			mContext->ExecuteCommand(mCommand, false);
+			//mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+			//mContext->ExecuteCommand(mCommand);
+
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			mShader->Use();
 			for (uint32_t i = 0; i < SAMPLE_COUNT; i++)
@@ -150,36 +154,36 @@ public:
 			mQuad[0].mMaterial->SetAttribID(mGeometryAttribID);
 			mQuad[0].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
 		}
-		mCommand->ReleaseTemporaryRT(mAttribID);
+		//mCommand->ReleaseTemporaryRT(mAttribID);
 
-		mCommand->GetTemporaryCustomRT(mBlurAttribID, info.windowWidth, info.windowHeight);
-		mCommand->SetRenderTarget(mBlurAttribID);
-		{
-			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
-			mContext->ExecuteCommand(mCommand, false);
+		//mCommand->GetTemporaryCustomRT(mBlurAttribID, info.windowWidth, info.windowHeight);
+		//mCommand->SetRenderTarget(mBlurAttribID);
+		//{
+		//	mCommand->ClearRenderTarget(false, true, glm::vec4(0.0f));
+		//	mContext->ExecuteCommand(mCommand, false);
 
-			mBlurShader->Use();
-			mQuad[1].mMaterial = mBlurMaterial;
-			mQuad[1].mMaterial->SetAttribID(mAttribID);
-			mQuad[1].DrawByIndex(0);
-		}
-		mCommand->ReleaseTemporaryRT(mBlurAttribID);
+		//	mBlurShader->Use();
+		//	mQuad[1].mMaterial = mBlurMaterial;
+		//	mQuad[1].mMaterial->SetAttribID(mAttribID);
+		//	mQuad[1].DrawByIndex(0);
+		//}
+		//mCommand->ReleaseTemporaryRT(mBlurAttribID);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
-		mContext->ExecuteCommand(mCommand, false);
+		//mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		//mContext->ExecuteCommand(mCommand);
 
-		mLightShader->Use();
-		mLightShader->SetVec3("viewPos", glm::vec3(0.0f));
-		mLightShader->SetVec3("light.Position", pipeline.GetCameraView() * glm::vec4(lightPos, 1.0));
-		mLightShader->SetVec3("light.Color", lightColor);
-		mLightShader->SetFloat("light.Linear", 0.09f);
-		mLightShader->SetFloat("light.Quadratic", 0.032f);
+		//mLightShader->Use();
+		//mLightShader->SetVec3("viewPos", glm::vec3(0.0f));
+		//mLightShader->SetVec3("light.Position", pipeline.GetCameraView() * glm::vec4(lightPos, 1.0));
+		//mLightShader->SetVec3("light.Color", lightColor);
+		//mLightShader->SetFloat("light.Linear", 0.09f);
+		//mLightShader->SetFloat("light.Quadratic", 0.032f);
 
-		GLuint drawArray[] = { 0, 1, 2, 3 };
-		mQuad[2].mMaterial = mLightMaterial;
-		mQuad[2].mMaterial->SetAttribID(mGeometryAttribID);
-		mQuad[2].mMaterial->SetAttribID(mBlurAttribID);
-		mQuad[2].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
+		//GLuint drawArray[] = { 0, 1, 2, 3 };
+		//mQuad[2].mMaterial = mLightMaterial;
+		//mQuad[2].mMaterial->SetAttribID(mGeometryAttribID);
+		//mQuad[2].mMaterial->SetAttribID(mBlurAttribID);
+		//mQuad[2].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
 	}
 
 	virtual void ShutDown() override

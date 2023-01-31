@@ -202,7 +202,7 @@ namespace OGL
         std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0);
         std::default_random_engine generator;
         std::vector<glm::vec3> ssaoNoise;
-        for (unsigned int i = 0; i < 16; i++)
+        for (uint32_t i = 0; i < 16; i++)
         {
             glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f);
             ssaoNoise.push_back(noise);
