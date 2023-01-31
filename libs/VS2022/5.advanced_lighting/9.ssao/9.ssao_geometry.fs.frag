@@ -9,11 +9,11 @@ in VS_OUT
 	vec3 Normal;
 } fs_in;
 
-float value = 0.95;
+uniform vec3 albedoColor;
 
 void main()
 {
 	gPos = fs_in.WPos;
 	gNormal = normalize(fs_in.Normal);
-	gAlbedo.rgb = vec3(value);
+	gAlbedo.rgb = albedoColor;
 }

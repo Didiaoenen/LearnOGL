@@ -62,10 +62,16 @@ public:
 		mLightMaterial = new ssao_lighting_material(mLightShader);
 		mGeometryMaterial = new ssao_geometry_material(mGeometryShader);
 
+		mMaterial->mCommand = mCommand;
+		mBlurMaterial->mCommand = mCommand;
+		mLightMaterial->mCommand = mCommand;
+
 		mBackpack = new OGL::LearnOGLModel("../../../resources/objects/backpack/backpack.obj");
 		mBackpack->mMaterial = mGeometryMaterial;
 
-		//mGeometryAttribID = mShader->GetAttribID("gPos");
+		mAttribID = mShader->GetAttribID("gPos");
+		mBlurAttribID = mBlurShader->GetAttribID("ssaoInput");
+		mGeometryAttribID = mGeometryShader->GetAttribID("albedoColor");
 
 		mTools = new OGL::LearnOGLTools();
 		mCube = mTools->MakeCube(1.0f);
@@ -105,6 +111,7 @@ public:
 			mGeometryShader->Use();
 			mGeometryShader->SetMat4("projection", pipeline.GetCameraProjection());
 			mGeometryShader->SetMat4("view", pipeline.GetCameraView());
+			mGeometryShader->SetVec3("albedoColor", glm::vec3(0.95f));
 
 			pipeline.SetPos(0.0f, 7.0f, 0.0f);
 			pipeline.SetRotate(0.0f, 0.0f, 0.0f);
@@ -123,45 +130,56 @@ public:
 		}
 		mCommand->ReleaseTemporaryRT(mGeometryAttribID);
 
-		//mCommand->GetTemporaryCustomRT(mAttribID, info.windowWidth, info.windowHeight);
-		//mCommand->SetRenderTarget(mAttribID);
-		//{
-		//	mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
-		//	mContext->ExecuteCommand(mCommand, false);
+		mCommand->GetTemporaryCustomRT(mAttribID, info.windowWidth, info.windowHeight);
+		mCommand->SetRenderTarget(mAttribID);
+		{
+			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
-		//	mShader->Use();
-		//	for (uint32_t i = 0; i < SAMPLE_COUNT; i++)
-		//	{
-		//		mShader->SetVec3("samples[" + std::to_string(i) + "]", mSSAOKernel[i]);
-		//	}
-		//	mShader->SetMat4("projection", pipeline.GetCameraProjection());
-		//	
-		//	GLuint drawArray[] = { 0 };
-		//	mQuad[0].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
-		//}
-		//mCommand->ReleaseTemporaryRT(mGeometryAttribID);
+			mShader->Use();
+			for (uint32_t i = 0; i < SAMPLE_COUNT; i++)
+			{
+				mShader->SetVec3("samples[" + std::to_string(i) + "]", mSSAOKernel[i]);
+			}
+			mShader->SetMat4("projection", pipeline.GetCameraProjection());
+			
+			mRandomTex->Bind(GL_TEXTURE2);
 
-		//mCommand->GetTemporaryCustomRT(mBlurAttribID, info.windowWidth, info.windowHeight);
-		//mCommand->SetRenderTarget(mBlurAttribID);
-		//{
-		//	mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
-		//	mContext->ExecuteCommand(mCommand, false);
+			GLuint drawArray[] = { 0, 1 };
+			mQuad[0].mMaterial = mMaterial;
+			mQuad[0].mMaterial->SetAttribID(mGeometryAttribID);
+			mQuad[0].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
+		}
+		mCommand->ReleaseTemporaryRT(mAttribID);
 
-		//	mBlurShader->Use();
-		//	mQuad[1].Draw();
-		//}
-		//mCommand->ReleaseTemporaryRT(mBlurAttribID);
+		mCommand->GetTemporaryCustomRT(mBlurAttribID, info.windowWidth, info.windowHeight);
+		mCommand->SetRenderTarget(mBlurAttribID);
+		{
+			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
-		//mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		//mContext->ExecuteCommand(mCommand);
+			mBlurShader->Use();
+			mQuad[1].mMaterial = mBlurMaterial;
+			mQuad[1].mMaterial->SetAttribID(mAttribID);
+			mQuad[1].DrawByIndex(0);
+		}
+		mCommand->ReleaseTemporaryRT(mBlurAttribID);
 
-		//mLightShader->SetVec3("light.Position", pipeline.GetCameraView() * glm::vec4(lightPos, 1.0));
-		//mLightShader->SetVec3("light.Color", lightColor);
-		//mLightShader->SetFloat("light.Linear", 0.09f);
-		//mLightShader->SetFloat("light.Quadratic", 0.032f);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 
-		//GLuint drawArray[] = { 0 };
-		//mQuad[2].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
+		mLightShader->Use();
+		mLightShader->SetVec3("viewPos", glm::vec3(0.0f));
+		mLightShader->SetVec3("light.Position", pipeline.GetCameraView() * glm::vec4(lightPos, 1.0));
+		mLightShader->SetVec3("light.Color", lightColor);
+		mLightShader->SetFloat("light.Linear", 0.09f);
+		mLightShader->SetFloat("light.Quadratic", 0.032f);
+
+		GLuint drawArray[] = { 0, 1, 2, 3 };
+		mQuad[2].mMaterial = mLightMaterial;
+		mQuad[2].mMaterial->SetAttribID(mGeometryAttribID);
+		mQuad[2].mMaterial->SetAttribID(mBlurAttribID);
+		mQuad[2].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
 	}
 
 	virtual void ShutDown() override

@@ -21,8 +21,10 @@ namespace OGL
 	private:
 		bool Init(uint32_t width, uint32_t height);
 
-	private:
+	public:
 		uint32_t mColorAttchCount{ 0 };
+	
+	private:
 		bool mDepthAttach{ false };
 		bool mStencilAttach{ false };
 

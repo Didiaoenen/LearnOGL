@@ -22,3 +22,39 @@ void ssao_lighting_material::Draw()
 {
 	mShader->Use();
 }
+
+void ssao_lighting_material::DrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
+{
+	mShader->Use();
+
+	CommandDrawByIndex(index, texIndex);
+}
+
+void ssao_lighting_material::SetAttribID(GLuint attrib)
+{
+	if (mAttribMap.find(attrib) == mAttribMap.end())
+	{
+		mAttribMap.insert(std::pair<GLuint, bool>(attrib, true));
+
+		if (mCommand)
+		{
+			auto unitText = mCommand->mUnitTexMap.find(attrib);
+			if (unitText != mCommand->mUnitTexMap.end())
+			{
+				auto fbo = dynamic_cast<OGL::LearnOGLCustomFBO*>(unitText->second);
+				for (uint32_t i = 0; i < fbo->mColorAttchCount; i++)
+				{
+					mDrawTexMap.insert(std::pair<uint32_t, OGL::LearnOGLFBO*>(mDrawTexMap.size(), fbo));
+				}
+			}
+		}
+	}
+}
+
+void ssao_lighting_material::CommandDrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
+{
+	if (mDrawTexMap.find(index) != mDrawTexMap.end())
+	{
+		mDrawTexMap.find(index)->second->BindForReading(texIndex, index);
+	}
+}

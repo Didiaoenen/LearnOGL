@@ -21,3 +21,27 @@ void ssao_material::Draw()
 {
 	mShader->Use();
 }
+
+void ssao_material::DrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
+{
+	mShader->Use();
+
+	CommandDrawByIndex(index, texIndex);
+}
+
+void ssao_material::SetAttribID(GLuint attrib)
+{
+	mAttribID = attrib;
+}
+
+void ssao_material::CommandDrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
+{
+	if (mCommand)
+	{
+		auto unitText = mCommand->mUnitTexMap.find(mAttribID);
+		if (unitText != mCommand->mUnitTexMap.end())
+		{
+			unitText->second->BindForReading(texIndex, index);
+		}
+	}
+}
