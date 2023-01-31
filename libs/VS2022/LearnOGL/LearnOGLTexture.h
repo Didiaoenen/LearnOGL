@@ -21,11 +21,11 @@ namespace OGL
 	class LearnOGLTexture
 	{
 	public:
+		LearnOGLTexture(GLuint width, GLuint height, const void* pixels, TextureType textureType = TextureType::Diffuse, GLenum targetType = GL_TEXTURE_2D);
 		LearnOGLTexture(const std::string path, bool flip = false, bool gammaCorrection = false, TextureType textureType = TextureType::Diffuse, GLenum targetType = GL_TEXTURE_2D);
 		~LearnOGLTexture();
 
 		void Bind(GLenum textureUnit = GL_TEXTURE0);
-		
 
 	public:
 		GLuint mID{ 0 };

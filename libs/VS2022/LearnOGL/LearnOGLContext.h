@@ -14,7 +14,7 @@ namespace OGL
 		LearnOGLContext();
 		~LearnOGLContext();
 
-		void ExecuteCommand(LearnOGLCommand* command);
+		void ExecuteCommand(LearnOGLCommand* command, bool clearBack = true);
 		void DrawRenderers();
 		void DrawSkybox(LearnOGLCamera* camera);
 

@@ -10,10 +10,12 @@ namespace OGL
 	{
 	}
 
-	void LearnOGLContext::ExecuteCommand(LearnOGLCommand* command)
+	void LearnOGLContext::ExecuteCommand(LearnOGLCommand* command, bool clearBack/* = true*/)
 	{
-
-		glClearColor(command->mBackgroundColor.r, command->mBackgroundColor.g, command->mBackgroundColor.b, command->mBackgroundColor.a);
+		if (clearBack)
+		{
+			glClearColor(command->mBackgroundColor.r, command->mBackgroundColor.g, command->mBackgroundColor.b, command->mBackgroundColor.a);
+		}
 
 		GLenum bit = 0;
 		if (command->mColorBit)

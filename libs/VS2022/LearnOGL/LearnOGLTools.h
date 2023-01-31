@@ -4,7 +4,9 @@
 #include <glm/glm.hpp>
 
 #include "LearnOGLBatch.h"
+#include "LearnOGLTexture.h"
 
+#include <random>
 #include <iostream>
 
 namespace OGL
@@ -20,6 +22,8 @@ namespace OGL
 		LearnOGLBatch MakePlane(GLfloat radius);
 		LearnOGLBatch MakeCube(GLfloat radius);
 		LearnOGLBatch MakeQuad(GLfloat radius, bool tangent = false, bool bitangent = false);
+
+		LearnOGLTexture* MakeRandomNoiseTex(GLuint width, GLuint height);
 
 	private:
 
