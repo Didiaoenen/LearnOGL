@@ -93,16 +93,19 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
+
 		mCommand->SetViewport(0.0f, 0.0f, info.windowWidth, info.windowHeight);
+
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
 		mCommand->GetTemporaryHDRRT(mHDRTexAttribID, info.windowWidth, info.windowHeight);
 		mCommand->SetRenderTarget(mHDRTexAttribID);
 		{
-			mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			mContext->ExecuteCommand(mCommand);
-
-			OGL::LearnOGLPipeline pipeline;
-			pipeline.SetCamera(mCamera);
+			mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
 			mLightShader->Use();
 			mLightShader->SetMat4("projection", pipeline.GetCameraProjection());
@@ -124,8 +127,8 @@ public:
 		}
 		mCommand->ReleaseTemporaryRT(mHDRTexAttribID);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 		
 		mHDRShader->Use();
 		mHDRShader->SetInt("hdr", mHDR);

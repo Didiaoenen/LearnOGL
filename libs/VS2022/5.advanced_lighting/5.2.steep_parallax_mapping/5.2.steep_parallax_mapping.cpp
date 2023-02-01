@@ -33,20 +33,20 @@ public:
 
 		mNormalShader = new OGL::LearnOGLShader("5.2.steep_parallax_mapping.vs.vert", "5.2.steep_parallax_mapping.fs.frag");
 		mNormalMaterial = new steep_normal_material(mNormalShader);
-		mNormalMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
-		mNormalMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
+		mNormalMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, false, OGL::TextureType::Diffuse);
+		mNormalMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, false, OGL::TextureType::Normal);
 
 		mParallaxShader1 = new OGL::LearnOGLShader("5.2.steep_parallax_mapping.vs.vert", "5.2.steep_parallax_mapping.fs.frag");
 		mParallaxMaterial1 = new steep_parallax_material(mParallaxShader1);
-		mParallaxMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
-		mParallaxMaterial1->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
-		mParallaxMaterial1->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_disp.jpg", false, OGL::TextureType::Parallax);
+		mParallaxMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, false, OGL::TextureType::Diffuse);
+		mParallaxMaterial1->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, false, OGL::TextureType::Normal);
+		mParallaxMaterial1->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_disp.jpg", false, false, OGL::TextureType::Parallax);
 
 		mParallaxShader2 = new OGL::LearnOGLShader("5.2.steep_parallax_mapping.vs.vert", "5.2.steep_parallax_mapping.fs.frag");
 		mParallaxMaterial2 = new steep_parallax_material(mParallaxShader1);
-		mParallaxMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/toy_box_diffuse.png", false, OGL::TextureType::Diffuse);
-		mParallaxMaterial2->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/toy_box_normal.png", false, OGL::TextureType::Normal);
-		mParallaxMaterial2->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/toy_box_disp.png", false, OGL::TextureType::Parallax);
+		mParallaxMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/toy_box_diffuse.png", false, false, OGL::TextureType::Diffuse);
+		mParallaxMaterial2->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/toy_box_normal.png", false, false, OGL::TextureType::Normal);
+		mParallaxMaterial2->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/toy_box_disp.png", false, false, OGL::TextureType::Parallax);
 
 		mTools = new OGL::LearnOGLTools();
 		mNormalQuad = mTools->MakeQuad(1.0f, true, true);
@@ -66,13 +66,13 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
+
 		mCommand->SetViewport(0.0f, 0.0f, info.windowWidth, info.windowHeight);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
-
-		OGL::LearnOGLPipeline pipeline;
-		pipeline.SetCamera(mCamera);
 
 		mNormalShader->Use();
 		mNormalShader->SetMat4("projection", pipeline.GetCameraProjection());

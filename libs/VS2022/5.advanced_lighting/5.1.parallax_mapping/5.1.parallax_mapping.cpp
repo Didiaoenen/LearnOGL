@@ -33,14 +33,14 @@ public:
 
 		mNormalShader = new OGL::LearnOGLShader("5.1.parallax_mapping.vs.vert", "5.1.parallax_mapping.fs.frag");
 		mNormalMaterial = new normal_material(mNormalShader);
-		mNormalMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
-		mNormalMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
+		mNormalMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, false, OGL::TextureType::Diffuse);
+		mNormalMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, false, OGL::TextureType::Normal);
 
 		mParallaxShader = new OGL::LearnOGLShader("5.1.parallax_mapping.vs.vert", "5.1.parallax_mapping.fs.frag");
 		mParallaxMaterial = new parallax_material(mParallaxShader);
-		mParallaxMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, OGL::TextureType::Diffuse);
-		mParallaxMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, OGL::TextureType::Normal);
-		mParallaxMaterial->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_disp.jpg", false, OGL::TextureType::Parallax);
+		mParallaxMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2.jpg", false, false, OGL::TextureType::Diffuse);
+		mParallaxMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_normal.jpg", false, false, OGL::TextureType::Normal);
+		mParallaxMaterial->mDepthTex = new OGL::LearnOGLTexture("./../../../resources/textures/bricks2_disp.jpg", false, false, OGL::TextureType::Parallax);
 
 		mTools = new OGL::LearnOGLTools();
 		mNormalQuad = mTools->MakeQuad(1.0f, true, true);
@@ -57,13 +57,13 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
+
 		mCommand->SetViewport(0.0f, 0.0f, info.windowWidth, info.windowHeight);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
-
-		OGL::LearnOGLPipeline pipeline;
-		pipeline.SetCamera(mCamera);
 
 		mNormalShader->Use();
 		mNormalShader->SetMat4("projection", pipeline.GetCameraProjection());

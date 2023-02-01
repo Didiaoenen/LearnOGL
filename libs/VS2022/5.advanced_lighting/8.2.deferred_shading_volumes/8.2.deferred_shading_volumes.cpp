@@ -98,16 +98,19 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
-
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
+
+		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
+		
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
 		mCommand->GetTemporaryCustomRT(mAttribID, info.windowWidth, info.windowHeight, 3, true);
 		mCommand->SetRenderTarget(mAttribID);
 		{
-			mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			mContext->ExecuteCommand(mCommand);
+			mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
 			mGShader->Use();
 			mGShader->SetMat4("projection", pipeline.GetCameraProjection());
@@ -124,8 +127,8 @@ public:
 		}
 		mCommand->ReleaseTemporaryRT(mAttribID);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 
 		mDeferredShader->Use();
 		for (uint32_t i = 0; i < mLightPositions.size(); i++)
@@ -146,7 +149,7 @@ public:
 
 		GLuint drawArray[] = { 0, 1, 2 };
 		mQuad.mMaterial->SetAttribID(mAttribID);
-		mQuad.DrawByIndexs(drawArray, 3);
+		mQuad.DrawByIndexs(sizeof(drawArray) / sizeof(GLuint));
 
 		//
 		mCommand->SetReadTarget(mAttribID);

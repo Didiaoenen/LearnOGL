@@ -128,16 +128,19 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		mCommand->SetViewport(0.0f, 0.0f, info.windowWidth, info.windowHeight);
-
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
+
+		mCommand->SetViewport(0.0f, 0.0f, info.windowWidth, info.windowHeight);
+
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
 		mCommand->GetTemporaryCustomRT(mSceneTexAttribID, info.windowWidth, info.windowHeight, 2, true);
 		mCommand->SetRenderTarget(mSceneTexAttribID);
 		{
-			mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			mContext->ExecuteCommand(mCommand);
+			mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
 			mBloomShader->Use();
 			mBloomShader->SetMat4("projection", pipeline.GetCameraProjection());
@@ -261,8 +264,8 @@ public:
 		}
 		mCommand->UnBindFramebuffer();
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 
 		mFinalShader->Use();
 		mFinalShader->SetInt("bloom", mBloom);

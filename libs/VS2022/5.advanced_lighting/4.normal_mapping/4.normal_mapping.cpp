@@ -33,8 +33,8 @@ public:
 		mShader = new OGL::LearnOGLShader("4.normal_mapping.vs.vert", "4.normal_mapping.fs.frag");
 
 		mMaterial = new normal_material(mShader);
-		mMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/brickwall.jpg", false, OGL::TextureType::Diffuse);
-		mMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/brickwall_normal.jpg", false, OGL::TextureType::Normal);
+		mMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/brickwall.jpg", false, false, OGL::TextureType::Diffuse);
+		mMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/brickwall_normal.jpg", false, false, OGL::TextureType::Normal);
 
 		mTools = new OGL::LearnOGLTools();
 		mQuad = mTools->MakeQuad(1.0f, true, true);
@@ -53,13 +53,13 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
+
 		mCommand->SetViewport(0.0f, 0.0f, info.windowWidth, info.windowHeight);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
-
-		OGL::LearnOGLPipeline pipeline;
-		pipeline.SetCamera(mCamera);
 
 		mShader->Use();
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());

@@ -20,8 +20,8 @@ void hdr_material::Draw()
 {
 	mShader->Use();
 	
-	if (mCommand->mUintTexMap.find(mHDRAttribID) != mCommand->mUintTexMap.end())
+	if (mCommand->mUnitTexMap.find(mHDRAttribID) != mCommand->mUnitTexMap.end())
 	{
-		mCommand->mUintTexMap.find(mHDRAttribID)->second->BindForReading(GL_TEXTURE0);
+		mCommand->mUnitTexMap.find(mHDRAttribID)->second->BindForReading(GL_TEXTURE0);
 	}
 }

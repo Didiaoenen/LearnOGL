@@ -99,10 +99,10 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
-		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
-
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
+
+		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);

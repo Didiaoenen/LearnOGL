@@ -27,8 +27,8 @@ void point_shadow_material::Draw()
 		mDiffuseTex->Bind(GL_TEXTURE0);
 	}
 
-	if (mCommand->mUintTexMap.find(mDepthAttribID) != mCommand->mUintTexMap.end())
+	if (mCommand->mUnitTexMap.find(mDepthAttribID) != mCommand->mUnitTexMap.end())
 	{
-		mCommand->mUintTexMap.find(mDepthAttribID)->second->BindForReading(GL_TEXTURE1);
+		mCommand->mUnitTexMap.find(mDepthAttribID)->second->BindForReading(GL_TEXTURE1);
 	}
 }

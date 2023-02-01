@@ -28,6 +28,11 @@ public:
 		mShadowAtlasWidth = 1024 * 4;
 		mShadowAtlasHeight = 1024 * 4;
 
+		mPos.push_back(glm::vec3(3.0f, 0.5f, 0.0f));
+		mPos.push_back(glm::vec3(-3.0f, 0.5f, 0.0f));
+		mPos.push_back(glm::vec3(0.0f, 0.5f, 3.0f));
+		mPos.push_back(glm::vec3(0.0f, 0.5f, -3.0f));
+
 		return true;
 	}
 
@@ -41,11 +46,11 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.2.1.point_shadows_depth.vs.vert", "3.2.1.point_shadows_depth.fs.frag", "3.2.1.point_shadows_depth.gs.geom");
 		
 		mPlaneMaterial = new point_shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new point_shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, OGL::TextureType::Diffuse);
+		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, false, OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
 		mShadowMaterial = new point_shadow_depth_material(mShadowShader);
@@ -79,45 +84,43 @@ public:
 
 	virtual void Render(OGL::LearnOGLContext* context) override
 	{
+		OGL::LearnOGLPipeline pipeline;
+
 		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
+
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand);
 
 		mCommand->GetTemporaryCubeMapRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
-		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0));
-		mContext->ExecuteCommand(mCommand);
-
-		OGL::LearnOGLPipeline pipeline;
-
+		
 		float zFar = 25.0f;
-		glm::mat4 shadowProj = pipeline.GetPerspectiveProjection(90.0f, mShadowAtlasWidth / mShadowAtlasHeight, 1.0f, zFar);
-	
-		mShadowShader->Use();
-		for (uint32_t i = 0; i < NUM_LAYERS; i++)
+		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0));
+		mContext->ExecuteCommand(mCommand, false);
 		{
-			mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp));
+			glm::mat4 shadowProj = pipeline.GetPerspectiveProjection(90.0f, mShadowAtlasWidth / mShadowAtlasHeight, 1.0f, zFar);
+
+			mShadowShader->Use();
+			for (uint32_t i = 0; i < NUM_LAYERS; i++)
+			{
+				mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp));
+			}
+			mShadowShader->SetFloat("farPlane", zFar);
+			mShadowShader->SetVec3("lightPos", mLightPos);
+
+			pipeline.SetPos(0.0f, 0.0f, 0.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+			mPlane.SetShadowTransform(pipeline.GetTransform());
+			mPlane.ShadowDraw();
+
+			for (int i = 0; i < 4; i++)
+			{
+				pipeline.SetPos(mPos[i].x, mPos[i].y, mPos[i].z);
+				mCubes[i].SetShadowTransform(pipeline.GetTransform());
+				mCubes[i].ShadowDraw();
+			}
 		}
-		mShadowShader->SetFloat("farPlane", zFar);
-		mShadowShader->SetVec3("lightPos", mLightPos);
-
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mPlane.SetShadowTransform(pipeline.GetTransform());
-		mPlane.ShadowDraw();
-
-		std::vector<glm::vec3> mPos;
-		mPos.push_back(glm::vec3( 3.0f, 0.5f,  0.0f));
-		mPos.push_back(glm::vec3(-3.0f, 0.5f,  0.0f));
-		mPos.push_back(glm::vec3( 0.0f, 0.5f,  3.0f));
-		mPos.push_back(glm::vec3( 0.0f, 0.5f, -3.0f));
-
-		for (int i = 0; i < 4; i++)
-		{
-			pipeline.SetPos(mPos[i].x, mPos[i].y, mPos[i].z);
-			mCubes[i].SetShadowTransform(pipeline.GetTransform());
-			mCubes[i].ShadowDraw();
-		}
-
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
@@ -135,11 +138,15 @@ public:
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 		mShader->SetFloat("farPlane", zFar);
 
+		pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
 
 		for (int i = 0; i < 4; i++)
 		{
+			pipeline.SetPos(mPos[i].x, mPos[i].y, mPos[i].z);
 			mCubes[i].SetTransform(pipeline.GetTransform());
 			mCubes[i].Draw();
 		}
@@ -187,6 +194,7 @@ private:
 
 	glm::vec3 mLightPos = glm::vec3(0.0f, 0.5f, 0.0f);
 	glm::vec3 mLightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	std::vector<glm::vec3> mPos;
 };
 
 DECLARE_MAIN(point_shadows)

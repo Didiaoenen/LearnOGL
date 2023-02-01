@@ -11,10 +11,10 @@ public:
 	~blur_material();
 
 	virtual void Draw() override;
-	virtual void DrawByIndex(GLuint index) override;
+	virtual void DrawByIndex(GLuint index, GLenum texIndex = GL_TEXTURE0) override;
 	virtual void SetAttribID(GLuint attribID) override;
 
-	void CommandDrawByIndex(GLuint index);
+	void CommandDrawByIndex(GLuint index, GLenum texIndex = GL_TEXTURE0);
 
 public:
 	std::string mImageTexLoc = "imageTex";

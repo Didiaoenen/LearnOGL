@@ -48,20 +48,20 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.1.3.shadow_mapping_depth.vs.vert", "3.1.3.shadow_mapping_depth.fs.frag");
 
 		mPlaneMaterial = new shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, OGL::TextureType::Diffuse);
+		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, false, OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
 		mBackpackMaterial = new shadow_material(mShader);
-		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", false, OGL::TextureType::Diffuse);
+		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", false, false, OGL::TextureType::Diffuse);
 		mBackpackMaterial->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
 
-		mDepthAttribID = mShader->GetUniformLocation("depthMap");
+		mDepthAttribID = mShader->GetAttribID("depthMap");
 
 		mPlane = mTools->MakePlane(10.0f);
 		mPlane.mMaterial = mPlaneMaterial;
@@ -93,44 +93,50 @@ public:
 
 	void RenderShadow()
 	{
+		OGL::LearnOGLPipeline pipeline;
+
 		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
 
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
+
+		glm::mat4 vpMatrix;
 		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
-		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-		mContext->ExecuteCommand(mCommand);
+		{
+			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
-		OGL::LearnOGLPipeline pipeline;
-		glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
-		glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
+			glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		glm::mat4 vpMatrix = lightProj * lightView;
+			vpMatrix = lightProj * lightView;
 
-		mShadowShader->Use();
-		mShadowShader->SetMat4("vpMatrix", vpMatrix);
+			mShadowShader->Use();
+			mShadowShader->SetMat4("vpMatrix", vpMatrix);
 
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mPlane.SetShadowTransform(pipeline.GetTransform());
-		mPlane.ShadowDraw();
+			pipeline.SetPos(0.0f, 0.0f, 0.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+			mPlane.SetShadowTransform(pipeline.GetTransform());
+			mPlane.ShadowDraw();
 
-		pipeline.SetPos(-2.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube.SetShadowTransform(pipeline.GetTransform());
-		mCube.ShadowDraw();
+			pipeline.SetPos(-2.0f, 0.5f, 0.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+			mCube.SetShadowTransform(pipeline.GetTransform());
+			mCube.ShadowDraw();
 
-		pipeline.SetPos(2.0f, 2.0f, 0.0f);
-		pipeline.SetScale(0.5f, 0.5f, 0.5f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mBackpack->SetShadowTransform(pipeline.GetTransform());
-		mBackpack->ShadowDraw();
-
+			pipeline.SetPos(2.0f, 2.0f, 0.0f);
+			pipeline.SetScale(0.5f, 0.5f, 0.5f);
+			pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+			mBackpack->SetShadowTransform(pipeline.GetTransform());
+			mBackpack->ShadowDraw();
+		}
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 
 		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 
@@ -145,9 +151,7 @@ public:
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 
 		mPlane.Draw();
-
 		mCube.Draw();
-		
 		mBackpack->Draw();
 	}
 
