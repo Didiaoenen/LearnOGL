@@ -44,7 +44,7 @@ void ssao_lighting_material::SetAttribID(GLuint attrib)
 				auto fbo = dynamic_cast<OGL::LearnOGLCustomFBO*>(unitText->second);
 				for (uint32_t i = 0; i < fbo->mColorAttchCount; i++)
 				{
-					mDrawTexMap.insert(std::pair<uint32_t, OGL::LearnOGLFBO*>(mDrawTexMap.size(), fbo));
+					mDrawTexMap.insert(std::pair<uint32_t, OGL::DrawTex*>(mDrawTexMap.size(), new OGL::DrawTex(fbo, i)));
 				}
 			}
 		}
@@ -55,6 +55,7 @@ void ssao_lighting_material::CommandDrawByIndex(GLuint index, GLenum texIndex/* 
 {
 	if (mDrawTexMap.find(index) != mDrawTexMap.end())
 	{
-		mDrawTexMap.find(index)->second->BindForReading(texIndex, index);
+		auto drawTex = mDrawTexMap.find(index)->second;
+		drawTex->mFBO->BindForReading(texIndex, drawTex->mIndex);
 	}
 }

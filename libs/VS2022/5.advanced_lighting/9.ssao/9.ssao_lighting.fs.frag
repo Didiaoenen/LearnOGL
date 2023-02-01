@@ -30,6 +30,7 @@ void main()
 	float AmbientOcclusion = texture(ssao, TexCoords).r;
 	
 	vec3 ambient = vec3(0.3 * Diffuse * AmbientOcclusion);
+
 	vec3 lighting = ambient;
 	vec3 viewDir = normalize(viewPos - Pos);
 

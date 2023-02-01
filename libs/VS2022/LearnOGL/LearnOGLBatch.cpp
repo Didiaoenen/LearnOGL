@@ -423,7 +423,7 @@ namespace OGL
 		glBindVertexArray(0);
 	}
 
-	void LearnOGLBatch::DrawByIndex(GLuint index)
+	void LearnOGLBatch::DrawByIndex(GLuint index/* = 0*/)
 	{
 		if (!mBatchDone)
 		{
@@ -435,7 +435,7 @@ namespace OGL
 		DrawArrays();
 	}
 
-	void LearnOGLBatch::DrawByIndexs(GLuint* index, uint32_t count)
+	void LearnOGLBatch::DrawByIndexs(uint32_t count)
 	{
 		if (!mBatchDone)
 		{

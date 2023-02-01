@@ -44,8 +44,8 @@ namespace OGL
 		void Bitangent3fv(glm::vec3 bitangent);
 
 		void DrawArrays();
-		void DrawByIndex(GLuint index);
-		void DrawByIndexs(GLuint* index, uint32_t count);
+		void DrawByIndex(GLuint index = 0);
+		void DrawByIndexs(uint32_t count);
 		virtual void Draw() override;
 
 		virtual void ShadowDraw() override;

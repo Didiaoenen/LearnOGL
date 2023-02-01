@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include "LearnOGLFBO.h"
+
 #include <string>
 
 namespace OGL
@@ -94,6 +96,18 @@ namespace OGL
 		Backward,
 		Left,
 		Right
+	};
+
+	struct DrawTex
+	{
+		uint32_t mIndex;
+		LearnOGLFBO* mFBO;
+
+		DrawTex(LearnOGLFBO* fbo, uint32_t index)
+		{
+			mFBO = fbo;
+			mIndex = index;
+		}
 	};
 }
 

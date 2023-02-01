@@ -1,6 +1,7 @@
 #pragma once
 
 #include <LearnOGLMaterial.h>
+#include <LearnOGLDefine.h>
 
 #include <map>
 
@@ -24,5 +25,5 @@ private:
 	std::string mSSAOLoc = "ssao";
 
 	std::map<GLuint, bool> mAttribMap;
-	std::map<uint32_t, OGL::LearnOGLFBO*> mDrawTexMap;
+	std::map<uint32_t, OGL::DrawTex*> mDrawTexMap;
 };
