@@ -23,7 +23,7 @@ namespace OGL
 			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
-		return nullptr;
+		return mUnitTexMap.find(id)->second;
 	}
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height)
@@ -34,7 +34,7 @@ namespace OGL
 			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
-		return nullptr;
+		return mUnitTexMap.find(id)->second;
 	}
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
@@ -45,7 +45,7 @@ namespace OGL
 			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
-		return nullptr;
+		return mUnitTexMap.find(id)->second;
 	}
 
 	LearnOGLFBO* LearnOGLCommand::GetTemporaryCustomRT(GLuint id, GLuint width, GLuint height, uint32_t colorAttachCount, bool depthAttch, bool stencilAttach)
@@ -56,7 +56,7 @@ namespace OGL
 			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
-		return nullptr;
+		return mUnitTexMap.find(id)->second;
 	}
 
 	void LearnOGLCommand::ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor)

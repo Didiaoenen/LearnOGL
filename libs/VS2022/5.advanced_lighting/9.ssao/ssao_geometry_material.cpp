@@ -19,4 +19,9 @@ ssao_geometry_material::~ssao_geometry_material()
 void ssao_geometry_material::Draw()
 {
 	mShader->Use();
+
+	if (mDiffuseTex)
+	{
+		mDiffuseTex->Bind(GL_TEXTURE0);
+	}
 }

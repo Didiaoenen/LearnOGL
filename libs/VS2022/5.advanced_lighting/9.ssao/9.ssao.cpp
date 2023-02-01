@@ -104,11 +104,14 @@ public:
 		OGL::LearnOGLPipeline pipeline;
 		pipeline.SetCamera(mCamera);
 
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
+
 		mCommand->GetTemporaryCustomRT(mGeometryAttribID, info.windowWidth, info.windowHeight, 3, true);
 		mCommand->SetRenderTarget(mGeometryAttribID);
 		{
-			mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
-			mContext->ExecuteCommand(mCommand);
+			mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
 			mGeometryShader->Use();
 			mGeometryShader->SetMat4("projection", pipeline.GetCameraProjection());
@@ -125,7 +128,7 @@ public:
 			mGeometryShader->SetInt("invertedNormal", 0);
 
 			pipeline.SetPos(0.0f, 0.5f, 0.0f);
-			pipeline.SetRotate(-90.0f, 0.0f, 90.0f);
+			pipeline.SetRotate(-90.0f, 0.0f, 0.0f);
 			pipeline.SetScale(1.0f, 1.0f, 1.0f);
 			mBackpack->SetTransform(pipeline.GetTransform());
 			mBackpack->Draw();
@@ -135,10 +138,8 @@ public:
 		//mCommand->GetTemporaryCustomRT(mAttribID, info.windowWidth, info.windowHeight);
 		//mCommand->SetRenderTarget(mAttribID);
 		{
-			//mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
-			//mContext->ExecuteCommand(mCommand);
-
-			glClear(GL_COLOR_BUFFER_BIT);
+			mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
 			mShader->Use();
 			for (uint32_t i = 0; i < SAMPLE_COUNT; i++)
@@ -147,11 +148,10 @@ public:
 			}
 			mShader->SetMat4("projection", pipeline.GetCameraProjection());
 			
-			mRandomTex->Bind(GL_TEXTURE2);
-
 			GLuint drawArray[] = { 0, 1 };
 			mQuad[0].mMaterial = mMaterial;
 			mQuad[0].mMaterial->SetAttribID(mGeometryAttribID);
+			mQuad[0].mMaterial->SetTexture(mRandomTex);
 			mQuad[0].DrawByIndexs(drawArray, sizeof(drawArray) / sizeof(GLuint));
 		}
 		//mCommand->ReleaseTemporaryRT(mAttribID);
@@ -203,10 +203,10 @@ private:
 	OGL::LearnOGLShader* mLightShader;
 	OGL::LearnOGLShader* mGeometryShader;
 
-	OGL::LearnOGLMaterial* mMaterial;
-	OGL::LearnOGLMaterial* mBlurMaterial;
-	OGL::LearnOGLMaterial* mLightMaterial;
-	OGL::LearnOGLMaterial* mGeometryMaterial;
+	ssao_material* mMaterial;
+	ssao_blur_material* mBlurMaterial;
+	ssao_lighting_material* mLightMaterial;
+	ssao_geometry_material* mGeometryMaterial;
 
 	OGL::LearnOGLTexture* mRandomTex;
 

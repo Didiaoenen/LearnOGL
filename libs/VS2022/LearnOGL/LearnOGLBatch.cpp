@@ -447,6 +447,8 @@ namespace OGL
 			mMaterial->DrawByIndex(i, GL_TEXTURE0 + i);
 		}
 
+		mMaterial->BindTextures(count);
+
 		DrawArrays();
 	}
 

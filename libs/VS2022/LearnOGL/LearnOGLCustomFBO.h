@@ -24,13 +24,14 @@ namespace OGL
 	public:
 		uint32_t mColorAttchCount{ 0 };
 	
+		GLuint* mColorTexs{ nullptr };
+		GLuint mDepthRBO{ 0 };
+		GLuint mStencilRBO{ 0 };
+
 	private:
 		bool mDepthAttach{ false };
 		bool mStencilAttach{ false };
 
-		GLuint* mColorTexs{ nullptr };
-		GLuint mDepthRBO{ 0 };
-		GLuint mStencilRBO{ 0 };
 	};
 }
 

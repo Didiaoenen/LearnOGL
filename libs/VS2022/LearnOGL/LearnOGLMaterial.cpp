@@ -31,4 +31,14 @@ namespace OGL
 	void LearnOGLMaterial::SetAttribID(GLuint attribID)
 	{
 	}
+
+	void LearnOGLMaterial::SetTexture(LearnOGLTexture* texture)
+	{
+
+	}
+
+	void LearnOGLMaterial::BindTextures(uint32_t count)
+	{
+
+	}
 }

@@ -25,7 +25,7 @@ void ssao_material::Draw()
 void ssao_material::DrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXTURE0*/)
 {
 	mShader->Use();
-
+	
 	CommandDrawByIndex(index, texIndex);
 }
 
@@ -43,5 +43,30 @@ void ssao_material::CommandDrawByIndex(GLuint index, GLenum texIndex/* = GL_TEXT
 		{
 			unitText->second->BindForReading(texIndex, index);
 		}
+	}
+}
+
+void ssao_material::BindTextures(uint32_t count)
+{
+	for (auto& tex : mTexVec)
+	{
+		tex->Bind(GL_TEXTURE0 + count);
+		count++;
+	}
+}
+
+void ssao_material::SetTexture(OGL::LearnOGLTexture* texture)
+{
+	bool bContains = false;
+	for (auto& tex : mTexVec)
+	{
+		if (tex == texture)
+		{
+			bContains = true;
+		}
+	}
+	if (!bContains)
+	{
+		mTexVec.push_back(texture);
 	}
 }

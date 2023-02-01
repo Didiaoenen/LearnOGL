@@ -20,8 +20,8 @@ void main()
 	vec4 viewPos = view * model * vec4(aPos, 1.0);
 	vs_out.WPos = viewPos.xyz;
 
-	mat3 normalMaterix = transpose(inverse(mat3(view * model)));
-	vs_out.Normal = normalMaterix * (invertedNormal ? -aNormal : aNormal);
+	mat3 normalMatrix = transpose(inverse(mat3(view * model)));
+	vs_out.Normal = normalMatrix * (invertedNormal ? -aNormal : aNormal);
 
 	gl_Position = projection * viewPos;
 }
