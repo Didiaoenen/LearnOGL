@@ -76,7 +76,6 @@ public:
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		//pipeline.SetRotate(mLastTime * -10.0f, 0.0f, mLastTime * -10.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-
 		mNormalQuad.SetTransform(pipeline.GetTransform());
 		mNormalQuad.Draw();
 

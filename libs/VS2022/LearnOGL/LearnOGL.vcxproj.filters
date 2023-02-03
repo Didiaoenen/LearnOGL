@@ -66,6 +66,9 @@
     <ClCompile Include="LearnOGLCustomFBO.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="LearnOGLTriangleBatch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -120,6 +123,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="LearnOGLCustomFBO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLTriangleBatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LearnOGLMathExt.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

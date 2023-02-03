@@ -48,15 +48,15 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.1.3.shadow_mapping_depth.vs.vert", "3.1.3.shadow_mapping_depth.fs.frag");
 
 		mPlaneMaterial = new shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, false, OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", true, false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, false, OGL::TextureType::Diffuse);
+		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", true, false, OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
 		mBackpackMaterial = new shadow_material(mShader);
-		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", false, false, OGL::TextureType::Diffuse);
+		mBackpackMaterial->mDiffuseTex = new OGL::LearnOGLTexture("../../../resources/objects/backpack/diffuse.jpg", true, false, OGL::TextureType::Diffuse);
 		mBackpackMaterial->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
@@ -94,26 +94,22 @@ public:
 	void RenderShadow()
 	{
 		OGL::LearnOGLPipeline pipeline;
+		glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
+		glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
 
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
 
-		glm::mat4 vpMatrix;
 		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
 		{
 			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
 			mContext->ExecuteCommand(mCommand, false);
 
-			glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
-			glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-			vpMatrix = lightProj * lightView;
-
 			mShadowShader->Use();
-			mShadowShader->SetMat4("vpMatrix", vpMatrix);
+			mShadowShader->SetMat4("vpMatrix", lightProj * lightView);
 
 			pipeline.SetPos(0.0f, 0.0f, 0.0f);
 			pipeline.SetScale(1.0f, 1.0f, 1.0f);
@@ -142,16 +138,34 @@ public:
 
 		pipeline.SetCamera(mCamera);
 
+		pipeline.SetPos(0.0f, -1.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+
 		mShader->Use();
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());
-		mShader->SetMat4("view", pipeline.GetCameraView());
-		mShader->SetMat4("lightSpaceMatrix", vpMatrix);
+		mShader->SetMat4("view", pipeline.GetTransform() * pipeline.GetCameraView());
+		mShader->SetMat4("lightSpaceMatrix", lightProj * lightView);
 		mShader->SetVec3("lightPos", mLightPos);
 		mShader->SetVec3("lightColor", mLightColor);
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 
+		pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
+
+		pipeline.SetPos(-2.0f, 0.5f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube.SetTransform(pipeline.GetTransform());
 		mCube.Draw();
+
+		pipeline.SetPos(2.0f, 2.0f, 0.0f);
+		pipeline.SetScale(0.5f, 0.5f, 0.5f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mBackpack->SetTransform(pipeline.GetTransform());
 		mBackpack->Draw();
 	}
 

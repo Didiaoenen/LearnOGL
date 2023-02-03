@@ -48,28 +48,28 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.1.2.shadow_mapping_depth.vs.vert", "3.1.2.shadow_mapping_depth.fs.frag");
 	
 		mPlaneMaterial = new shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", true, false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial1 = new shadow_material(mShader);
-		mCubeMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, OGL::TextureType::Diffuse);
+		mCubeMaterial1->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", true, false, OGL::TextureType::Diffuse);
 		mCubeMaterial1->mCommand = mCommand;
 
 		mCubeMaterial2 = new shadow_material(mShader);
-		mCubeMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2.png", false, OGL::TextureType::Diffuse);
+		mCubeMaterial2->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2.png", true, false, OGL::TextureType::Diffuse);
 		mCubeMaterial2->mCommand = mCommand;
 
 		mCubeMaterial3 = new shadow_material(mShader);
-		mCubeMaterial3->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular.png", false, OGL::TextureType::Diffuse);
+		mCubeMaterial3->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular.png", true, false, OGL::TextureType::Diffuse);
 		mCubeMaterial3->mCommand = mCommand;
 
 		mCubeMaterial4 = new shadow_material(mShader);
-		mCubeMaterial4->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular_colored.png", false, OGL::TextureType::Diffuse);
+		mCubeMaterial4->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container2_specular_colored.png", true, false, OGL::TextureType::Diffuse);
 		mCubeMaterial4->mCommand = mCommand;
 
 		mDepthMaterial = new shadow_depth_material(mShadowShader);
 
-		mDepthAttribID = mShader->GetUniformLocation("depthMap");
+		mDepthAttribID = mShader->GetAttribID("depthMap");
 
 		mPlane = mTools->MakePlane(10.0f);
 		mPlane.mMaterial = mPlaneMaterial;
@@ -104,79 +104,103 @@ public:
 
 	void RenderShadow()
 	{
-		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
-
-		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
-		mCommand->SetRenderTarget(mDepthAttribID);
-		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-		mContext->ExecuteCommand(mCommand);
-
 		OGL::LearnOGLPipeline pipeline;
 		glm::mat4 lightProj = pipeline.GetOrthographicProjection(mOrthoInfo.left, mOrthoInfo.right, mOrthoInfo.top, mOrthoInfo.bottom, mOrthoInfo.zNear, mOrthoInfo.zFar);
 		glm::mat4 lightView = pipeline.GetViewMatrix(mLightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		
-		mShadowShader->Use();
-		mShadowShader->SetMat4("vpMatrix", lightProj * lightView);
 
-		pipeline.SetPos(5.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube1.SetShadowTransform(pipeline.GetTransform());
-		mCube1.ShadowDraw();
+		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
 
-		pipeline.SetPos(-5.0f, 0.5f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube2.SetShadowTransform(pipeline.GetTransform());
-		mCube2.ShadowDraw();
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
+		mContext->ExecuteCommand(mCommand);
 
-		pipeline.SetPos(0.0f, 0.5f, 5.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube3.SetShadowTransform(pipeline.GetTransform());
-		mCube3.ShadowDraw();
+		mCommand->GetTemporaryRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
+		mCommand->SetRenderTarget(mDepthAttribID);
+		{
+			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0f));
+			mContext->ExecuteCommand(mCommand, false);
 
-		pipeline.SetPos(0.0f, 0.5f, -5.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
-		mCube4.SetShadowTransform(pipeline.GetTransform());
-		mCube4.ShadowDraw();
+			mShadowShader->Use();
+			mShadowShader->SetMat4("vpMatrix", lightProj * lightView);
 
-		pipeline.SetPos(0.0f, 0.0f, 0.0f);
-		pipeline.SetScale(1.0f, 1.0f, 1.0f);
-		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		mPlane.SetShadowTransform(pipeline.GetTransform());
-		mPlane.ShadowDraw();
+			pipeline.SetPos(5.0f, 0.5f, 0.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+			mCube1.SetShadowTransform(pipeline.GetTransform());
+			mCube1.ShadowDraw();
 
+			pipeline.SetPos(-5.0f, 0.5f, 0.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+			mCube2.SetShadowTransform(pipeline.GetTransform());
+			mCube2.ShadowDraw();
+
+			pipeline.SetPos(0.0f, 0.5f, 5.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+			mCube3.SetShadowTransform(pipeline.GetTransform());
+			mCube3.ShadowDraw();
+
+			pipeline.SetPos(0.0f, 0.5f, -5.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+			mCube4.SetShadowTransform(pipeline.GetTransform());
+			mCube4.ShadowDraw();
+
+			pipeline.SetPos(0.0f, 0.0f, 0.0f);
+			pipeline.SetScale(1.0f, 1.0f, 1.0f);
+			pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+			mPlane.SetShadowTransform(pipeline.GetTransform());
+			mPlane.ShadowDraw();
+		}
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 
 		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 		
 		pipeline.SetCamera(mCamera);
 
-		glm::mat4 cameraView = pipeline.GetCameraView();
-
 		pipeline.SetPos(0.0f, -1.0f, 0.0f);
 		pipeline.SetScale(1.0f, 1.0f, 1.0f);
 		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
-		cameraView = pipeline.GetTransform() * cameraView;
 
 		mShader->Use();
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());
-		mShader->SetMat4("view", cameraView);
+		mShader->SetMat4("view", pipeline.GetTransform() * pipeline.GetCameraView());
 		mShader->SetMat4("lightSpaceMatrix", lightProj * lightView);
 		mShader->SetVec3("lightPos", mLightPos);
 		mShader->SetVec3("lightColor", mLightColor);
 		mShader->SetVec3("viewPos", mCamera->mPosition);
 
+		pipeline.SetPos(0.0f, 0.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+		mPlane.SetTransform(pipeline.GetTransform());
 		mPlane.Draw();
 
+		pipeline.SetPos(5.0f, 0.5f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube1.SetTransform(pipeline.GetTransform());
 		mCube1.Draw();
+
+		pipeline.SetPos(-5.0f, 0.5f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube2.SetTransform(pipeline.GetTransform());
 		mCube2.Draw();
+
+		pipeline.SetPos(0.0f, 0.5f, 5.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube3.SetTransform(pipeline.GetTransform());
 		mCube3.Draw();
+
+		pipeline.SetPos(0.0f, 0.5f, -5.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 45.0f, 0.0f);
+		mCube4.SetTransform(pipeline.GetTransform());
 		mCube4.Draw();
 	}
 

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{d76a5803-2985-4185-a091-544972987d5c}</ProjectGuid>
-    <RootNamespace>LearnOGL</RootNamespace>
+    <ProjectGuid>{d0db2b58-6711-435e-b2f5-07984d748358}</ProjectGuid>
+    <RootNamespace>My11lighting</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -70,9 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)LearnOGL\lib</OutDir>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -107,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./../../includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../../includes;./../../LearnOGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>./../../lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>./../../../lib;./../../LearnOGL/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glfw3.lib;assimp.lib;STB_IMAGE.lib;GLAD.lib;LearnOGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,46 +130,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LearnOGLApp.cpp" />
-    <ClCompile Include="LearnOGLBatch.cpp" />
-    <ClCompile Include="LearnOGLCamera.cpp" />
-    <ClCompile Include="LearnOGLCommand.cpp" />
-    <ClCompile Include="LearnOGLContext.cpp" />
-    <ClCompile Include="LearnOGLCubeMapFBO.cpp" />
-    <ClCompile Include="LearnOGLCustomFBO.cpp" />
-    <ClCompile Include="LearnOGLDepthFBO.cpp" />
-    <ClCompile Include="LearnOGLFBO.cpp" />
-    <ClCompile Include="LearnOGLHDRFBO.cpp" />
-    <ClCompile Include="LearnOGLMaterial.cpp" />
-    <ClCompile Include="LearnOGLMesh.cpp" />
-    <ClCompile Include="LearnOGLModel.cpp" />
-    <ClCompile Include="LearnOGLPipeline.cpp" />
-    <ClCompile Include="LearnOGLShader.cpp" />
-    <ClCompile Include="LearnOGLTexture.cpp" />
-    <ClCompile Include="LearnOGLTools.cpp" />
-    <ClCompile Include="LearnOGLTriangleBatch.cpp" />
+    <ClCompile Include="1.1.lighting.cpp" />
+    <ClCompile Include="pbr_material.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LearnOGLApp.h" />
-    <ClInclude Include="LearnOGLBatch.h" />
-    <ClInclude Include="LearnOGLCamera.h" />
-    <ClInclude Include="LearnOGLCommand.h" />
-    <ClInclude Include="LearnOGLContext.h" />
-    <ClInclude Include="LearnOGLCubeMapFBO.h" />
-    <ClInclude Include="LearnOGLCustomFBO.h" />
-    <ClInclude Include="LearnOGLDefine.h" />
-    <ClInclude Include="LearnOGLDepthFBO.h" />
-    <ClInclude Include="LearnOGLFBO.h" />
-    <ClInclude Include="LearnOGLHDRFBO.h" />
-    <ClInclude Include="LearnOGLMaterial.h" />
-    <ClInclude Include="LearnOGLMesh.h" />
-    <ClInclude Include="LearnOGLModel.h" />
-    <ClInclude Include="LearnOGLPipeline.h" />
-    <ClInclude Include="LearnOGLShader.h" />
-    <ClInclude Include="LearnOGLTexture.h" />
-    <ClInclude Include="LearnOGLTools.h" />
-    <ClInclude Include="LearnOGLTriangleBatch.h" />
-    <ClInclude Include="LearnOGLMathExt.h" />
+    <None Include="1.1.pbr.fs.frag" />
+    <None Include="1.1.pbr.vs.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pbr_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

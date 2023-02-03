@@ -46,11 +46,11 @@ public:
 		mShadowShader = new OGL::LearnOGLShader("3.2.1.point_shadows_depth.vs.vert", "3.2.1.point_shadows_depth.fs.frag", "3.2.1.point_shadows_depth.gs.geom");
 		
 		mPlaneMaterial = new point_shadow_material(mShader);
-		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", false, false, OGL::TextureType::Diffuse);
+		mPlaneMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/wood.png", true, false, OGL::TextureType::Diffuse);
 		mPlaneMaterial->mCommand = mCommand;
 
 		mCubeMaterial = new point_shadow_material(mShader);
-		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", false, false, OGL::TextureType::Diffuse);
+		mCubeMaterial->mDiffuseTex = new OGL::LearnOGLTexture("./../../../resources/textures/container.jpg", true, false, OGL::TextureType::Diffuse);
 		mCubeMaterial->mCommand = mCommand;
 
 		mShadowMaterial = new point_shadow_depth_material(mShadowShader);
@@ -88,7 +88,7 @@ public:
 
 		mCommand->SetViewport(0, 0, mShadowAtlasWidth, mShadowAtlasHeight);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
 
 		mCommand->GetTemporaryCubeMapRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
@@ -103,7 +103,8 @@ public:
 			mShadowShader->Use();
 			for (uint32_t i = 0; i < NUM_LAYERS; i++)
 			{
-				mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp));
+				glm::mat4 view = pipeline.GetViewMatrix(mLightPos, mLightPos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp);
+				mShadowShader->SetMat4("shadowMatrices[" + std::to_string(i) + "]", shadowProj * view);
 			}
 			mShadowShader->SetFloat("farPlane", zFar);
 			mShadowShader->SetVec3("lightPos", mLightPos);
@@ -123,16 +124,20 @@ public:
 		}
 		mCommand->ReleaseTemporaryRT(mDepthAttribID);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-		mContext->ExecuteCommand(mCommand);
+		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
+		mContext->ExecuteCommand(mCommand, false);
 
 		mCommand->SetViewport(0, 0, info.windowWidth, info.windowHeight);
 
 		pipeline.SetCamera(mCamera);
 
+		pipeline.SetPos(0.0f, -1.0f, 0.0f);
+		pipeline.SetScale(1.0f, 1.0f, 1.0f);
+		pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+
 		mShader->Use();
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());
-		mShader->SetMat4("view", pipeline.GetCameraView());
+		mShader->SetMat4("view", pipeline.GetTransform() * pipeline.GetCameraView());
 		mShader->SetVec3("lightPos", mLightPos);
 		mShader->SetVec3("lightColor", mLightColor);
 		mShader->SetVec3("viewPos", mCamera->mPosition);

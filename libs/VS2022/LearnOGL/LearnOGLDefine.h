@@ -8,6 +8,11 @@
 
 namespace OGL
 {
+#define VERTEX_DATA     0
+#define NORMAL_DATA     1
+#define TEXTURE_DATA    2
+#define INDEX_DATA      3
+
 #define INVALID_UNIFORM_LOCATION 0xFFFFFFFF
 
 	enum class CompileType

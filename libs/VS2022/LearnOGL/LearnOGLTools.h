@@ -5,6 +5,7 @@
 
 #include "LearnOGLBatch.h"
 #include "LearnOGLTexture.h"
+#include "LearnOGLTriangleBatch.h"
 
 #include <random>
 #include <iostream>
@@ -22,6 +23,7 @@ namespace OGL
 		LearnOGLBatch MakePlane(GLfloat radius);
 		LearnOGLBatch MakeCube(GLfloat radius);
 		LearnOGLBatch MakeQuad(GLfloat radius, bool tangent = false, bool bitangent = false);
+		LearnOGLTriangleBatch MakeSphere(GLfloat radius, GLint slices, GLint stacks);
 
 		LearnOGLTexture* MakeRandomNoiseTex(GLuint width, GLuint height);
 
