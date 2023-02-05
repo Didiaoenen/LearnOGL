@@ -9,7 +9,7 @@
 
 #include "pbr_material.h"
 
-class lighting : public OGL::LearnOGLApp
+class lighting_textured : public OGL::LearnOGLApp
 {
 public:
 	virtual bool Init() override
@@ -22,10 +22,10 @@ public:
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
 
-		mLightPositions.push_back(glm::vec3(-10.0f,  10.0f, 10.0f));
-		mLightPositions.push_back(glm::vec3( 10.0f,  10.0f, 10.0f));
+		mLightPositions.push_back(glm::vec3(-10.0f, 10.0f, 10.0f));
+		mLightPositions.push_back(glm::vec3(10.0f, 10.0f, 10.0f));
 		mLightPositions.push_back(glm::vec3(-10.0f, -10.0f, 10.0f));
-		mLightPositions.push_back(glm::vec3( 10.0f, -10.0f, 10.0f));
+		mLightPositions.push_back(glm::vec3(10.0f, -10.0f, 10.0f));
 
 		mLightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
 		mLightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
@@ -41,7 +41,7 @@ public:
 		mCamera->SetCameraInfo(OGL::CameraType::Perspective, &mPersInfo);
 
 		mCommand = new OGL::LearnOGLCommand();
-	
+
 		mShader = new OGL::LearnOGLShader("1.1.pbr.vs.vert", "1.1.pbr.fs.frag");
 
 		mMaterial = new pbr_material(mShader);
@@ -75,8 +75,6 @@ public:
 		mShader->SetMat4("projection", pipeline.GetCameraProjection());
 		mShader->SetMat4("view", pipeline.GetCameraView());
 		mShader->SetVec3("camPos", mCamera->mPosition);
-		mShader->SetVec3("albedo", glm::vec3(0.5f, 0.0f, 0.0f));
-		mShader->SetFloat("ao", 1.0f);
 
 		for (uint32_t i = 0; i < nrRows; i++)
 		{
@@ -127,10 +125,10 @@ private:
 
 	std::vector<glm::vec3> mLightPositions;
 	std::vector<glm::vec3> mLightColors;
-	
+
 	uint32_t nrRows = 7;
 	uint32_t nrColumns = 7;
 	float spacing = 2.5f;
 };
 
-DECLARE_MAIN(lighting)
+DECLARE_MAIN(lighting_textured)
