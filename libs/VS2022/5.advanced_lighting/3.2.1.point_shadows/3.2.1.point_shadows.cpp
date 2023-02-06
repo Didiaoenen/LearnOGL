@@ -99,13 +99,13 @@ public:
 		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f, 0.1f, 0.1f, 1.0f));
 		mContext->ExecuteCommand(mCommand);
 
+		float zFar = 25.0f;
 		mCommand->GetTemporaryCubeMapRT(mDepthAttribID, mShadowAtlasWidth, mShadowAtlasHeight);
 		mCommand->SetRenderTarget(mDepthAttribID);
-		
-		float zFar = 25.0f;
-		mCommand->ClearRenderTarget(true, false, glm::vec4(0.0));
-		mContext->ExecuteCommand(mCommand, false);
 		{
+			mCommand->ClearRenderTarget(true, false, glm::vec4(0.0));
+			mContext->ExecuteCommand(mCommand, false);
+
 			glm::mat4 shadowProj = pipeline.GetPerspectiveProjection(90.0f, mShadowAtlasWidth / mShadowAtlasHeight, 1.0f, zFar);
 
 			mShadowShader->Use();

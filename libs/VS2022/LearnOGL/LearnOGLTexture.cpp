@@ -15,12 +15,21 @@ namespace OGL
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, bool gammaCorrection/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
+	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, bool gammaCorrection/* = false*/, bool hdr/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
 		mPath(path), mTextureType(textureType), mTargetType(targetType)
 	{
 		stbi_set_flip_vertically_on_load(flip);
 
-		auto imageData = stbi_load(path.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
+		void* imageData;
+		if (hdr)
+		{
+			imageData = (void*)stbi_loadf(path.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
+		}
+		else
+		{
+			imageData = (void*)stbi_load(path.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
+		}
+
 		if (!imageData)
 		{
 			std::cout << "Error::Texture load failed: " << path << std::endl;
@@ -30,20 +39,24 @@ namespace OGL
 
 		GLenum format;
 		GLenum dataFormat;
+		GLenum dataType;
 		switch (imageChannels)
 		{
 		case 1:
 			format = dataFormat = GL_RED;
+			dataType = GL_UNSIGNED_BYTE;
 			break;
 
 		case 3:
-			format = gammaCorrection ? GL_SRGB : GL_RGB;
+			format = hdr ? GL_RGB16F : (gammaCorrection ? GL_SRGB : GL_RGB);
 			dataFormat = GL_RGB;
+			dataType = GL_FLOAT;
 			break;
 
 		case 4:
 			format = gammaCorrection ? GL_SRGB_ALPHA : GL_RGBA;
 			dataFormat = GL_RGBA;
+			dataType = GL_UNSIGNED_BYTE;
 			break;
 
 		default:
@@ -57,7 +70,7 @@ namespace OGL
 			{
 			case GL_TEXTURE_2D:
 			{
-				glTexImage2D(targetType, 0, format, imageWidth, imageHeight, 0, dataFormat, GL_UNSIGNED_BYTE, imageData);
+				glTexImage2D(targetType, 0, format, imageWidth, imageHeight, 0, dataFormat, dataType, imageData);
 			}
 				break;
 
@@ -67,8 +80,8 @@ namespace OGL
 
 			glGenerateMipmap(GL_TEXTURE_2D);
 
-			glTexParameteri(targetType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(targetType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(targetType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(targetType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(targetType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameteri(targetType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}

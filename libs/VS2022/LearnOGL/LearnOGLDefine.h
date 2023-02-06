@@ -8,6 +8,8 @@
 
 namespace OGL
 {
+#define DEPTH_COMPONENT(depth) GL_DEPTH_COMPONENT##depth
+
 #define NUM_LAYERS 6
 
 #define VERTEX_DATA     0
@@ -120,7 +122,7 @@ namespace OGL
 
 	enum class DepthCompOpt
 	{
-		LESS = 0x0201,
+		LESS = GL_LESS,
 		EQUAL,
 		LEQUAL,
 		GREATER,
@@ -136,9 +138,9 @@ namespace OGL
 
 	enum class AttachType
 	{
-		COLOR = 0x8CE0,
-		DEPTH = 0x8D00,
-		STENCIL = 0x8D20,
+		COLOR = GL_COLOR_ATTACHMENT0,
+		DEPTH = GL_DEPTH_ATTACHMENT,
+		STENCIL = GL_STENCIL_ATTACHMENT,
 	};
 }
 

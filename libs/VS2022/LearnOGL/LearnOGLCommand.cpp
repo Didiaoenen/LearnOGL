@@ -37,11 +37,11 @@ namespace OGL
 		return mUnitTexMap.find(id)->second;
 	}
 
-	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height)
+	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height, AttachType type/* = AttachType::COLOR*/, bool depthAttach/* = false*/, uint32_t depths/* = 32*/)
 	{
 		if (mUnitTexMap.find(id) == mUnitTexMap.end())
 		{
-			auto fbo = new LearnOGLCubeMapFBO(width, height);
+			auto fbo = new LearnOGLCubeMapFBO(width, height, type, depthAttach, depths);
 			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}

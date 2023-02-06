@@ -25,7 +25,7 @@ namespace OGL
 
 		LearnOGLFBO* GetTemporaryRT(GLuint id, GLuint width, GLuint height);
 		LearnOGLFBO* GetTemporaryHDRRT(GLuint id, GLuint width, GLuint height);
-		LearnOGLFBO* GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height);
+		LearnOGLFBO* GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height, AttachType type = AttachType::COLOR, bool depthAttach = false, uint32_t depths = 32);
 		LearnOGLFBO* GetTemporaryCustomRT(GLuint id, GLuint width, GLuint height, uint32_t colorAttachCount = 1, bool depthAttch = false, bool stencilAttach = false);
 		void ClearRenderTarget(bool depth, bool color, glm::vec4 backgroundcolor);
 

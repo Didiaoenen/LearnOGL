@@ -6,11 +6,12 @@ namespace OGL
 	{
 	}
 
-	LearnOGLCubeMapFBO::LearnOGLCubeMapFBO(uint32_t width, uint32_t height, AttachType type ,bool depthAttach/* = false*/, uint32_t depth/* = 32*/) :
+	LearnOGLCubeMapFBO::LearnOGLCubeMapFBO(uint32_t width, uint32_t height, AttachType type/* = AttachType::COLOR*/,bool depthAttach/* = false*/, uint32_t depths/* = 32*/) :
 		LearnOGLFBO(width, height)
 	{
 		mType = type;
 		mDepthAttach = depthAttach;
+		mDepths = depths;
 		Init(width, height);
 	}
 
@@ -57,7 +58,22 @@ namespace OGL
 		{
 			glGenRenderbuffers(1, &mDepthRBO);
 			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRBO);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+
+			GLuint depths;
+			switch (mDepths)
+			{
+			case 16:
+				depths = DEPTH_COMPONENT(16);
+			case 24:
+				depths = DEPTH_COMPONENT(24);
+			case 32:
+				depths = DEPTH_COMPONENT(32);
+			default:
+				depths = DEPTH_COMPONENT();
+				break;
+			}
+
+			glRenderbufferStorage(GL_RENDERBUFFER, depths, width, height);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRBO);
 		}
 
