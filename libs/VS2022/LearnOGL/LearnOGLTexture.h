@@ -16,6 +16,8 @@ namespace OGL
 		Parallax,
 		Roughness,
 		Specular,
+		Metallic,
+		AO,
 	};
 
 	class LearnOGLTexture

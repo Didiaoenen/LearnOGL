@@ -89,10 +89,19 @@ namespace OGL
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLushort) * mNumIndexes, mIndexes, GL_STATIC_DRAW);
 
         glBindVertexArray(0);
+
+        mBatchDone = true;
     }
 
     void LearnOGLTriangleBatch::Draw()
     {
+        if (!mBatchDone)
+        {
+            return;
+        }
+
+        mMaterial->Draw();
+
         glBindVertexArray(mVAO);
         glDrawElements(GL_TRIANGLES, mNumIndexes, GL_UNSIGNED_SHORT, 0);
         glBindVertexArray(0);

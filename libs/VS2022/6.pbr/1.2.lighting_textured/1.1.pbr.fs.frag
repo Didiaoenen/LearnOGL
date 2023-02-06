@@ -11,12 +11,12 @@ in VS_OUT
 
 uniform sampler2D albedoTex;
 uniform sampler2D normalTex;
-uniform sampler2D matallicTex;
+uniform sampler2D metallicTex;
 uniform sampler2D roughnessTex;
 uniform sampler2D aoTex;
 
-uniform vec3 lightPositionp[4];
-uniform vec3 lightColor[4];
+uniform vec3 lightPositions[4];
+uniform vec3 lightColors[4];
 
 uniform vec3 camPos;
 
@@ -80,8 +80,8 @@ vec3 fresnelSchick(float cosTheta, vec3 F0)
 
 void main()
 {
-	vec3 albedo = pow(texture(albedoTex, fs_in.TexCoords).rgb, vec3(2.0));
-	float metallic = texture(matallicTex, fs_in.TexCoords).r;
+	vec3 albedo = pow(texture(albedoTex, fs_in.TexCoords).rgb, vec3(2.2));
+	float metallic = texture(metallicTex, fs_in.TexCoords).r;
 	float roughness = texture(roughnessTex, fs_in.TexCoords).r;
 	float ao = texture(aoTex, fs_in.TexCoords).r;
 
@@ -94,11 +94,11 @@ void main()
 	vec3 Lo = vec3(0.0);
 	for(int i = 0; i < 4; i++)
 	{
-		vec3 L = normalize(lightPositionp[i] - fs_in.WPos);
+		vec3 L = normalize(lightPositions[i] - fs_in.WPos);
 		vec3 H = normalize(V + L);
-		float dis = length(lightPositionp[i] - fs_in.WPos);
+		float dis = length(lightPositions[i] - fs_in.WPos);
 		float attenuation = 1.0 / (dis * dis);
-		vec3 radiance = lightColor[i] * attenuation;
+		vec3 radiance = lightColors[i] * attenuation;
 		
 		float NDF = DistibutionGGX(N, H, roughness);
 		float G = GeometrySmith(N, V, L, roughness);

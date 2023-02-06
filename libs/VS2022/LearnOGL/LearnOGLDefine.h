@@ -94,6 +94,7 @@ namespace OGL
 		TexCoord0x01,
 		TexCoord0x02,
 		TexCoord0x03,
+		TexCoord0x04,
 	};
 
 	enum class CameraMovement {

@@ -22,15 +22,9 @@ public:
 		mPersInfo.zFar = 100.0f;
 		mPersInfo.zNear = 0.1f;
 
-		mLightPositions.push_back(glm::vec3(-10.0f, 10.0f, 10.0f));
-		mLightPositions.push_back(glm::vec3(10.0f, 10.0f, 10.0f));
-		mLightPositions.push_back(glm::vec3(-10.0f, -10.0f, 10.0f));
-		mLightPositions.push_back(glm::vec3(10.0f, -10.0f, 10.0f));
+		mLightPositions.push_back(glm::vec3(0.0f, 0.0f, 10.0f));
 
-		mLightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
-		mLightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
-		mLightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
-		mLightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
+		mLightColors.push_back(glm::vec3(150.0f, 150.0f, 150.0f));
 
 		return true;
 	}
@@ -45,6 +39,11 @@ public:
 		mShader = new OGL::LearnOGLShader("1.1.pbr.vs.vert", "1.1.pbr.fs.frag");
 
 		mMaterial = new pbr_material(mShader);
+		mMaterial->mAlbedoTex = new OGL::LearnOGLTexture("./../../../resources/textures/pbr/rusted_iron/albedo.png", false, false, OGL::TextureType::Diffuse);
+		mMaterial->mNormalTex = new OGL::LearnOGLTexture("./../../../resources/textures/pbr/rusted_iron/normal.png", false, false, OGL::TextureType::Normal);
+		mMaterial->mMetallicTex = new OGL::LearnOGLTexture("./../../../resources/textures/pbr/rusted_iron/metallic.png", false, false, OGL::TextureType::Metallic);
+		mMaterial->mRoughnessTex = new OGL::LearnOGLTexture("./../../../resources/textures/pbr/rusted_iron/roughness.png", false, false, OGL::TextureType::Roughness);
+		mMaterial->mAOTex = new OGL::LearnOGLTexture("./../../../resources/textures/pbr/rusted_iron/ao.png", false, false, OGL::TextureType::AO);
 
 		mTools = new OGL::LearnOGLTools();
 		mSphere = mTools->MakeSphere(1.0f, 52, 26);
@@ -78,16 +77,13 @@ public:
 
 		for (uint32_t i = 0; i < nrRows; i++)
 		{
-			mShader->SetFloat("metallic", (float)i / (float)nrRows);
 			for (uint32_t j = 0; j < nrColumns; j++)
 			{
-				mShader->SetFloat("roughness", glm::clamp((float)j / (float)nrColumns, 0.05f, 1.0f));
-
 				int col = i - nrRows / 2;
 				int row = j - nrColumns / 2;
 
 				pipeline.SetPos(row * spacing, col * spacing, 0.0f);
-				pipeline.SetRotate(0.0f, 0.0f, 0.0f);
+				pipeline.SetRotate(90.0f, 0.0f, 0.0f);
 				pipeline.SetScale(1.0f, 1.0f, 1.0f);
 				mSphere.SetTransform(pipeline.GetTransform());
 				mSphere.Draw();

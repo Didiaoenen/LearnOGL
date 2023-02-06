@@ -28,6 +28,8 @@ namespace OGL
 		GLuint mNumVerts{ 0 };
 
 		GLuint mVAO{ 0 };
-		GLuint mVBO[4];
+		GLuint mVBO[ 4 ];
+
+		bool mBatchDone = false;
 	};
 }
