@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "LearnOGLFBO.h"
+#include "LearnOGLDefine.h"
 
 namespace OGL
 {
@@ -10,7 +11,7 @@ namespace OGL
 	{
 	public:
 		LearnOGLCubeMapFBO();
-		LearnOGLCubeMapFBO(uint32_t width, uint32_t height);
+		LearnOGLCubeMapFBO(uint32_t width, uint32_t height, AttachType type, bool depthAttach = false, uint32_t depth = 32);
 		~LearnOGLCubeMapFBO();
 
 		virtual void BindForWriting() override;
@@ -23,6 +24,9 @@ namespace OGL
 
 	private:
 		GLuint mCubeMapTex{ 0 };
+		GLuint mDepthRBO{ 0 };
 
+		AttachType mType;
+		bool mDepthAttach;
 	};
 }

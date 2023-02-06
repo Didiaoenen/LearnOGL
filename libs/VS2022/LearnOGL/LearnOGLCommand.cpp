@@ -132,6 +132,18 @@ namespace OGL
 		return face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 	}
 
+	void LearnOGLCommand::SetDepthFunc(OGL::DepthCompOpt comOpt)
+	{
+		glDepthFunc((GLenum)comOpt);
+	}
+
+	void LearnOGLCommand::SetViewportByFramebufferSize(GLFWwindow* window)
+	{
+		int srcWidth, srcHeight;
+		glfwGetFramebufferSize(window, &srcWidth, &srcHeight);
+		SetViewport(0, 0, srcWidth, srcHeight);
+	}
+
 	void LearnOGLCommand::UnBindFramebuffer()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);

@@ -8,6 +8,8 @@
 
 namespace OGL
 {
+#define NUM_LAYERS 6
+
 #define VERTEX_DATA     0
 #define NORMAL_DATA     1
 #define TEXTURE_DATA    2
@@ -114,6 +116,29 @@ namespace OGL
 			mFBO = fbo;
 			mIndex = index;
 		}
+	};
+
+	enum class DepthCompOpt
+	{
+		LESS = 0x0201,
+		EQUAL,
+		LEQUAL,
+		GREATER,
+		NOTEQUAL,
+		GEQUAL,
+	};
+
+	struct CameraDirection
+	{
+		glm::vec3 mCenter;
+		glm::vec3 mUp;
+	};
+
+	enum class AttachType
+	{
+		COLOR = 0x8CE0,
+		DEPTH = 0x8D00,
+		STENCIL = 0x8D20,
 	};
 }
 

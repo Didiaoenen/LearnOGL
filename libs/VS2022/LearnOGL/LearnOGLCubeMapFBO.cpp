@@ -6,9 +6,11 @@ namespace OGL
 	{
 	}
 
-	LearnOGLCubeMapFBO::LearnOGLCubeMapFBO(uint32_t width, uint32_t height) :
+	LearnOGLCubeMapFBO::LearnOGLCubeMapFBO(uint32_t width, uint32_t height, AttachType type ,bool depthAttach/* = false*/, uint32_t depth/* = 32*/) :
 		LearnOGLFBO(width, height)
 	{
+		mType = type;
+		mDepthAttach = depthAttach;
 		Init(width, height);
 	}
 
@@ -40,7 +42,7 @@ namespace OGL
 		glBindTexture(GL_TEXTURE_CUBE_MAP, mCubeMapTex);
 		for (uint32_t i = 0; i < 6; i++)
 		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		}
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -49,8 +51,16 @@ namespace OGL
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, mCubeMapTex, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, (GLenum)mType, mCubeMapTex, 0);
 		
+		if (mDepthAttach)
+		{
+			glGenRenderbuffers(1, &mDepthRBO);
+			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRBO);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRBO);
+		}
+
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 #include "LearnOGLFBO.h"
@@ -8,6 +9,7 @@
 #include "LearnOGLCubeMapFBO.h"
 #include "LearnOGLHDRFBO.h"
 #include "LearnOGLCustomFBO.h"
+#include "LearnOGLDefine.h"
 
 #include <map>
 #include <string>
@@ -46,6 +48,9 @@ namespace OGL
 		void SetViewport(GLfloat beginX, GLfloat beginY, GLfloat width, GLfloat height);
 
 		void EnableCullFace(bool face);
+
+		void SetDepthFunc(OGL::DepthCompOpt comOpt);
+		void SetViewportByFramebufferSize(GLFWwindow* window);
 
 		void UnBindFramebuffer();
 		void ReleaseTemporaryRT(GLuint id);

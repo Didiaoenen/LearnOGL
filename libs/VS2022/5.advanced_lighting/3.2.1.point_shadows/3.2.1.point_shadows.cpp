@@ -10,8 +10,6 @@
 
 #include <vector>
 
-#define NUM_LAYERS 6
-
 class point_shadows : public OGL::LearnOGLApp
 {
 public:
@@ -32,6 +30,16 @@ public:
 		mPos.push_back(glm::vec3(-3.0f, 0.5f, 0.0f));
 		mPos.push_back(glm::vec3(0.0f, 0.5f, 3.0f));
 		mPos.push_back(glm::vec3(0.0f, 0.5f, -3.0f));
+
+		mCameraDirs = new OGL::CameraDirection[NUM_LAYERS]
+		{
+			{ glm::vec3(1.0f,  0.0f,  0.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+			{ glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+			{ glm::vec3(0.0f,  1.0f,  0.0f), glm::vec3(0.0f,   0.0f,  1.0f) },
+			{ glm::vec3(0.0f, -1.0f,  0.0f), glm::vec3(0.0f,   0.0f, -1.0f) },
+			{ glm::vec3(0.0f,  0.0f,  1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+			{ glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
+		};
 
 		return true;
 	}
@@ -181,21 +189,7 @@ private:
 	float mShadowAtlasWidth;
 	float mShadowAtlasHeight;
 
-	struct CameraDirection
-	{
-		glm::vec3 mCenter;
-		glm::vec3 mUp;
-	};
-
-	CameraDirection mCameraDirs[NUM_LAYERS] =
-	{
-		{ glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
-		{ glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
-		{ glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,   0.0f,  1.0f) },
-		{ glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,   0.0f, -1.0f) },
-		{ glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
-		{ glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f,  -1.0f,  0.0f) },
-	};
+	OGL::CameraDirection* mCameraDirs;
 
 	glm::vec3 mLightPos = glm::vec3(0.0f, 0.5f, 0.0f);
 	glm::vec3 mLightColor = glm::vec3(1.0f, 1.0f, 1.0f);

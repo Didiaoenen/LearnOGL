@@ -53,6 +53,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1.1.lighting", "6.pbr\1.1.l
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1.2.lighting_textured", "6.pbr\1.2.lighting_textured\1.2.lighting_textured.vcxproj", "{6E6AA39E-279A-41AF-BD24-655776B5C8AC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2.1.1.ibl_irradiance_conversion", "6.pbr\2.1.1.ibl_irradiance_conversion\2.1.1.ibl_irradiance_conversion.vcxproj", "{B994CCE3-BA8D-4317-8A36-89150378147F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -221,6 +223,14 @@ Global
 		{6E6AA39E-279A-41AF-BD24-655776B5C8AC}.Release|x64.Build.0 = Release|x64
 		{6E6AA39E-279A-41AF-BD24-655776B5C8AC}.Release|x86.ActiveCfg = Release|Win32
 		{6E6AA39E-279A-41AF-BD24-655776B5C8AC}.Release|x86.Build.0 = Release|Win32
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Debug|x64.ActiveCfg = Debug|x64
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Debug|x64.Build.0 = Debug|x64
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Debug|x86.ActiveCfg = Debug|Win32
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Debug|x86.Build.0 = Debug|Win32
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Release|x64.ActiveCfg = Release|x64
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Release|x64.Build.0 = Release|x64
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Release|x86.ActiveCfg = Release|Win32
+		{B994CCE3-BA8D-4317-8A36-89150378147F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -245,6 +255,7 @@ Global
 		{3768183E-6F8E-4D13-AC58-FE310161873E} = {70E417F0-02FB-4CD3-9770-86055BC36A45}
 		{D0DB2B58-6711-435E-B2F5-07984D748358} = {794590BE-50A0-4C02-BA6E-3AD34D133EE4}
 		{6E6AA39E-279A-41AF-BD24-655776B5C8AC} = {794590BE-50A0-4C02-BA6E-3AD34D133EE4}
+		{B994CCE3-BA8D-4317-8A36-89150378147F} = {794590BE-50A0-4C02-BA6E-3AD34D133EE4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9F91B1D-DCEE-4CF4-84EA-B3EE1F242270}
