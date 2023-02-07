@@ -10,12 +10,18 @@ public:
 	~cubemap_material();
 
 	virtual void Draw() override;
+	virtual void SetTexture(OGL::LearnOGLTexture* texture) override;
+	virtual void BindTextures(uint32_t count) override;
 
 public:
-	OGL::LearnOGLTexture* mEquirectangularTex;
+	OGL::LearnOGLTexture* mEquirectangularTex{ nullptr };
 
 private:
-	std::string mEquirectangularLoc;
+	std::string mEquirectangularLoc = "equirectangularTex";
+
+	std::vector<OGL::LearnOGLTexture*> mTexVec;
+
+	uint32_t mTexCount{ 0 };
 
 };
 

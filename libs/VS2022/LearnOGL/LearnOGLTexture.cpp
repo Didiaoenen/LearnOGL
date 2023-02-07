@@ -15,7 +15,7 @@ namespace OGL
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, bool gammaCorrection/* = false*/, bool hdr/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
+	LearnOGLTexture::LearnOGLTexture(const std::string path, bool flip/* = false*/, bool gammaCorrection/* = false*/, bool mipmap/* = false*/, bool hdr/* = false*/, TextureType textureType/* = TextureType::Diffuse*/, GLenum targetType/* = GL_TEXTURE_2D*/) :
 		mPath(path), mTextureType(textureType), mTargetType(targetType)
 	{
 		stbi_set_flip_vertically_on_load(flip);
@@ -78,12 +78,19 @@ namespace OGL
 				break;
 			}
 
-			glGenerateMipmap(GL_TEXTURE_2D);
+			GLuint minFilter = GL_LINEAR;
+			GLuint magFilter = GL_LINEAR;
+			if (mipmap)
+			{
+				glGenerateMipmap(GL_TEXTURE_2D);
+				minFilter = GL_LINEAR_MIPMAP_LINEAR;
+				magFilter = GL_LINEAR_MIPMAP_LINEAR;
+			}
 
 			glTexParameteri(targetType, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(targetType, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(targetType, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(targetType, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(targetType, GL_TEXTURE_MIN_FILTER, minFilter);
+			glTexParameteri(targetType, GL_TEXTURE_MAG_FILTER, magFilter);
 		}
 		glBindTexture(targetType, 0);
 

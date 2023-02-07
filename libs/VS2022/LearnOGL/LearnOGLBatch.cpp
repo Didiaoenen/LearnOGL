@@ -432,6 +432,8 @@ namespace OGL
 
 		mMaterial->DrawByIndex(index);
 
+		mMaterial->BindTextures(0);
+
 		DrawArrays();
 	}
 
@@ -460,6 +462,8 @@ namespace OGL
 		}
 
 		mMaterial->Draw();
+
+		mMaterial->BindTextures(0);
 
 		DrawArrays();
 	}

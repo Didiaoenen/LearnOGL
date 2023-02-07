@@ -18,44 +18,44 @@
     <ClCompile Include="2.1.1.ibl_irradiance_conversion.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="pbr_material.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="background_material.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="cubemap_material.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="pbr_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="2.1.1.background.fs.frag">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="2.1.1.background.vs.vert">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="2.1.1.cubemap.vs.vert">
-      <Filter>资源文件</Filter>
-    </None>
-    <None Include="2.1.1.equirectangular_to_cubemap.fs.frag">
+    <None Include="2.1.1.pbr.vs.vert">
       <Filter>资源文件</Filter>
     </None>
     <None Include="2.1.1.pbr.fs.frag">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="2.1.1.pbr.vs.vert">
+    <None Include="2.1.1.equirectangular_to_cubemap.fs.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="2.1.1.cubemap.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="2.1.1.background.vs.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="2.1.1.background.fs.frag">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pbr_material.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="background_material.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="cubemap_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pbr_material.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

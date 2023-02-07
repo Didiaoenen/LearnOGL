@@ -37,11 +37,11 @@ namespace OGL
 		return mUnitTexMap.find(id)->second;
 	}
 
-	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height, AttachType type/* = AttachType::COLOR*/, bool depthAttach/* = false*/, uint32_t depths/* = 32*/)
+	LearnOGLFBO* LearnOGLCommand::GetTemporaryCubeMapRT(GLuint id, GLuint width, GLuint height, AttachType type/* = AttachType::COLOR*/, bool depthAttach/* = false*/, uint32_t depths/* = 32*/, bool clear/* = false*/)
 	{
 		if (mUnitTexMap.find(id) == mUnitTexMap.end())
 		{
-			auto fbo = new LearnOGLCubeMapFBO(width, height, type, depthAttach, depths);
+			auto fbo = new LearnOGLCubeMapFBO(width, height, type, depthAttach, depths, clear);
 			mUnitTexMap.insert(std::pair<GLuint, LearnOGLFBO*>(id, fbo));
 			return fbo;
 		}
@@ -160,6 +160,15 @@ namespace OGL
 	void LearnOGLCommand::BlitDepthFBO(GLfloat width, GLfloat height)
 	{
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+	}
+
+	void LearnOGLCommand::CubemapFramebufferTex2D(GLuint id, uint32_t layer)
+	{
+		if (mUnitTexMap.find(id) != mUnitTexMap.end())
+		{
+			auto fbo = dynamic_cast<LearnOGLCubeMapFBO*>(mUnitTexMap.find(id)->second);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, (GLenum)fbo->mType, GL_TEXTURE_CUBE_MAP_POSITIVE_X + layer, fbo->mCubeMapTex, 0);
+		}
 	}
 
 	void LearnOGLCommand::Clear()
