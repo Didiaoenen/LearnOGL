@@ -12,5 +12,8 @@ public:
 	virtual void Draw() override;
 
 private:
+	OGL::LearnOGLTexture* mIrradianceTex{ nullptr };
+
+	std::string mIrradianceLoc = "irradianceTex";
 
 };

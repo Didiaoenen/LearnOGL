@@ -18,6 +18,18 @@
     <ClCompile Include="2.1.2.ibl_irradiance.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="pbr_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cubemap_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="background_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="irradiance_material.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="2.1.2.pbr.vs.vert">
@@ -41,5 +53,19 @@
     <None Include="2.1.2.background.fs.frag">
       <Filter>资源文件</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pbr_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="cubemap_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="background_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="irradiance_material.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

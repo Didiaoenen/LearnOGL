@@ -131,6 +131,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2.1.2.ibl_irradiance.cpp" />
+    <ClCompile Include="background_material.cpp" />
+    <ClCompile Include="cubemap_material.cpp" />
+    <ClCompile Include="irradiance_material.cpp" />
+    <ClCompile Include="pbr_material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="2.1.2.background.fs.frag" />
@@ -140,6 +144,12 @@
     <None Include="2.1.2.irradiance_convolution.fs.frag" />
     <None Include="2.1.2.pbr.fs.frag" />
     <None Include="2.1.2.pbr.vs.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="background_material.h" />
+    <ClInclude Include="cubemap_material.h" />
+    <ClInclude Include="irradiance_material.h" />
+    <ClInclude Include="pbr_material.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
