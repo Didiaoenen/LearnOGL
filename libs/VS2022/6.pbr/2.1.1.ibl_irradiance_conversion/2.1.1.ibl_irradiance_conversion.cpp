@@ -70,7 +70,7 @@ public:
 		mTools = new OGL::LearnOGLTools();
 		mCube = mTools->MakeCube(1.0);
 
-		mSphere = mTools->MakeSphere(1.0, 52, 26);
+		mSphere = mTools->MakeSphere(1.0, 104, 52);
 		mSphere.mMaterial = mPBRMaterial;
 	}
 
@@ -169,7 +169,7 @@ public:
 		mBackgroundShader->SetMat4("view", pipeline.GetCameraView());
 		mCube.mMaterial = mBackgroundMaterial;
 		mCube.mMaterial->SetAttribID(mAttribID);
-		mCube.Draw();
+		mCube.DrawByIndex();
 
 		//mEquirectangularToCubemapShader->Use();
 		//mEquirectangularToCubemapShader->SetMat4("view", pipeline.GetCameraView());
@@ -210,8 +210,6 @@ private:
 	uint32_t mapHeight = 1024;
 
 	GLuint mAttribID;
-
-	unsigned int envCubemap;
 };
 
 DECLARE_MAIN(ibl_irradiance_conversion)
