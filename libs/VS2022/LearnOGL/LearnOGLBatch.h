@@ -43,17 +43,19 @@ namespace OGL
 		void Bitangent3f(GLfloat x, GLfloat y, GLfloat z);
 		void Bitangent3fv(glm::vec3 bitangent);
 
-		void DrawArrays();
-		void DrawByIndex(GLuint index = 0);
-		void DrawByIndexs(uint32_t count);
+		virtual void DrawArrays();
+		virtual void DrawByIndex(GLuint index = 0);
+		virtual void DrawByIndexs(uint32_t count);
 		virtual void Draw() override;
 
 		virtual void ShadowDraw() override;
 
+	protected:
+		bool mBatchDone;
+
 	private:
 		GLenum mPrimitiveType;
 		GLuint mVerts;
-		bool mBatchDone;
 
 		GLuint pVertCount;
 

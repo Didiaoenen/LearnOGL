@@ -18,9 +18,28 @@ pbr_material::~pbr_material()
 void pbr_material::Draw()
 {
 	mShader->Use();
+}
 
-	if (mIrradianceTex)
+void pbr_material::DrawByIndex(GLuint index, GLenum texIndex)
+{
+	mShader->Use();
+
+	CommandDrawByIndex(index, texIndex);
+}
+
+void pbr_material::SetAttribID(GLuint attrib)
+{
+	mAttribID = attrib;
+}
+
+void pbr_material::CommandDrawByIndex(GLuint index, GLenum texIndex)
+{
+	if (mCommand)
 	{
-		mIrradianceTex->Bind(GL_TEXTURE0);
+		auto unitText = mCommand->mUnitTexMap.find(mAttribID);
+		if (unitText != mCommand->mUnitTexMap.end())
+		{
+			unitText->second->BindForReading(texIndex, index);
+		}
 	}
 }

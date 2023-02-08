@@ -25,8 +25,10 @@ namespace OGL
 		uint32_t mWidth{ 0 };
 		uint32_t mHeight{ 0 };
 
-	protected:
 		GLuint mFBO{ 0 };
+		GLuint mDepthRBO{ 0 };
+
+	protected:
 
 	};
 }

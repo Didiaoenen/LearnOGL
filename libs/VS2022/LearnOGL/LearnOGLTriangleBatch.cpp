@@ -102,9 +102,25 @@ namespace OGL
 
         mMaterial->Draw();
 
+        DrawArrays();
+    }
+
+    void LearnOGLTriangleBatch::DrawArrays()
+    {
         glBindVertexArray(mVAO);
         glDrawElements(GL_TRIANGLES, mNumIndexes, GL_UNSIGNED_SHORT, 0);
         glBindVertexArray(0);
     }
 
+    void LearnOGLTriangleBatch::DrawByIndex(GLuint index)
+    {
+        if (!mBatchDone)
+        {
+            return;
+        }
+
+        mMaterial->DrawByIndex(index);
+
+        DrawArrays();
+    }
 }

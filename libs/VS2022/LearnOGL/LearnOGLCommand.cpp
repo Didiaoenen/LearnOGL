@@ -171,6 +171,16 @@ namespace OGL
 		}
 	}
 
+	void LearnOGLCommand::SetCubemapFBODepthRBO(GLuint from, GLuint to)
+	{
+		if (mUnitTexMap.find(from) != mUnitTexMap.end() && mUnitTexMap.find(to) != mUnitTexMap.end())
+		{
+			auto fromFBO = mUnitTexMap.find(from)->second;
+			auto toFBO = dynamic_cast<LearnOGLCubeMapFBO*>(mUnitTexMap.find(to)->second);
+			toFBO->SetDepthRBO(fromFBO->mDepthRBO);
+		}
+	}
+
 	void LearnOGLCommand::Clear()
 	{
 		mColorBit = false;

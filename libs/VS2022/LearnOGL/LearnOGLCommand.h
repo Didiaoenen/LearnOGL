@@ -57,6 +57,7 @@ namespace OGL
 
 		void BlitDepthFBO(GLfloat width, GLfloat height);
 		void CubemapFramebufferTex2D(GLuint id, uint32_t layer);
+		void SetCubemapFBODepthRBO(GLuint from, GLuint to);
 
 		void Clear();
 

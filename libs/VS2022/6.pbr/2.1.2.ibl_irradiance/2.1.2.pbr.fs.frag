@@ -14,7 +14,7 @@ uniform float metallic;
 uniform float roughness;
 uniform float ao;
 
-uniform samplerCube irradianceMap;
+uniform samplerCube irradianceTex;
 
 uniform vec3 lightPositions[4];
 uniform vec3 lightColors[4];
@@ -100,13 +100,13 @@ void main()
     vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;	  
-    vec3 irradiance = texture(irradianceMap, N).rgb;
+
+    vec3 irradiance = texture(irradianceTex, N).rgb;
     vec3 diffuse = irradiance * albedo;
     vec3 ambient = (kD * diffuse) * ao;
     // vec3 ambient = vec3(0.002);
     
     vec3 color = ambient + Lo;
-
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0 / 2.2)); 
 

@@ -19,12 +19,14 @@ namespace OGL
 
 		virtual void BindForReading(GLenum textureUnit = GL_TEXTURE0, uint32_t colorIndex = 0) override;
 
+		GLuint GetDepthFormat();
+		void SetDepthRBO(GLuint id);
+
 	private:
 		bool Init(uint32_t width, uint32_t height);
 
 	public:
 		GLuint mCubeMapTex{ 0 };
-		GLuint mDepthRBO{ 0 };
 		AttachType mType{ (AttachType)0 };
 
 	private:

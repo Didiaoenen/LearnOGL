@@ -171,8 +171,8 @@
     <ClInclude Include="LearnOGLShader.h" />
     <ClInclude Include="LearnOGLTexture.h" />
     <ClInclude Include="LearnOGLTools.h" />
-    <ClInclude Include="LearnOGLTriangleBatch.h" />
     <ClInclude Include="LearnOGLMathExt.h" />
+    <ClInclude Include="LearnOGLTriangleBatch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

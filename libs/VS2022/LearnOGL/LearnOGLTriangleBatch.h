@@ -16,6 +16,8 @@ namespace OGL
 		void End();
 
 		virtual void Draw() override;
+		virtual void DrawArrays() override;
+		virtual void DrawByIndex(GLuint index = 0) override;
 
 	private:
 		GLushort* mIndexes{ nullptr };
@@ -29,7 +31,5 @@ namespace OGL
 
 		GLuint mVAO{ 0 };
 		GLuint mVBO[ 4 ];
-
-		bool mBatchDone = false;
 	};
 }

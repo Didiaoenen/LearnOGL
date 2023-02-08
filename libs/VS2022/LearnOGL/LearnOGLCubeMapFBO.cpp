@@ -36,6 +36,34 @@ namespace OGL
 		glBindTexture(GL_TEXTURE_CUBE_MAP, mCubeMapTex);
 	}
 
+	GLuint LearnOGLCubeMapFBO::GetDepthFormat()
+	{
+		GLuint depths;
+		switch (mDepths)
+		{
+		case 16:
+			depths = DEPTH_COMPONENT(16);
+			break;
+		case 24:
+			depths = DEPTH_COMPONENT(24);
+			break;
+		case 32:
+			depths = DEPTH_COMPONENT(32);
+			break;
+		default:
+			depths = DEPTH_COMPONENT();
+			break;
+		}
+		return depths;
+	}
+
+	void LearnOGLCubeMapFBO::SetDepthRBO(GLuint id)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+		glBindRenderbuffer(GL_RENDERBUFFER, id);
+		glRenderbufferStorage(GL_RENDERBUFFER, GetDepthFormat(), mWidth, mHeight);
+	}
+
 	bool LearnOGLCubeMapFBO::Init(uint32_t width, uint32_t height)
 	{
 		glGenFramebuffers(1, &mFBO);
@@ -59,22 +87,7 @@ namespace OGL
 		{
 			glGenRenderbuffers(1, &mDepthRBO);
 			glBindRenderbuffer(GL_RENDERBUFFER, mDepthRBO);
-
-			GLuint depths;
-			switch (mDepths)
-			{
-			case 16:
-				depths = DEPTH_COMPONENT(16);
-			case 24:
-				depths = DEPTH_COMPONENT(24);
-			case 32:
-				depths = DEPTH_COMPONENT(32);
-			default:
-				depths = DEPTH_COMPONENT();
-				break;
-			}
-
-			glRenderbufferStorage(GL_RENDERBUFFER, depths, width, height);
+			glRenderbufferStorage(GL_RENDERBUFFER, GetDepthFormat(), width, height);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mDepthRBO);
 		}
 

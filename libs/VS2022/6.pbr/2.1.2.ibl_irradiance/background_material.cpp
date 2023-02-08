@@ -8,7 +8,7 @@ background_material::background_material(OGL::LearnOGLShader* shader) :
 	OGL::LearnOGLMaterial(shader)
 {
 	mShader->Use();
-	mShader->SetTexUnit(mEnvironmentLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x00);
+	mShader->SetTexUnit(mEnviromentLoc, (uint32_t)OGL::TexCoordIndex::TexCoord0x00);
 }
 
 background_material::~background_material()

@@ -4,11 +4,11 @@ out vec4 FragColor;
 
 in vec3 WPos;
 
-uniform samplerCube enviromentTex;
+uniform samplerCube environmentTex;
 
 void main()
 {
-	vec3 envColor = texture(enviromentTex, WPos).rgb;
+	vec3 envColor = texture(environmentTex, WPos).rgb;
 
 	envColor = envColor / (envColor + vec3(1.0));
 	envColor = pow(envColor, vec3(1.0 / 2.2));

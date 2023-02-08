@@ -16,7 +16,7 @@ public:
 	void CommandDrawByIndex(GLuint index, GLenum texIndex = GL_TEXTURE0);
 
 private:
-	std::string mEnvironmentLoc = "environmentTex";
+	std::string mEnviromentLoc = "environmentTex";
 
 	GLuint mAttribID{ 0 };
 

@@ -64,6 +64,8 @@ public:
 		mIrradianceMaterial = new irradiance_material(mIrradianceShader);
 		mBackgroundMaterial = new background_material(mBackgroundShader);
 
+		mPBRMaterial->mCommand = mCommand;
+		mIrradianceMaterial->mCommand = mCommand;
 		mBackgroundMaterial->mCommand = mCommand;
 
 		mCubemapMaterial->mEquirectangularTex = new OGL::LearnOGLTexture("./../../../resources/textures/hdr/newport_loft.hdr", true, false, false, true);
@@ -76,35 +78,16 @@ public:
 
 		mSphere = mTools->MakeSphere(1.0, 104, 52);
 		mSphere.mMaterial = mPBRMaterial;
-	}
-
-	virtual void Update(double dt) override
-	{
-
-	}
-
-	virtual void Input() override
-	{
-
-	}
-
-	virtual void Render(OGL::LearnOGLContext* context) override
-	{
-		OGL::LearnOGLPipeline pipeline;
-		pipeline.SetCamera(mCamera);
-
-		mCommand->SetViewport(0, 0, mapWidth, mapHeight);
 
 		mCommand->SetDepthFunc(OGL::DepthCompOpt::LEQUAL);
 
-		mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
-		mContext->ExecuteCommand(mCommand);
-
-		glm::mat4 captureProj = pipeline.GetPerspectiveProjection(90.0f, mapWidth / mapHeight, 0.1f, 10.0f);
-
+		OGL::LearnOGLPipeline pipeline;
+		mCommand->SetViewport(0.0f, 0.0f, mapWidth, mapHeight);
 		mCommand->GetTemporaryCubeMapRT(mEquirectangularAttribID, mapWidth, mapHeight, OGL::AttachType::COLOR, true);
 		mCommand->SetRenderTarget(mEquirectangularAttribID);
 		{
+			glm::mat4 captureProj = pipeline.GetPerspectiveProjection(90.0f, mapWidth / mapHeight, 0.1f, 10.0f);
+
 			mEquirectangularToCubemapShader->Use();
 			mEquirectangularToCubemapShader->SetMat4("projection", captureProj);
 
@@ -124,27 +107,46 @@ public:
 		}
 		mCommand->ReleaseTemporaryRT(mEquirectangularAttribID);
 
-		mCommand->GetTemporaryCubeMapRT(mEnvironmentAttribID, mapWidth, mapHeight, OGL::AttachType::COLOR, true);
+		mCommand->SetViewport(0.0f, 0.0f, mIrradianceWidth, mIrradianceHeight);
+		mFbo = mCommand->GetTemporaryCubeMapRT(mEnvironmentAttribID, mIrradianceWidth, mIrradianceHeight, OGL::AttachType::COLOR, true);
 		mCommand->SetRenderTarget(mEnvironmentAttribID);
 		{
+			glm::mat4 captureProj = pipeline.GetPerspectiveProjection(90.0f, mIrradianceWidth / mIrradianceHeight, 0.1f, 10.0f);
+
 			mIrradianceShader->Use();
 			mIrradianceShader->SetMat4("projection", captureProj);
 
 			for (uint32_t i = 0; i < NUM_LAYERS; i++)
 			{
 				glm::mat4 view = pipeline.GetViewMatrix(mEyePos, mEyePos + mCameraDirs[i].mCenter, mCameraDirs[i].mUp);
-				mEquirectangularToCubemapShader->SetMat4("view", view);
+				mIrradianceShader->SetMat4("view", view);
 
 				mCommand->CubemapFramebufferTex2D(mEnvironmentAttribID, i);
-
 				mCommand->ClearRenderTarget(true, true, glm::vec4(0.0f));
 				mContext->ExecuteCommand(mCommand, false);
 
 				mCube.mMaterial = mIrradianceMaterial;
-				mCube.Draw();
+				mCube.mMaterial->SetAttribID(mEquirectangularAttribID);
+				mCube.DrawByIndex();
 			}
 		}
 		mCommand->ReleaseTemporaryRT(mEnvironmentAttribID);
+	}
+
+	virtual void Update(double dt) override
+	{
+
+	}
+
+	virtual void Input() override
+	{
+
+	}
+
+	virtual void Render(OGL::LearnOGLContext* context) override
+	{
+		OGL::LearnOGLPipeline pipeline;
+		pipeline.SetCamera(mCamera);
 
 		mCommand->SetViewportByFramebufferSize(mWindow);
 
@@ -155,7 +157,7 @@ public:
 		mPBRShader->SetMat4("projection", pipeline.GetCameraProjection());
 		mPBRShader->SetMat4("view", pipeline.GetCameraView());
 		mPBRShader->SetVec3("camPos", mCamera->mPosition);
-		mPBRShader->SetVec3("albedo", 0.5f, 0.0f, 0.0f);
+		mPBRShader->SetVec3("albedo", glm::vec3(0.5f, 0.0f, 0.0f));
 		mPBRShader->SetFloat("ao", 1.0f);
 
 		for (uint32_t i = 0; i < nrRows; i++)
@@ -172,7 +174,8 @@ public:
 				pipeline.SetRotate(0.0f, 0.0f, 0.0f);
 				pipeline.SetScale(1.0f, 1.0f, 1.0f);
 				mSphere.SetTransform(pipeline.GetTransform());
-				mSphere.Draw();
+				mSphere.mMaterial->SetAttribID(mEnvironmentAttribID);
+				mSphere.DrawByIndex();
 			}
 		}
 
@@ -196,11 +199,6 @@ public:
 		mCube.mMaterial = mBackgroundMaterial;
 		mCube.mMaterial->SetAttribID(mEquirectangularAttribID);
 		mCube.DrawByIndex();
-
-		//mEquirectangularToCubemapShader->Use();
-		//mEquirectangularToCubemapShader->SetMat4("view", pipeline.GetCameraView());
-		//mCube.mMaterial = mCubemapMaterial;
-		//mCube.Draw();
 	}
 
 	virtual void ShutDown() override
@@ -210,7 +208,6 @@ public:
 
 private:
 	OGL::LearnOGLCommand* mCommand;
-
 	OGL::LearnOGLShader* mPBRShader;
 	OGL::LearnOGLShader* mEquirectangularToCubemapShader;
 	OGL::LearnOGLShader* mIrradianceShader;
@@ -222,8 +219,8 @@ private:
 
 	pbr_material* mPBRMaterial;
 	cubemap_material* mCubemapMaterial;
-	background_material* mBackgroundMaterial;
 	irradiance_material* mIrradianceMaterial;
+	background_material* mBackgroundMaterial;
 
 	OGL::CameraDirection* mCameraDirs;
 	glm::vec3 mEyePos = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -238,7 +235,13 @@ private:
 	uint32_t mapWidth = 1024;
 	uint32_t mapHeight = 1024;
 
+	uint32_t mIrradianceWidth = 32;
+	uint32_t mIrradianceHeight = 32;
+
 	GLuint mEnvironmentAttribID;
 	GLuint mEquirectangularAttribID;
 
+	OGL::LearnOGLFBO* mFbo;
 };
+
+DECLARE_MAIN(ibl_irradiance);
