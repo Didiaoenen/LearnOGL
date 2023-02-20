@@ -12,7 +12,6 @@
 #include "Ambient.h"
 #include "Material.h"
 #include "CSMLayers.h"
-#include "glDevice.h"
 
 namespace ll
 {
@@ -22,7 +21,7 @@ class PipelineSceneData
 public:
     PipelineSceneData();
     ~PipelineSceneData();
-    virtual void Activate(ll::glDevice* device);
+    virtual void Activate(ll::Device* device);
     void Destroy();
 
     virtual void UpdatePipelineSceneData() {}

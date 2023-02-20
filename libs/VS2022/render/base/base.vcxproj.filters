@@ -102,6 +102,12 @@
     <ClInclude Include="Object.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Batcher2d.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Director.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture.cpp">
@@ -174,6 +180,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Batcher2d.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Director.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

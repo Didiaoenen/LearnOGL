@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Batcher2d.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="BufferBarrier.h" />
     <ClInclude Include="CommandBuffer.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="DescriptorSetLayout.h" />
     <ClInclude Include="Device.h" />
     <ClInclude Include="DeviceManager.h" />
+    <ClInclude Include="Director.h" />
     <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GeneralBarrier.h" />
@@ -50,6 +52,7 @@
     <ClInclude Include="Value.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Batcher2d.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="BufferBarrier.cpp" />
     <ClCompile Include="CommandBuffer.cpp" />
@@ -57,6 +60,7 @@
     <ClCompile Include="DescriptorSet.cpp" />
     <ClCompile Include="DescriptorSetLayout.cpp" />
     <ClCompile Include="Device.cpp" />
+    <ClCompile Include="Director.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GeneralBarrier.cpp" />

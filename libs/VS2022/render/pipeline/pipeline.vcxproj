@@ -19,24 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClusterLightCulling.h" />
     <ClInclude Include="CSMLayers.h" />
+    <ClInclude Include="DeferredPipeline.h" />
+    <ClInclude Include="ForwardPipeline.h" />
     <ClInclude Include="GeometryRenderer.h" />
     <ClInclude Include="GlobalDSManager.h" />
+    <ClInclude Include="NativePipelineTypes.h" />
     <ClInclude Include="PipelineSceneData.h" />
     <ClInclude Include="PipelineUBO.h" />
     <ClInclude Include="RenderFlow.h" />
+    <ClInclude Include="RenderInterfaceTypes.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="RenderStage.h" />
     <ClInclude Include="UIPhase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClusterLightCulling.cpp" />
     <ClCompile Include="CSMLayers.cpp" />
+    <ClCompile Include="DeferredPipeline.cpp" />
     <ClCompile Include="Define.h" />
+    <ClCompile Include="ForwardPipeline.cpp" />
     <ClCompile Include="GeometryRenderer.cpp" />
     <ClCompile Include="GlobalDSManager.cpp" />
+    <ClCompile Include="NativePipelineTypes.cpp" />
     <ClCompile Include="PipelineSceneData.cpp" />
     <ClCompile Include="PipelineUBO.cpp" />
     <ClCompile Include="RenderFlow.cpp" />
+    <ClCompile Include="RenderInterfaceTypes.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderStage.cpp" />
     <ClCompile Include="UIPhase.cpp" />

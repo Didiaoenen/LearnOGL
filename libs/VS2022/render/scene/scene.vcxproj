@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Ambient.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DrawBatch2D.h" />
     <ClInclude Include="Fog.h" />
     <ClInclude Include="Light.h" />
@@ -37,6 +38,7 @@
   <ItemGroup>
     <ClCompile Include="Ambient.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="DrawBatch2D.cpp" />
     <ClCompile Include="Fog.cpp" />
     <ClCompile Include="Light.cpp" />

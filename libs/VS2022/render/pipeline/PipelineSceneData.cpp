@@ -1,5 +1,7 @@
 #include "PipelineSceneData.h"
 
+#include "Device.h"
+
 ll::PipelineSceneData::PipelineSceneData()
 {
 }
@@ -8,7 +10,7 @@ ll::PipelineSceneData::~PipelineSceneData()
 {
 }
 
-void ll::PipelineSceneData::Activate(ll::glDevice* device)
+void ll::PipelineSceneData::Activate(ll::Device* device)
 {
 }
 
@@ -28,7 +30,7 @@ void ll::PipelineSceneData::InitDebugRenderer()
 {
 }
 
-InputAssembler* ll::PipelineSceneData::CreateOcclusionQueryIA()
+ll::InputAssembler* ll::PipelineSceneData::CreateOcclusionQueryIA()
 {
     return nullptr;
 }

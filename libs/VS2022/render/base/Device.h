@@ -115,7 +115,7 @@ protected:
     virtual TextureBarrier* CreateTextureBarrier(const TextureBarrierInfo& info) { return new TextureBarrier(info); }
     virtual BufferBarrier* CreateBufferBarrier(const BufferBarrierInfo& info) { return new BufferBarrier(info); }
 
-    virtual void bindContext(bool bound) {}
+    virtual void BindContext(bool bound) {}
 
     std::string _deviceName;
     std::string _renderer;

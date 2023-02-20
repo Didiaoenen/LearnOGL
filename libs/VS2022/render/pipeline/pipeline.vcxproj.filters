@@ -42,6 +42,21 @@
     <ClInclude Include="UIPhase.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DeferredPipeline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ClusterLightCulling.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardPipeline.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderInterfaceTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="NativePipelineTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -72,6 +87,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UIPhase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClusterLightCulling.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardPipeline.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderInterfaceTypes.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="NativePipelineTypes.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

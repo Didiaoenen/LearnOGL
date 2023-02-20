@@ -51,7 +51,7 @@ void ll::Engine::SetPreferredFramesPerSecond(int fps)
 {
 }
 
-ll::uint ll::Engine::GetTotalFrames() const
+uint32_t ll::Engine::GetTotalFrames() const
 {
     return _totalFrames;
 }

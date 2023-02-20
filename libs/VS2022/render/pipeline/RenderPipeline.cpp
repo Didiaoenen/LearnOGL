@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Device.h"
 #include "PipelineUBO.h"
+#include "RenderWindow.h"
 #include "GlobalDSManager.h"
 #include "PipelineSceneData.h"
 #include "DescriptorSetLayout.h"
@@ -127,7 +128,7 @@ ll::Color ll::RenderPipeline::GetClearcolor(Camera* camera) const
 	return Color();
 }
 
-InputAssembler* ll::RenderPipeline::GetIAByRenderArea(const Rect& renderArea)
+ll::InputAssembler* ll::RenderPipeline::GetIAByRenderArea(const Rect& renderArea)
 {
 	return nullptr;
 }

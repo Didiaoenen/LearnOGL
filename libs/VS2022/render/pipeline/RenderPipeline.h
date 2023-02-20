@@ -33,11 +33,16 @@ class RenderPipeline
 {
 public:
     static RenderPipeline* GetInstance();
+    static StringHandle fgStrHandleOutDepthTexture;
+    static StringHandle fgStrHandleOutColorTexture;
+    static StringHandle fgStrHandlePostprocessPass;
+    static StringHandle fgStrHandleBloomOutTexture;
     static Rect GetRenderArea(Camera* camera);
 
     RenderPipeline();
     virtual ~RenderPipeline();
-    bool Destroy();
+    
+    virtual bool Destroy();
 
     virtual bool Activate(Swapchain* swapchain);
     virtual bool Initialize(const RenderPipelineInfo& info);
