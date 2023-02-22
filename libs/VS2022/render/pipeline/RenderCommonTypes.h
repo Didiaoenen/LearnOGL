@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Ptr.h"
+#include "../base/Ptr.h"
+#include "../base/Def_common.h"
+#include "../scene/Light.h"
 
-#include "Light.h"
+#include <string>
 
 namespace ll
 {
@@ -92,10 +94,12 @@ struct ComputeView
     ComputeView& operator=(ComputeView&& rhs) = default;
     ComputeView& operator=(ComputeView const& rhs) = default;
 
-    bool isRead() const {
+    bool isRead() const 
+    {
         return accessType != AccessType::WRITE;
     }
-    bool isWrite() const {
+    bool isWrite() const 
+    {
         return accessType != AccessType::READ;
     }
 
@@ -134,3 +138,7 @@ struct RasterView
 };
 
 }
+
+class RenderCommonTypes
+{
+};

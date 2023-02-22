@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Ptr.h"
-#include "Node.h"
-#include "Macros.h"
+#include "../base/Ptr.h"
+#include "../base/Macros.h"
 
 #include <glm/glm.hpp>
 #include <string>
@@ -10,6 +9,7 @@
 namespace ll
 {
 
+    class Node;
     class RenderScene;
 
 enum class LightType 
@@ -86,7 +86,7 @@ protected:
     glm::vec3 _forward{ 0, 0, -1 };
 
 private:
-    CC_DISALLOW_COPY_MOVE_ASSIGN(Light)
+    DISALLOW_COPY_MOVE_ASSIGN(Light)
 
 };
 

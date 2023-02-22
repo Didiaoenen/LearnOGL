@@ -2,7 +2,8 @@
 
 #include <utility>
 
-namespace ll {
+namespace ll 
+{
 
 template <class T>
 class IntrusivePtr 
@@ -18,7 +19,7 @@ public:
     {
         if (_ptr) 
         {
-            _ptr->addRef();
+            //_ptr->addRef();
         }
     }
 
@@ -26,7 +27,7 @@ public:
     {
         if (_ptr) 
         {
-            _ptr->addRef();
+            //_ptr->addRef();
         }
     }
 
@@ -35,7 +36,7 @@ public:
     {
         if (_ptr) 
         {
-            _ptr->addRef();
+            //_ptr->addRef();
         }
     }
 
@@ -52,7 +53,7 @@ public:
     {
         if (_ptr) 
         {
-            _ptr->release();
+            //_ptr->release();
         }
     }
 
@@ -124,10 +125,10 @@ public:
     {
         if (p) 
         {
-            p->addRef();
+            //p->addRef();
         }
         if (_ptr) {
-            _ptr->release();
+            //_ptr->release();
         }
         _ptr = p;
     }

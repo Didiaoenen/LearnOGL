@@ -4,8 +4,12 @@
 #include "Ambient.h"
 #include "Shadows.h"
 
+#include <glm/glm.hpp>
+
 namespace ll
 {
+
+
 
 class DirectionalLight final : public Light
 {
@@ -64,8 +68,8 @@ public:
     inline float GetShadowFar() const { return _shadowFar; }
     inline float GetShadowOrthoSize() const { return _shadowOrthoSize; }
 
-    inline const Vec3& GetDirection() const { return _dir; }
-    inline void SetDirection(const Vec3& dir) { _dir = dir; }
+    inline const glm::vec3& GetDirection() const { return _dir; }
+    inline void SetDirection(const glm::vec3& dir) { _dir = dir; }
     inline void SetIlluminanceHDR(float value) { _illuminanceHDR = value; }
     inline void SetIlluminanceLDR(float value) { _illuminanceLDR = value; }
     inline float GetIlluminanceHDR() const { return _illuminanceHDR; }
@@ -78,7 +82,7 @@ private:
 
     float _illuminanceHDR{ Ambient::SUN_ILLUM };
     float _illuminanceLDR{ 1.F };
-    Vec3 _dir{ 1.0F, -1.0F, -1.0F };
+    glm::vec3 _dir{ 1.0F, -1.0F, -1.0F };
 
     bool _shadowEnabled{ false };
     PCFType _shadowPcf{ PCFType::HARD };
@@ -96,7 +100,7 @@ private:
     float _shadowFar{ 10.0F };
     float _shadowOrthoSize{ 1.0F };
 
-    CC_DISALLOW_COPY_MOVE_ASSIGN(DirectionalLight)
+    DISALLOW_COPY_MOVE_ASSIGN(DirectionalLight)
 };
 
 }

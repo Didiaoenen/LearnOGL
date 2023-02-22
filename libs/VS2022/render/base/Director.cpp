@@ -1,6 +1,5 @@
 #include "Director.h"
 
-#include "Root.h"
 #include "Device.h"
 
 double ll::Director::GetDeltaTime()

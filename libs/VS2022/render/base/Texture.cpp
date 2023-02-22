@@ -1,6 +1,7 @@
 #include "Texture.h"
 
 ll::Texture::Texture()
+    :ll::Object(ObjectType::TEXTURE)
 {
 }
 

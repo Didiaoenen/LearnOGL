@@ -1,5 +1,8 @@
 #include "Game.h"
 
+#include "../base/DeviceManager.h"
+#include "../pipeline/GlobalDSManager.h"
+
 ll::Game::Game()
 {
 }
@@ -16,15 +19,13 @@ int ll::Game::Init()
 {
     //ll::GlobalDSManager::SetDescriptorSetLayout();
 
-
-
     auto ret = Application::Init();
     if (ret != 0)
     {
         return ret;
     }
 
-    //DeviceManager::Create({});
+    DeviceManager::Create({});
 
     //_director = new Director();
     //_director->Init();

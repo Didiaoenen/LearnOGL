@@ -3,6 +3,8 @@
 #include "Ptr.h"
 #include "Def_common.h"
 
+#include "Texture.h"
+
 namespace ll
 {
 

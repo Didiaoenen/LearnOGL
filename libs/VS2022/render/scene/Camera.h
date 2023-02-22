@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Ptr.h"
-#include "Macros.h"
-#include "Def_common.h"
+#include "../base/Ptr.h"
+#include "../base/Macros.h"
+#include "../base/Frustum.h"
+#include "../base/Def_common.h"
+#include "../pipeline/Define.h"
 
-#include "Frustum.h"
-
+#include <glm/glm.hpp>
 #include <string>
 #include <optional>
 
@@ -134,11 +135,11 @@ public:
 
     Ray ScreenPointToRay(float x, float y);
 
-    Vec3 ScreenToWorld(const Vec3& screenPos);
+    glm::vec3 ScreenToWorld(const glm::vec3& screenPos);
 
-    Vec3 WorldToScreen(const Vec3& worldPos);
+    glm::vec3 WorldToScreen(const glm::vec3& worldPos);
 
-    Mat4 WorldMatrixToScreen(const Mat4& worldMatrix, uint32_t width, uint32_t height);
+    glm::mat4 WorldMatrixToScreen(const glm::mat4& worldMatrix, uint32_t width, uint32_t height);
 
     void SetNode(Node* val);
     inline Node* GetNode() const { return _node.get(); }
@@ -191,7 +192,7 @@ public:
     inline void SetClearColor(const Color& val) { _clearColor = val; }
     inline const Color& GetClearColor() const { return _clearColor; }
 
-    inline const Vec4& GetViewport() const { return _viewport; }
+    inline const glm::vec4& GetViewport() const { return _viewport; }
     void GetViewport(const Rect& val);
     void GetViewportInOrientedSpace(const Rect& val);
 
@@ -200,11 +201,11 @@ public:
     inline uint32_t GetWidth() const { return _width; }
     inline uint32_t GetHeight() const { return _height; }
     inline float GetAspect() const { return _aspect; }
-    inline const Mat4& GetMatView() const { return _matView; }
-    inline const Mat4& GetMatProj() const { return _matProj; }
-    inline const Mat4& GetMatProjInv() const { return _matProjInv; }
-    inline const Mat4& GetMatViewProj() const { return _matViewProj; }
-    inline const Mat4& GetMatViewProjInv() const { return _matViewProjInv; }
+    inline const glm::mat4& GetMatView() const { return _matView; }
+    inline const glm::mat4& GetMatProj() const { return _matProj; }
+    inline const glm::mat4& GetMatProjInv() const { return _matProjInv; }
+    inline const glm::mat4& GetMatViewProj() const { return _matViewProj; }
+    inline const glm::mat4& GetMatViewProjInv() const { return _matViewProjInv; }
 
     inline void SetFrustum(const Frustum& val) 
     {
@@ -215,11 +216,11 @@ public:
     inline void SetWindow(RenderWindow* val) { _window = val; }
     inline RenderWindow* GetWindow() const { return _window; }
 
-    inline void SetForward(const Vec3& val) { _forward = val; }
-    inline const Vec3& GetForward() const { return _forward; }
+    inline void SetForward(const glm::vec3& val) { _forward = val; }
+    inline const glm::vec3& GetForward() const { return _forward; }
 
-    inline void SetPosition(const Vec3& val) { _position = val; }
-    inline const Vec3& GetPosition() const { return _position; }
+    inline void SetPosition(const glm::vec3& val) { _position = val; }
+    inline const glm::vec3& GetPosition() const { return _position; }
 
     inline void SetVisibility(uint32_t vis) { _visibility = vis; }
     inline uint32_t GetVisibility() const { return _visibility; }
@@ -314,22 +315,22 @@ private:
     float _aspect{ 0.F };
     float _orthoHeight{ 10.0F };
     CameraFOVAxis _fovAxis{ CameraFOVAxis::VERTICAL };
-    float _fov{ static_cast<float>(toRadian(45.F)) };
+    float _fov{ static_cast<float>(glm::radians(45.F)) };
     float _nearClip{ 1.0F };
     float _farClip{ 1000.0F };
     Color _clearColor{ 0.2, 0.2, 0.2, 1 };
-    Vec4 _viewport{ 0, 0, 1, 1 };
-    Vec4 _orientedViewport{ 0, 0, 1, 1 };
+    glm::vec4 _viewport{ 0, 0, 1, 1 };
+    glm::vec4 _orientedViewport{ 0, 0, 1, 1 };
     SurfaceTransform _curTransform{ SurfaceTransform::IDENTITY };
     bool _isProjDirty{ true };
-    Mat4 _matView;
-    Mat4 _matProj;
-    Mat4 _matProjInv;
-    Mat4 _matViewProj;
-    Mat4 _matViewProjInv;
+    glm::mat4 _matView;
+    glm::mat4 _matProj;
+    glm::mat4 _matProjInv;
+    glm::mat4 _matViewProj;
+    glm::mat4 _matViewProjInv;
     Frustum* _frustum{ nullptr };
-    Vec3 _forward;
-    Vec3 _position;
+    glm::vec3 _forward;
+    glm::vec3 _position;
     uint32_t _priority{ 0 };
     CameraAperture _aperture{ CameraAperture::F16_0 };
     float _apertureValue{ 0.F };
@@ -354,7 +355,7 @@ private:
     float _exposure{ 0.F };
     uint32_t _clearStencil{ 0 };
 
-    CC_DISALLOW_COPY_MOVE_ASSIGN(Camera)
+    DISALLOW_COPY_MOVE_ASSIGN(Camera)
 };
 
 }

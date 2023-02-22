@@ -1,15 +1,11 @@
 #pragma once
 
-#include "Def_common.h"
-#include "glDevice.h"
-#include "glObjects.h"
-#include "RenderPass.h"
-#include "glCommands.h"
+#include "../base/RenderPass.h"
 
 namespace ll
 {
 
-struct GPURenderPass;
+    struct GPURenderPass;
 
 class glRenderPass final : public RenderPass
 {

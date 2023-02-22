@@ -1,5 +1,8 @@
 #include "glShader.h"
 
+#include "glDevice.h"
+#include "glCommands.h"
+
 ll::glShader::glShader()
 {
 }

@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Def_common.h"
-#include "PassUtils.h"
-#include "RenderGraphTypes.h"
+#include "../core/PassUtils.h"
+#include "../base/Def_common.h"
+
 #include "LayoutGraphTypes.h"
+#include "RenderGraphTypes.h"
 #include "RenderCommonTypes.h"
 
 #include <glm/glm.hpp>
@@ -13,16 +14,17 @@
 namespace ll
 {
 
-    class Model;
-    class Camera;
     class Device;
+    class Camera;
     class Material;
+
+    class Model;
     class RenderScene;
     class RenderWindow;
-    class PipelineState;
-    class InputAssembler;
 
+    class PipelineState;
     class DescriptorSet;
+    class InputAssembler;
     class GlobalDSManager;
     class GeometryRenderer;
     class PipelineSceneData;
@@ -101,7 +103,8 @@ public:
     virtual void setSampler(const std::string& name, Sampler* sampler) = 0;
 };
 
-class ComputeQueueBuilder : public Setter {
+class ComputeQueueBuilder : public Setter 
+{
 public:
     ComputeQueueBuilder() noexcept = default;
 
@@ -114,13 +117,13 @@ class ComputePassBuilder : public Setter
 public:
     ComputePassBuilder() noexcept = default;
 
-    virtual void addComputeView(const std::string& name, const ComputeView& view) = 0;
+    virtual void AddComputeView(const std::string& name, const ComputeView& view) = 0;
 
-    virtual ComputeQueueBuilder* addQueue(const std::string& name) = 0;
-    virtual ComputeQueueBuilder* addQueue() = 0;
+    virtual ComputeQueueBuilder* AddQueue(const std::string& name) = 0;
+    virtual ComputeQueueBuilder* AddQueue() = 0;
 
-    virtual void addDispatch(const std::string& shader, uint32_t threadGroupCountX, uint32_t threadGroupCountY, uint32_t threadGroupCountZ, const std::string& name) = 0;
-    virtual void addDispatch(const std::string& shader, uint32_t threadGroupCountX, uint32_t threadGroupCountY, uint32_t threadGroupCountZ) = 0;
+    virtual void AddDispatch(const std::string& shader, uint32_t threadGroupCountX, uint32_t threadGroupCountY, uint32_t threadGroupCountZ, const std::string& name) = 0;
+    virtual void AddDispatch(const std::string& shader, uint32_t threadGroupCountX, uint32_t threadGroupCountY, uint32_t threadGroupCountZ) = 0;
 };
 
 class MovePassBuilder 
@@ -134,7 +137,7 @@ public:
 
     virtual ~MovePassBuilder() noexcept = default;
 
-    virtual void addPair(const MovePair& pair) = 0;
+    virtual void AddPair(const MovePair& pair) = 0;
 };
 
 class CopyPassBuilder 
@@ -148,7 +151,7 @@ public:
 
     virtual ~CopyPassBuilder() noexcept = default;
 
-    virtual void addPair(const CopyPair& pair) = 0;
+    virtual void AddPair(const CopyPair& pair) = 0;
 };
 
 class SceneVisitor 
@@ -162,15 +165,15 @@ public:
 
     virtual ~SceneVisitor() noexcept = default;
 
-    virtual const PipelineSceneData* getPipelineSceneData() const = 0;
+    virtual const PipelineSceneData* GetPipelineSceneData() const = 0;
 
-    virtual void setViewport(const Viewport& vp) = 0;
-    virtual void setScissor(const Rect& rect) = 0;
-    virtual void bindPipelineState(PipelineState* pso) = 0;
-    virtual void bindDescriptorSet(uint32_t set, DescriptorSet* descriptorSet, uint32_t dynamicOffsetCount, const uint32_t* dynamicOffsets) = 0;
-    virtual void bindInputAssembler(InputAssembler* ia) = 0;
-    virtual void updateBuffer(Buffer* buff, const void* data, uint32_t size) = 0;
-    virtual void draw(const DrawInfo& info) = 0;
+    virtual void SetViewport(const Viewport& vp) = 0;
+    virtual void SetScissor(const Rect& rect) = 0;
+    virtual void BindPipelineState(PipelineState* pso) = 0;
+    virtual void BindDescriptorSet(uint32_t set, DescriptorSet* descriptorSet, uint32_t dynamicOffsetCount, const uint32_t* dynamicOffsets) = 0;
+    virtual void BindInputAssembler(InputAssembler* ia) = 0;
+    virtual void UpdateBuffer(Buffer* buff, const void* data, uint32_t size) = 0;
+    virtual void Draw(const DrawInfo& info) = 0;
 };
 
 class SceneTask 
@@ -184,10 +187,10 @@ public:
 
     virtual ~SceneTask() noexcept = default;
 
-    virtual TaskType getTaskType() const noexcept = 0;
-    virtual void     start() = 0;
-    virtual void     join() = 0;
-    virtual void     submit() = 0;
+    virtual TaskType GetTaskType() const noexcept = 0;
+    virtual void     Start() = 0;
+    virtual void     Join() = 0;
+    virtual void     Submit() = 0;
 };
 
 class SceneTransversal 
@@ -201,7 +204,7 @@ public:
 
     virtual ~SceneTransversal() noexcept = default;
 
-    virtual SceneTask* transverse(SceneVisitor* visitor) const = 0;
+    virtual SceneTask* Transverse(SceneVisitor* visitor) const = 0;
 };
 
 class LayoutGraphBuilder 
@@ -215,16 +218,16 @@ public:
 
     virtual ~LayoutGraphBuilder() noexcept = default;
 
-    virtual void clear() = 0;
-    virtual uint32_t addRenderStage(const std::string& name) = 0;
-    virtual uint32_t addRenderPhase(const std::string& name, uint32_t parentID) = 0;
-    virtual void addShader(const std::string& name, uint32_t parentPhaseID) = 0;
-    virtual void addDescriptorBlock(uint32_t nodeID, const DescriptorBlockIndex& index, const DescriptorBlockFlattened& block) = 0;
-    virtual void addUniformBlock(uint32_t nodeID, const DescriptorBlockIndex& index, const std::string& name, const UniformBlock& uniformBlock) = 0;
-    virtual void reserveDescriptorBlock(uint32_t nodeID, const DescriptorBlockIndex& index, const DescriptorBlockFlattened& block) = 0;
-    virtual int compile() = 0;
+    virtual void Clear() = 0;
+    virtual uint32_t AddRenderStage(const std::string& name) = 0;
+    virtual uint32_t AddRenderPhase(const std::string& name, uint32_t parentID) = 0;
+    virtual void AddShader(const std::string& name, uint32_t parentPhaseID) = 0;
+    virtual void AddDescriptorBlock(uint32_t nodeID, const DescriptorBlockIndex& index, const DescriptorBlockFlattened& block) = 0;
+    virtual void AddUniformBlock(uint32_t nodeID, const DescriptorBlockIndex& index, const std::string& name, const UniformBlock& uniformBlock) = 0;
+    virtual void ReserveDescriptorBlock(uint32_t nodeID, const DescriptorBlockIndex& index, const DescriptorBlockFlattened& block) = 0;
+    virtual int Compile() = 0;
 
-    virtual std::string print() const = 0;
+    virtual std::string Print() const = 0;
 };
 
 class RasterQueueBuilder : public Setter
@@ -232,15 +235,15 @@ class RasterQueueBuilder : public Setter
 public:
     RasterQueueBuilder() noexcept = default;
 
-    virtual void addSceneOfCamera(Camera* camera, LightInfo light, SceneFlags sceneFlags, const std::string& name) = 0;
-    virtual void addSceneOfCamera(Camera* camera, LightInfo light, SceneFlags sceneFlags) = 0;
-    virtual void addScene(const std::string& name, SceneFlags sceneFlags) = 0;
-    virtual void addFullscreenQuad(Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
-    virtual void addFullscreenQuad(Material* material, SceneFlags sceneFlags) = 0;
-    virtual void addCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
-    virtual void addCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags) = 0;
-    virtual void clearRenderTarget(const std::string& name, const Color& color) = 0;
-    virtual void setViewport(const Viewport& viewport) = 0;
+    virtual void AddSceneOfCamera(Camera* camera, LightInfo light, SceneFlags sceneFlags, const std::string& name) = 0;
+    virtual void AddSceneOfCamera(Camera* camera, LightInfo light, SceneFlags sceneFlags) = 0;
+    virtual void AddScene(const std::string& name, SceneFlags sceneFlags) = 0;
+    virtual void AddFullscreenQuad(Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
+    virtual void AddFullscreenQuad(Material* material, SceneFlags sceneFlags) = 0;
+    virtual void AddCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
+    virtual void AddCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags) = 0;
+    virtual void ClearRenderTarget(const std::string& name, const Color& color) = 0;
+    virtual void SetViewport(const Viewport& viewport) = 0;
 };
 
 class RasterPassBuilder : public Setter
@@ -248,15 +251,15 @@ class RasterPassBuilder : public Setter
 public:
     RasterPassBuilder() noexcept = default;
 
-    virtual void addRasterView(const std::string& name, const RasterView& view) = 0;
-    virtual void addComputeView(const std::string& name, const ComputeView& view) = 0;
-    virtual RasterQueueBuilder* addQueue(QueueHint hint, const std::string& name) = 0;
-    virtual RasterQueueBuilder* addQueue(QueueHint hint) = 0;
-    virtual void addFullscreenQuad(Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
-    virtual void addFullscreenQuad(Material* material, SceneFlags sceneFlags) = 0;
-    virtual void addCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
-    virtual void addCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags) = 0;
-    virtual void setViewport(const Viewport& viewport) = 0;
+    virtual void AddRasterView(const std::string& name, const RasterView& view) = 0;
+    virtual void AddComputeView(const std::string& name, const ComputeView& view) = 0;
+    virtual RasterQueueBuilder* AddQueue(QueueHint hint, const std::string& name) = 0;
+    virtual RasterQueueBuilder* AddQueue(QueueHint hint) = 0;
+    virtual void AddFullscreenQuad(Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
+    virtual void AddFullscreenQuad(Material* material, SceneFlags sceneFlags) = 0;
+    virtual void AddCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags, const std::string& name) = 0;
+    virtual void AddCameraQuad(Camera* camera, Material* material, SceneFlags sceneFlags) = 0;
+    virtual void SetViewport(const Viewport& viewport) = 0;
 };
 
 class Pipeline : public PipelineRuntime 

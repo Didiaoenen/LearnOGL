@@ -46,77 +46,77 @@ void ll::glDevice::DoDestroy()
 {
 }
 
-CommandBuffer* ll::glDevice::CreateCommandBuffer(const CommandBufferInfo& info, bool hasAgent)
+ll::CommandBuffer* ll::glDevice::CreateCommandBuffer(const CommandBufferInfo& info, bool hasAgent)
 {
     return nullptr;
 }
 
-Queue* ll::glDevice::CreateQueue()
+ll::Queue* ll::glDevice::CreateQueue()
 {
     return nullptr;
 }
 
-QueryPool* ll::glDevice::CreateQueryPool()
+ll::QueryPool* ll::glDevice::CreateQueryPool()
 {
     return nullptr;
 }
 
-Swapchain* ll::glDevice::CreateSwapchain()
+ll::Swapchain* ll::glDevice::CreateSwapchain()
 {
     return nullptr;
 }
 
-Buffer* ll::glDevice::CreateBuffer()
+ll::Buffer* ll::glDevice::CreateBuffer()
 {
     return nullptr;
 }
 
-Texture* ll::glDevice::CreateTexture()
+ll::Texture* ll::glDevice::CreateTexture()
 {
     return nullptr;
 }
 
-Shader* ll::glDevice::CreateShader()
+ll::Shader* ll::glDevice::CreateShader()
 {
     return nullptr;
 }
 
-InputAssembler* ll::glDevice::CreateInputAssembler()
+ll::InputAssembler* ll::glDevice::CreateInputAssembler()
 {
     return nullptr;
 }
 
-RenderPass* ll::glDevice::CreateRenderPass()
+ll::RenderPass* ll::glDevice::CreateRenderPass()
 {
     return nullptr;
 }
 
-FrameBuffer* ll::glDevice::CreateFramebuffer()
+ll::FrameBuffer* ll::glDevice::CreateFramebuffer()
 {
     return nullptr;
 }
 
-DescriptorSet* ll::glDevice::CreateDescriptorSet()
+ll::DescriptorSet* ll::glDevice::CreateDescriptorSet()
 {
     return nullptr;
 }
 
-DescriptorSetLayout* ll::glDevice::CreateDescriptorSetLayout()
+ll::DescriptorSetLayout* ll::glDevice::CreateDescriptorSetLayout()
 {
     return nullptr;
 }
 
-PipelineLayout* ll::glDevice::CreatePipelineLayout()
+ll::PipelineLayout* ll::glDevice::CreatePipelineLayout()
 {
     return nullptr;
 }
 
-PipelineState* ll::glDevice::CreatePipelineState()
+ll::PipelineState* ll::glDevice::CreatePipelineState()
 {
     return nullptr;
 }
 
-Sampler* ll::glDevice::CreateSampler(const SamplerInfo& info)
+ll::Sampler* ll::glDevice::CreateSampler(const SamplerInfo& info)
 {
     return nullptr;
 }

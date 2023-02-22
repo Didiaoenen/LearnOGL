@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Shader.h"
-#include "glDevice.h"
-#include "glObjects.h"
-#include "glCommands.h"
+#include "../base/Shader.h"
 
 namespace ll
 {

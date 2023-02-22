@@ -7,6 +7,7 @@
 #include "GeneralBarrier.h"
 #include "TextureBarrier.h"
 
+#include <map>
 #include <array>
 
 namespace ll
@@ -150,10 +151,10 @@ protected:
     uint32_t _numTriangles{ 0U };
     MemoryStatus _memoryStatus;
 
-    std::unordered_map<SamplerInfo, Sampler*, std::hash<SamplerInfo>> _samplers;
-    std::unordered_map<GeneralBarrierInfo, GeneralBarrier*, std::hash<GeneralBarrierInfo>> _generalBarriers;
-    std::unordered_map<TextureBarrierInfo, TextureBarrier*, std::hash<TextureBarrierInfo>> _textureBarriers;
-    std::unordered_map<BufferBarrierInfo, BufferBarrier*, std::hash<BufferBarrierInfo>> _bufferBarriers;
+    std::map<SamplerInfo, Sampler*> _samplers;
+    std::map<GeneralBarrierInfo, GeneralBarrier*> _generalBarriers;
+    std::map<TextureBarrierInfo, TextureBarrier*> _textureBarriers;
+    std::map<BufferBarrierInfo, BufferBarrier*> _bufferBarriers;
 
 private:
     std::vector<Swapchain*> _swapchains;

@@ -1,8 +1,19 @@
 #pragma once
 
+#include "Define.h"
+
+#include <glm/glm.hpp>
+#include <array>
+#include <vector>
+
 namespace ll
 {
 
+    class Device;
+    class Camera;
+    class Shadows;
+    class DescriptorSet;
+    class RenderPipeline;
     class DirectionalLight;
 
 class PipelineUBO final
@@ -13,8 +24,9 @@ public:
     static void UpdateShadowUBOView(
         const RenderPipeline* pipeline, std::array<float, UBOShadow::COUNT>* shadowBufferView, std::array<float, UBOCSM::COUNT>* csmBufferView, const Camera* camera
     );
-    static void UpdateShadowUBOLightView(const RenderPipeline* pipeline, std::array<float, UBOShadow::COUNT>* shadowBufferView,
-        const Light* light, uint32_t level);
+    static void UpdateShadowUBOLightView(
+        const RenderPipeline* pipeline, std::array<float, UBOShadow::COUNT>* shadowBufferView, const Light* light, uint32_t level
+    );
     static uint8_t GetCombineSignY();
     static void UpdatePlanarNormalAndDistance(const Shadows* shadowInfo, std::array<float, UBOShadow::COUNT>* shadowUBO);
 
@@ -27,7 +39,7 @@ public:
     void UpdateMultiCameraUBO(const std::vector<Camera*>& cameras);
     void UpdateShadowUBO(const Camera* camera);
     void UpdateShadowUBOLight(DescriptorSet* globalDS, const Light* light, uint32_t level = 0U);
-    void UpdateShadowUBORange(uint32_t offset, const Mat4* data);
+    void UpdateShadowUBORange(uint32_t offset, const glm::mat4* data);
 
     uint32_t GetCurrentCameraUBOOffset() const;
     void IncCameraUBOOffset();

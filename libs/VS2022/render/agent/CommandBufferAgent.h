@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Agent.h"
-#include "CommandBuffer.h"
+#include "../base/Agent.h"
+#include "../base/CommandBuffer.h"
 
 namespace ll
 {

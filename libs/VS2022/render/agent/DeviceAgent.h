@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Agent.h"
-#include "Device.h"
+#include "../base/Agent.h"
+#include "../base/Device.h"
 
 #include <string>
 #include <unordered_set>

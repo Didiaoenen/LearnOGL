@@ -1,7 +1,5 @@
 #include "PipelineSceneData.h"
 
-#include "Device.h"
-
 ll::PipelineSceneData::PipelineSceneData()
 {
 }

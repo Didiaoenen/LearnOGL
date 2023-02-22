@@ -1,20 +1,23 @@
 #pragma once
 
 #include "Define.h"
-#include "Ptr.h"
-#include "Fog.h"
-#include "Pass.h"
-#include "Light.h"
-#include "Skybox.h"
-#include "Octree.h"
-#include "Shader.h"
-#include "Shadows.h"
-#include "Ambient.h"
-#include "Material.h"
 #include "CSMLayers.h"
+
+#include "../base/Device.h"
+#include "../core/Material.h"
+
+#include <map>
 
 namespace ll
 {
+
+    class Fog;
+    class Pass;
+    class Skybox;
+    class Octree;
+    class Ambient;
+    class Shadows;
+    class FrameBuffer;
 
 class PipelineSceneData
 {
@@ -27,7 +30,7 @@ public:
     virtual void UpdatePipelineSceneData() {}
 
     inline void SetShadowFramebuffer(const Light* light, FrameBuffer* framebuffer) { _shadowFrameBufferMap[light] = framebuffer; }
-    inline const std::unordered_map<const Light*, IntrusivePtr<FrameBuffer>>& GetShadowFramebufferMap() const { return _shadowFrameBufferMap; }
+    inline const std::map<const Light*, IntrusivePtr<FrameBuffer>>& GetShadowFramebufferMap() const { return _shadowFrameBufferMap; }
     inline const RenderObjectList& GetRenderObjects() const { return _renderObjects; }
     inline void SetRenderObjects(RenderObjectList&& ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     inline const std::vector<const Light*>& GetValidPunctualLights() const { return _validPunctualLights; }
@@ -94,7 +97,7 @@ protected:
     std::vector<Pass*> _geometryRendererPasses;
     std::vector<Shader*> _geometryRendererShaders;
 
-    std::unordered_map<const Light*, IntrusivePtr<FrameBuffer>> _shadowFrameBufferMap;
+    std::map<const Light*, IntrusivePtr<FrameBuffer>> _shadowFrameBufferMap;
 };
 
 }

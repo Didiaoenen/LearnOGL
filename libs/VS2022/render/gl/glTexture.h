@@ -1,17 +1,11 @@
 #pragma once
 
-#include "Def.h"
-#include "glDevice.h"
-#include "glObjects.h"
-#include "glCommands.h"
-
-#include "Texture.h"
-#include "glSwapchain.h"
+#include "../base/Texture.h"
 
 namespace ll
 {
 
-struct GPUTexture;
+	struct GPUTexture;
 
 class glTexture final : public Texture
 {

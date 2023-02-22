@@ -1,6 +1,7 @@
 #include "glBuffer.h"
 
 #include "glDevice.h"
+#include "glCommands.h"
 
 ll::glBuffer::glBuffer()
 {
@@ -12,7 +13,7 @@ ll::glBuffer::~glBuffer()
 
 void ll::glBuffer::Update(const void* buffer, uint32_t size)
 {
-    cmdFuncUpdateBuffer(glDevice::GetInstance(), _gpuBuffer, buffer, 0U, size);
+    cmdFuncUpdateBuffer(ll::glDevice::GetInstance(), _gpuBuffer, buffer, 0U, size);
 }
 
 void ll::glBuffer::DoInit(const BufferInfo& info)

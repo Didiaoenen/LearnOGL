@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Def_common.h"
+#include "../core/PassUtils.h"
+
 #include "Define.h"
-#include "PassUtils.h"
 
 #include <glm/glm.hpp>
-#include <unordered_map>
+#include <map>
 
 namespace ll
 {
@@ -52,7 +52,7 @@ public:
 
     inline const RenderFlowList& GetFlows() const { return _flows; }
     inline uint32_t GetTag() const { return _tag; }
-    inline const std::unordered_map<std::string, InternalBindingInst>& GetGlobalBindings() const { return _globalBindings; }
+    inline const std::map<std::string, InternalBindingInst>& GetGlobalBindings() const { return _globalBindings; }
     inline const MacroRecord& GetMacros() const { return _macros; }
     inline void SetValue(const std::string& name, int32_t value) { _macros[name] = value; }
     inline void SetValue(const std::string& name, bool value) { _macros[name] = value; }
@@ -111,7 +111,7 @@ protected:
     CommandBufferList _commandBuffers;
     QueryPoolList _queryPools;
     RenderFlowList _flows;
-    std::unordered_map<std::string, InternalBindingInst> _globalBindings;
+    std::map<std::string, InternalBindingInst> _globalBindings;
     MacroRecord _macros;
     uint32_t _tag{ 0 };
     std::string _constantMacros;
@@ -127,9 +127,9 @@ protected:
     uint32_t _height{ 0 };
     Buffer* _quadIB{ nullptr };
     std::vector<Buffer*> _quadVB;
-    std::unordered_map<glm::vec4, InputAssembler*, std::hash<glm::vec4>> _quadIA;
+    std::map<glm::vec4, InputAssembler*> _quadIA;
 
-    std::unordered_map<ClearFlags, RenderPass*> _renderPasses;
+    std::map<ClearFlags, RenderPass*> _renderPasses;
 
     bool _clusterEnabled{ false };
     bool _bloomEnabled{ false };

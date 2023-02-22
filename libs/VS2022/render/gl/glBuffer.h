@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Def_common.h"
-#include "glCommands.h"
+#include "../base/Buffer.h"
 
 namespace ll
 {

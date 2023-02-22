@@ -1,35 +1,21 @@
 #pragma once
 
-#include "Def_common.h"
+#include "../base/Def.h"
+#include "../common/CommandPool.h"
+
 #include "glWrangler.h"
 
+#include <string>
 #include <unordered_map>
 
 namespace ll
 {
 
-struct UniformSamplerTexture 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    Type type{ Type::UNKNOWN };
-    uint32_t count{ 0 };
+    struct GPUSwapchain;
+    struct GPUPipelineState;
 
-    EXPOSE_COPY_FN(UniformSamplerTexture)
-};
-using UniformSamplerTextureList = std::vector<UniformSamplerTexture>;
-
-struct UniformInputAttachment 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    uint32_t count{ 0 };
-
-    EXPOSE_COPY_FN(UniformInputAttachment)
-};
-using UniformInputAttachmentList = std::vector<UniformInputAttachment>;
+    class GPUFramebuffer;
+    class GPUFramebufferCacheMap;
 
 struct GPUShaderStage 
 {
@@ -94,14 +80,6 @@ struct GPUInput
 };
 using GPUInputList = std::vector<GPUInput>;
 
-struct GPUSwapchain 
-{
-    EGLSurface glSurface{ GL_NO_SURFACE };
-    EGLint eglSwapInterval{ 0 };
-    GLuint glFramebuffer{ 0 };
-    GPUTexture* gpuColorTexture{ nullptr };
-};
-
 struct GPUTexture 
 {
     TextureType type{ TextureType::TEX2D };
@@ -132,6 +110,14 @@ struct GPUTexture
     GPUSwapchain* swapchain{ nullptr };
 };
 using GPUTextureList = std::vector<GPUTexture*>;
+
+struct GPUSwapchain
+{
+    //EGLSurface glSurface{ GL_NO_SURFACE };
+    //EGLint eglSwapInterval{ 0 };
+    GLuint glFramebuffer{ 0 };
+    GPUTexture* gpuColorTexture{ nullptr };
+};
 
 struct GPUBuffer 
 {
@@ -187,7 +173,7 @@ struct GPURenderPass
     DepthStencilAttachment depthStencilAttachment;
     SubpassInfoList subpasses;
 
-    std::vector<AttachmentStatistics> statistics; // per attachment
+    std::vector<AttachmentStatistics> statistics;
 };
 
 struct GPUAttribute 
@@ -228,6 +214,76 @@ struct ObjectCache
     ColorList clearColors;
     float clearDepth = 1.F;
     uint32_t clearStencil = 0U;
+};
+
+struct GPUDescriptorSetLayout
+{
+    DescriptorSetLayoutBindingList bindings;
+    std::vector<uint32_t> dynamicBindings;
+
+    std::vector<uint32_t> bindingIndices;
+    std::vector<uint32_t> descriptorIndices;
+    uint32_t descriptorCount = 0U;
+};
+using GPUDescriptorSetLayoutList = std::vector<GPUDescriptorSetLayout*>;
+
+struct GPUPipelineLayout
+{
+    GPUDescriptorSetLayoutList setLayouts;
+
+    std::vector<std::vector<int>> dynamicOffsetIndices;
+    std::vector<uint32_t> dynamicOffsetOffsets;
+    std::vector<uint32_t> dynamicOffsets;
+    uint32_t dynamicOffsetCount = 0U;
+};
+
+struct GPUPipelineState
+{
+    GLenum glPrimitive = GL_TRIANGLES;
+    GPUShader* gpuShader = nullptr;
+    RasterizerState rs;
+    DepthStencilState dss;
+    BlendState bs;
+    DynamicStateList dynamicStates;
+    GPUPipelineLayout* gpuLayout = nullptr;
+    GPURenderPass* gpuRenderPass = nullptr;
+    GPUPipelineLayout* gpuPipelineLayout = nullptr;
+};
+
+struct GPUBufferView
+{
+    GPUBuffer* gpuBuffer = nullptr;
+    uint32_t offset = 0U;
+    uint32_t range = 0U;
+};
+
+struct GPUDescriptor
+{
+    DescriptorType type = DescriptorType::UNKNOWN;
+    GPUBuffer* gpuBuffer = nullptr;
+    GPUBufferView* gpuBufferView = nullptr;
+    GPUTexture* gpuTexture = nullptr;
+    GPUSampler* gpuSampler = nullptr;
+};
+using GPUDescriptorList = std::vector<GPUDescriptor>;
+
+struct GPUDescriptorSet
+{
+    GPUDescriptorList gpuDescriptors;
+    const std::vector<uint32_t>* descriptorIndices = nullptr;
+};
+
+struct GPUConstantRegistry
+{
+    size_t currentBoundThreadID{ 0U };
+
+    MSRTSupportLevel mMSRT{ MSRTSupportLevel::NONE };
+    FBFSupportLevel mFBF{ FBFSupportLevel::NONE };
+
+    bool useVAO = false;
+    bool useDrawInstanced = false;
+    bool useInstancedArrays = false;
+    bool useDiscardFramebuffer = false;
 };
 
 class GPUStateCache 
@@ -310,17 +366,17 @@ public:
 
     struct GLFramebuffer 
     {
-        inline void initialize(GPUSwapchain* sc) { swapchain = sc; }
-        inline void initialize(const GLFramebufferInfo& info) {
+        inline void Initialize(GPUSwapchain* sc) { swapchain = sc; }
+        inline void Initialize(const GLFramebufferInfo& info) {
             _glFramebuffer = info.glFramebuffer;
             _width = info.width;
             _height = info.height;
         }
-        inline GLuint getFramebuffer() const { return swapchain ? swapchain->glFramebuffer : _glFramebuffer; }
-        inline uint32_t getWidth() const { return swapchain ? swapchain->gpuColorTexture->width : _width; }
-        inline uint32_t getHeight() const { return swapchain ? swapchain->gpuColorTexture->height : _height; }
+        inline GLuint GetFramebuffer() const { return swapchain ? swapchain->glFramebuffer : _glFramebuffer; }
+        inline uint32_t GetWidth() const { return swapchain ? swapchain->gpuColorTexture->width : _width; }
+        inline uint32_t GetHeight() const { return swapchain ? swapchain->gpuColorTexture->height : _height; }
 
-        void destroy(GPUStateCache* cache, GPUFramebufferCacheMap* framebufferCacheMap);
+        void Destroy(GPUStateCache* cache, GPUFramebufferCacheMap* framebufferCacheMap) {}
 
         GPUSwapchain* swapchain{ nullptr };
 
@@ -469,234 +525,20 @@ private:
     CacheMap _textureMap;
 };
 
-struct RasterizerState 
-{
-    uint32_t isDiscard{ 0 };
-    PolygonMode polygonMode{ PolygonMode::FILL };
-    ShadeModel shadeModel{ ShadeModel::GOURAND };
-    CullMode cullMode{ CullMode::BACK };
-    uint32_t isFrontFaceCCW{ 1 };
-    uint32_t depthBiasEnabled{ 0 };
-    float depthBias{ 0.F };
-    float depthBiasClamp{ 0.F };
-    float depthBiasSlop{ 0.F };
-    uint32_t isDepthClip{ 1 };
-    uint32_t isMultisample{ 0 };
-    float lineWidth{ 1.F };
-
-    void reset() 
-    {
-        *this = RasterizerState();
-    }
-
-    EXPOSE_COPY_FN(RasterizerState)
-};
-
-struct DepthStencilState 
-{
-    uint32_t depthTest{ 1 };
-    uint32_t depthWrite{ 1 };
-    ComparisonFunc depthFunc{ ComparisonFunc::LESS };
-    uint32_t stencilTestFront{ 0 };
-    ComparisonFunc stencilFuncFront{ ComparisonFunc::ALWAYS };
-    uint32_t stencilReadMaskFront{ 0xffffffff };
-    uint32_t stencilWriteMaskFront{ 0xffffffff };
-    StencilOp stencilFailOpFront{ StencilOp::KEEP };
-    StencilOp stencilZFailOpFront{ StencilOp::KEEP };
-    StencilOp stencilPassOpFront{ StencilOp::KEEP };
-    uint32_t stencilRefFront{ 1 };
-    uint32_t stencilTestBack{ 0 };
-    ComparisonFunc stencilFuncBack{ ComparisonFunc::ALWAYS };
-    uint32_t stencilReadMaskBack{ 0xffffffff };
-    uint32_t stencilWriteMaskBack{ 0xffffffff };
-    StencilOp stencilFailOpBack{ StencilOp::KEEP };
-    StencilOp stencilZFailOpBack{ StencilOp::KEEP };
-    StencilOp stencilPassOpBack{ StencilOp::KEEP };
-    uint32_t stencilRefBack{ 1 };
-
-    void reset() 
-    {
-        *this = DepthStencilState();
-    }
-
-    EXPOSE_COPY_FN(DepthStencilState)
-};
-
-struct BlendState 
-{
-    uint32_t isA2C{ 0 };
-    uint32_t isIndepend{ 0 };
-    Color blendColor;
-    BlendTargetList targets{ 1 };
-
-    void setTarget(index_t index, const BlendTarget& target) 
-    {
-        if (index >= targets.size()) 
-        {
-            targets.resize(index + 1);
-        }
-        targets[index] = target;
-    }
-
-    void reset() 
-    {
-        *this = BlendState();
-    }
-
-    void destroy() {}
-
-    EXPOSE_COPY_FN(BlendState)
-};
-
-struct DescriptorSetLayoutBinding 
-{
-    uint32_t binding{ INVALID_BINDING };
-    DescriptorType descriptorType{ DescriptorType::UNKNOWN };
-    uint32_t count{ 0 };
-    ShaderStageFlags stageFlags{ ShaderStageFlagBit::NONE };
-    SamplerList immutableSamplers;
-
-    EXPOSE_COPY_FN(DescriptorSetLayoutBinding)
-};
-using DescriptorSetLayoutBindingList = std::vector<DescriptorSetLayoutBinding>;
-
-struct GPUDescriptorSetLayout 
-{
-    DescriptorSetLayoutBindingList bindings;
-    std::vector<uint32_t> dynamicBindings;
-
-    std::vector<uint32_t> bindingIndices;
-    std::vector<uint32_t> descriptorIndices;
-    uint32_t descriptorCount = 0U;
-};
-using GPUDescriptorSetLayoutList = std::vector<GPUDescriptorSetLayout*>;
-
-struct GPUPipelineLayout 
-{
-    GPUDescriptorSetLayoutList setLayouts;
-
-    std::vector<std::vector<int>> dynamicOffsetIndices;
-    std::vector<uint32_t> dynamicOffsetOffsets;
-    std::vector<uint32_t> dynamicOffsets;
-    uint32_t dynamicOffsetCount = 0U;
-};
-
-struct GPUPipelineState 
-{
-    GLenum glPrimitive = GL_TRIANGLES;
-    GPUShader* gpuShader = nullptr;
-    RasterizerState rs;
-    DepthStencilState dss;
-    BlendState bs;
-    DynamicStateList dynamicStates;
-    GPUPipelineLayout* gpuLayout = nullptr;
-    GPURenderPass* gpuRenderPass = nullptr;
-    GPUPipelineLayout* gpuPipelineLayout = nullptr;
-};
-
-struct GPUBufferView 
-{
-    GPUBuffer* gpuBuffer = nullptr;
-    uint32_t offset = 0U;
-    uint32_t range = 0U;
-};
-
-struct GPUDescriptor 
-{
-    DescriptorType type = DescriptorType::UNKNOWN;
-    GPUBuffer* gpuBuffer = nullptr;
-    GPUBufferView* gpuBufferView = nullptr;
-    GPUTexture* gpuTexture = nullptr;
-    GPUSampler* gpuSampler = nullptr;
-};
-using GPUDescriptorList = std::vector<GPUDescriptor>;
-
-struct GPUDescriptorSet 
-{
-    GPUDescriptorList gpuDescriptors;
-    const std::vector<uint32_t>* descriptorIndices = nullptr;
-};
-
-struct DynamicStencilStates 
-{
-    uint32_t writeMask{ 0 };
-    uint32_t compareMask{ 0 };
-    uint32_t reference{ 0 };
-
-    EXPOSE_COPY_FN(DynamicStencilStates)
-};
-
-struct DynamicStates 
-{
-    Viewport viewport;
-    Rect scissor;
-    Color blendConstant;
-    float lineWidth{ 1.F };
-    float depthBiasConstant{ 0.F };
-    float depthBiasClamp{ 0.F };
-    float depthBiasSlope{ 0.F };
-    float depthMinBounds{ 0.F };
-    float depthMaxBounds{ 0.F };
-
-    DynamicStencilStates stencilStatesFront;
-    DynamicStencilStates stencilStatesBack;
-
-    EXPOSE_COPY_FN(DynamicStates)
-};
-
-struct BufferTextureCopy 
-{
-    uint32_t buffOffset{ 0 };
-    uint32_t buffStride{ 0 };
-    uint32_t buffTexHeight{ 0 };
-    Offset texOffset;
-    Extent texExtent;
-    TextureSubresLayers texSubres;
-
-    EXPOSE_COPY_FN(BufferTextureCopy)
-};
-using BufferTextureCopyList = std::vector<BufferTextureCopy>;
-
-struct TextureBlit 
-{
-    TextureSubresLayers srcSubres;
-    Offset srcOffset;
-    Extent srcExtent;
-    TextureSubresLayers dstSubres;
-    Offset dstOffset;
-    Extent dstExtent;
-
-    EXPOSE_COPY_FN(TextureBlit)
-};
-using TextureBlitList = std::vector<TextureBlit>;
-
-struct GPUConstantRegistry 
-{
-    size_t currentBoundThreadID{ 0U };
-
-    MSRTSupportLevel mMSRT{ MSRTSupportLevel::NONE };
-    FBFSupportLevel mFBF{ FBFSupportLevel::NONE };
-
-    bool useVAO = false;
-    bool useDrawInstanced = false;
-    bool useInstancedArrays = false;
-    bool useDiscardFramebuffer = false;
-};
-
 class GPUContext final 
 {
 public:
     bool Initialize(GPUStateCache* stateCache, GPUConstantRegistry* constantRegistry);
     void Destroy();
 
-    EGLint eglMajorVersion{ 0 };
-    EGLint eglMinorVersion{ 0 };
-    EGLDisplay eglDisplay{ EGL_NO_DISPLAY };
-    EGLConfig eglConfig{ nullptr };
-    std::vector<EGLint> eglAttributes;
+    //EGLint eglMajorVersion{ 0 };
+    //EGLint eglMinorVersion{ 0 };
+    //EGLDisplay eglDisplay{ EGL_NO_DISPLAY };
+    //EGLConfig eglConfig{ nullptr };
+    //std::vector<EGLint> eglAttributes;
 
-    EGLSurface eglDefaultSurface{ EGL_NO_SURFACE };
-    EGLContext eglDefaultContext{ EGL_NO_CONTEXT };
+    //EGLSurface eglDefaultSurface{ EGL_NO_SURFACE };
+    //EGLContext eglDefaultContext{ EGL_NO_CONTEXT };
 
     void MakeCurrent(const GPUSwapchain* drawSwapchain = nullptr, const GPUSwapchain* readSwapchain = nullptr);
     void BindContext(bool bound);
@@ -709,19 +551,19 @@ public:
     }
 
 private:
-    bool MakeCurrent(EGLSurface drawSurface, EGLSurface readSurface, EGLContext context, bool updateCache = true);
-    EGLContext GetSharedContext();
-    void ResetStates() const;
+    //bool MakeCurrent(EGLSurface drawSurface, EGLSurface readSurface, EGLContext context, bool updateCache = true);
+    //EGLContext GetSharedContext();
+    //void ResetStates() const;
 
-    EGLSurface _eglCurrentDrawSurface{ EGL_NO_SURFACE };
-    EGLSurface _eglCurrentReadSurface{ EGL_NO_SURFACE };
-    EGLContext _eglCurrentContext{ EGL_NO_CONTEXT };
-    EGLint _eglCurrentInterval{ 0 };
+    //EGLSurface _eglCurrentDrawSurface{ EGL_NO_SURFACE };
+    //EGLSurface _eglCurrentReadSurface{ EGL_NO_SURFACE };
+    //EGLContext _eglCurrentContext{ EGL_NO_CONTEXT };
+    //EGLint _eglCurrentInterval{ 0 };
 
-    GPUStateCache* _stateCache{ nullptr };
-    GPUConstantRegistry* _constantRegistry{ nullptr };
+    //GPUStateCache* _stateCache{ nullptr };
+    //GPUConstantRegistry* _constantRegistry{ nullptr };
 
-    std::unordered_map<size_t, EGLContext> _sharedContexts;
+    //std::unordered_map<size_t, EGLContext> _sharedContexts;
 
     std::vector<std::string> _extensions;
 };
@@ -729,9 +571,9 @@ private:
 class GPUBlitManager final 
 {
 public:
-    void initialize();
-    void destroy();
-    void draw(GPUTexture* gpuTextureSrc, GPUTexture* gpuTextureDst, const TextureBlit* regions, uint32_t count, Filter filter);
+    void Initialize();
+    void Destroy();
+    void Draw(GPUTexture* gpuTextureSrc, GPUTexture* gpuTextureDst, const TextureBlit* regions, uint32_t count, Filter filter);
 
 private:
     GPUShader _gpuShader;
@@ -752,20 +594,23 @@ private:
 class GPUFramebufferHub final 
 {
 public:
-    void connect(GPUTexture* texture, GPUFramebuffer* framebuffer) {
+    void Connect(GPUTexture* texture, GPUFramebuffer* framebuffer) 
+    {
         _framebuffers[texture].push_back(framebuffer);
     }
 
-    void disengage(GPUTexture* texture) {
+    void Disengage(GPUTexture* texture) 
+    {
         _framebuffers.erase(texture);
     }
 
-    void disengage(GPUTexture* texture, GPUFramebuffer* framebuffer) {
+    void Disengage(GPUTexture* texture, GPUFramebuffer* framebuffer) 
+    {
         auto& pool = _framebuffers[texture];
         pool.erase(std::remove(pool.begin(), pool.end(), framebuffer), pool.end());
     }
 
-    void update(GPUTexture* texture);
+    void Update(GPUTexture* texture) {}
 
 private:
     std::unordered_map<GPUTexture*, std::vector<GPUFramebuffer*>> _framebuffers;

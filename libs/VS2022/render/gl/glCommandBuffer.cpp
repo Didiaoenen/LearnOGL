@@ -1,10 +1,20 @@
 #include "glCommandBuffer.h"
 
+#include "../base/Math.h"
+#include "../common/CommandPool.h"
+
+#include "glBuffer.h"
+#include "glDevice.h"
+#include "glTexture.h"
 #include "glCommands.h"
 #include "glRenderPass.h"
 #include "glFrameBuffer.h"
 #include "glDescriptorSet.h"
 #include "glPipelineState.h"
+#include "glInputAssembler.h"
+#include "glWrangler.h"
+
+#include <glm/glm.hpp>
 
 ll::glCommandBuffer::glCommandBuffer()
 {
@@ -101,7 +111,7 @@ void ll::glCommandBuffer::BindDescriptorSet(uint32_t set, DescriptorSet* descrip
 
 void ll::glCommandBuffer::BindInputAssembler(InputAssembler* ia)
 {
-    _curGPUInputAssember = static_cast<InputAssembler*>(ia)->GpuInputAssembler();
+    _curGPUInputAssember = static_cast<glInputAssembler*>(ia)->GpuInputAssembler();
     _isStateInvalid = true;
 }
 
@@ -111,8 +121,8 @@ void ll::glCommandBuffer::SetViewport(const Viewport& vp)
         (_curDynamicStates.viewport.top != vp.top) ||
         (_curDynamicStates.viewport.width != vp.width) ||
         (_curDynamicStates.viewport.height != vp.height) ||
-        math::isNotEqualF(_curDynamicStates.viewport.minDepth, vp.minDepth) ||
-        math::isNotEqualF(_curDynamicStates.viewport.maxDepth, vp.maxDepth)) 
+        IsNotEqualF(_curDynamicStates.viewport.minDepth, vp.minDepth) ||
+        IsNotEqualF(_curDynamicStates.viewport.maxDepth, vp.maxDepth))
     {
         _curDynamicStates.viewport = vp;
         _isStateInvalid = true;
@@ -133,7 +143,7 @@ void ll::glCommandBuffer::SetScissor(const Rect& rect)
 
 void ll::glCommandBuffer::SetLineWidth(float width)
 {
-    if (math::isNotEqualF(_curDynamicStates.lineWidth, width)) 
+    if (IsNotEqualF(_curDynamicStates.lineWidth, width))
     {
         _curDynamicStates.lineWidth = width;
         _isStateInvalid = true;
@@ -142,9 +152,9 @@ void ll::glCommandBuffer::SetLineWidth(float width)
 
 void ll::glCommandBuffer::SetDepthBias(float constant, float clamp, float slope)
 {
-    if (math::isNotEqualF(_curDynamicStates.depthBiasConstant, constant) ||
-        math::isNotEqualF(_curDynamicStates.depthBiasClamp, clamp) ||
-        math::isNotEqualF(_curDynamicStates.depthBiasSlope, slope)) 
+    if (IsNotEqualF(_curDynamicStates.depthBiasConstant, constant) ||
+        IsNotEqualF(_curDynamicStates.depthBiasClamp, clamp) ||
+        IsNotEqualF(_curDynamicStates.depthBiasSlope, slope))
     {
         _curDynamicStates.depthBiasConstant = constant;
         _curDynamicStates.depthBiasClamp = clamp;
@@ -155,10 +165,10 @@ void ll::glCommandBuffer::SetDepthBias(float constant, float clamp, float slope)
 
 void ll::glCommandBuffer::SetBlendConstants(const Color& constants)
 {
-    if (math::isNotEqualF(_curDynamicStates.blendConstant.x, constants.x) ||
-        math::isNotEqualF(_curDynamicStates.blendConstant.y, constants.y) ||
-        math::isNotEqualF(_curDynamicStates.blendConstant.z, constants.z) ||
-        math::isNotEqualF(_curDynamicStates.blendConstant.w, constants.w)) 
+    if (IsNotEqualF(_curDynamicStates.blendConstant.x, constants.x) ||
+        IsNotEqualF(_curDynamicStates.blendConstant.y, constants.y) ||
+        IsNotEqualF(_curDynamicStates.blendConstant.z, constants.z) ||
+        IsNotEqualF(_curDynamicStates.blendConstant.w, constants.w))
     {
         _curDynamicStates.blendConstant.x = constants.x;
         _curDynamicStates.blendConstant.y = constants.y;
@@ -170,8 +180,8 @@ void ll::glCommandBuffer::SetBlendConstants(const Color& constants)
 
 void ll::glCommandBuffer::SetDepthBound(float minBounds, float maxBounds)
 {
-    if (math::isNotEqualF(_curDynamicStates.depthMinBounds, minBounds) ||
-        math::isNotEqualF(_curDynamicStates.depthMaxBounds, maxBounds)) 
+    if (IsNotEqualF(_curDynamicStates.depthMinBounds, minBounds) ||
+        IsNotEqualF(_curDynamicStates.depthMaxBounds, maxBounds))
     {
         _curDynamicStates.depthMinBounds = minBounds;
         _curDynamicStates.depthMaxBounds = maxBounds;
@@ -181,7 +191,7 @@ void ll::glCommandBuffer::SetDepthBound(float minBounds, float maxBounds)
 
 void ll::glCommandBuffer::SetStencilWriteMask(StencilFace face, uint32_t mask)
 {
-    auto update = [&](DynamicStencilStates& stencilState) 
+    auto update = [&](ll::DynamicStencilStates& stencilState) 
     {
         if (stencilState.writeMask != mask) 
         {
@@ -189,13 +199,13 @@ void ll::glCommandBuffer::SetStencilWriteMask(StencilFace face, uint32_t mask)
             _isStateInvalid = true;
         }
     };
-    if (hasFlag(face, StencilFace::FRONT)) update(_curDynamicStates.stencilStatesFront);
-    if (hasFlag(face, StencilFace::BACK)) update(_curDynamicStates.stencilStatesBack);
+    //if (hasFlag(face, StencilFace::FRONT)) update(_curDynamicStates.stencilStatesFront);
+    //if (hasFlag(face, StencilFace::BACK)) update(_curDynamicStates.stencilStatesBack);
 }
 
 void ll::glCommandBuffer::SetStencilCompareMask(StencilFace face, uint32_t ref, uint32_t mask)
 {
-    auto update = [&](DynamicStencilStates& stencilState) 
+    auto update = [&](ll::DynamicStencilStates& stencilState) 
     {
         if ((stencilState.reference != ref) ||
             (stencilState.compareMask != mask)) 
@@ -205,8 +215,8 @@ void ll::glCommandBuffer::SetStencilCompareMask(StencilFace face, uint32_t ref, 
             _isStateInvalid = true;
         }
     };
-    if (hasFlag(face, StencilFace::FRONT)) update(_curDynamicStates.stencilStatesFront);
-    if (hasFlag(face, StencilFace::BACK)) update(_curDynamicStates.stencilStatesBack);
+    //if (hasFlag(face, StencilFace::FRONT)) update(_curDynamicStates.stencilStatesFront);
+    //if (hasFlag(face, StencilFace::BACK)) update(_curDynamicStates.stencilStatesBack);
 }
 
 void ll::glCommandBuffer::NextSubpass()
@@ -301,7 +311,7 @@ void ll::glCommandBuffer::Execute(CommandBuffer* const* cmdBuffs, uint32_t count
 {
     for (uint32_t i = 0; i < count; ++i) 
     {
-        auto* cmdBuff = static_cast<CommandBuffer*>(cmdBuffs[i]);
+        auto* cmdBuff = static_cast<glCommandBuffer*>(cmdBuffs[i]);
         CmdPackage* cmdPackage = cmdBuff->_pendingPackages.front();
 
         for (uint32_t j = 0; j < cmdPackage->beginRenderPassCmds.size(); ++j) 
@@ -359,7 +369,7 @@ void ll::glCommandBuffer::DoInit(const CommandBufferInfo& info)
     _cmdAllocator = new GPUCommandAllocator;
     _curCmdPackage = new CmdPackage;
 
-    size_t setCount = ll::glDevice::GetInstance()->BindingMappingInfo().SetIndices.size();
+    size_t setCount = ll::glDevice::GetInstance()->GetBindingMappingInfo().setIndices.size();
     _curGPUDescriptorSets.resize(setCount);
     _curDynamicOffsets.resize(setCount);
 }

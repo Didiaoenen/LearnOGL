@@ -122,5 +122,8 @@
     <ClCompile Include="LayoutGraphTypes.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Define.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

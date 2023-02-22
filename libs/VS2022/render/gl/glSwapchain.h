@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Swapchain.h"
+#include "../base/Swapchain.h"
 
 namespace ll
 {
 
-struct GPUSwapchain;
+    struct GPUSwapchain;
 
 class glSwapchain final : public Swapchain
 {

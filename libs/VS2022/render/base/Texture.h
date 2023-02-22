@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Def.h"
+#include "Object.h"
 
 namespace ll
 {
 
-class Texture
+class Texture : public Object
 {
 public:
 	Texture();

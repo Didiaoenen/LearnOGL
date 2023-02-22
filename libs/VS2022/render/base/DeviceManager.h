@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../gl/glDevice.h"
+#include "../pipeline/Define.h"
 #include "../agent/DeviceAgent.h"
 
 namespace ll 

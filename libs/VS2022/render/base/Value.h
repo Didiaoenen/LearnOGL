@@ -1,8 +1,8 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
-#include <unordered_map>
 
 namespace ll 
 {
@@ -10,8 +10,8 @@ namespace ll
 class Value;
 
 using ValueVector = std::vector<Value>;
-using ValueMap = std::unordered_map<std::string, Value>;
-using ValueMapIntKey = std::unordered_map<int, Value>;
+using ValueMap = std::map<std::string, Value>;
+using ValueMapIntKey = std::map<int, Value>;
 
 extern const ValueMap VALUE_MAP_NULL;
 extern const ValueVector VALUE_VECTOR_NULL;

@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Ptr.h"
-#include "Macros.h"
-#include "Def_common.h"
-
-#include "FrameBuffer.h"
+#include "../base/Ptr.h"
+#include "../base/Macros.h"
+#include "../base/FrameBuffer.h"
 
 #include <string>
 #include <vector>
@@ -15,6 +13,7 @@ namespace ll
 
     class Camera;
     class Device;
+    class Swapchain;
 
 struct IRenderWindowInfo 
 {
@@ -57,7 +56,7 @@ private:
     std::vector<IntrusivePtr<Camera>> _cameras;
     std::vector<Texture*> _colorTextures;
 
-    CC_DISALLOW_COPY_MOVE_ASSIGN(RenderWindow)
+    DISALLOW_COPY_MOVE_ASSIGN(RenderWindow)
 
 };
 

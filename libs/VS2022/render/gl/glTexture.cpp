@@ -1,5 +1,9 @@
 #include "glTexture.h"
 
+#include "glDevice.h"
+#include "glCommands.h"
+#include "glSwapchain.h"
+
 ll::glTexture::glTexture()
 {
 }
@@ -23,7 +27,7 @@ void ll::glTexture::DoInit(const TextureInfo& /*info*/)
     _gpuTexture->flags = _info.flags;
     _gpuTexture->glTexture = static_cast<GLuint>(reinterpret_cast<size_t>(_info.externalRes));
 
-    cmdFuncCreateTexture(glDevice::GetInstance(), _gpuTexture);
+    cmdFuncCreateTexture(ll::glDevice::GetInstance(), _gpuTexture);
 
 }
 

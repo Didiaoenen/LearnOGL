@@ -1,7 +1,5 @@
 #pragma once
 
-#include "RenderPass.h"
-#include "FrameBuffer.h"
 #include "glCommandBuffer.h"
 
 #include <string>

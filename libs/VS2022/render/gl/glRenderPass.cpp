@@ -1,5 +1,8 @@
 #include "glRenderPass.h"
 
+#include "glDevice.h"
+#include "glCommands.h"
+
 ll::glRenderPass::glRenderPass()
 {
 }
@@ -15,7 +18,7 @@ void ll::glRenderPass::DoInit(const RenderPassInfo& info)
     _gpuRenderPass->depthStencilAttachment = _depthStencilAttachment;
     _gpuRenderPass->subpasses = _subpasses;
 
-    uint32_t colorCount = toUint(_gpuRenderPass->colorAttachments.size());
+    uint32_t colorCount = (uint32_t)_gpuRenderPass->colorAttachments.size();
     if (_gpuRenderPass->subpasses.empty()) 
     {
         _gpuRenderPass->subpasses.emplace_back();

@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Def_common.h"
 #include "glObjects.h"
-#include "CommandPool.h"
-#include "CachedArray.h"
 
 namespace ll
 {
-class glDevice;
+
+    class glDevice;
 
 class CmdBeginRenderPass final : public Cmd 
 {
@@ -75,7 +73,8 @@ public:
     }
 };
 
-class CmdCopyBufferToTexture final : public Cmd {
+class CmdCopyBufferToTexture final : public Cmd 
+{
 public:
     GPUTexture* gpuTexture = nullptr;
     const BufferTextureCopy* regions = nullptr;

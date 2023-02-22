@@ -1,13 +1,15 @@
 #include "Root.h"
 
-#include "Define.h"
-#include "Device.h"
-#include "Batcher2d.h"
-#include "Swapchain.h"
-#include "RenderScene.h"
-#include "ForwardPipeline.h"
-#include "DeferredPipeline.h"
-#include "NativePipelineTypes.h"
+#include "../base/Device.h"
+#include "../base/Batcher2d.h"
+#include "../base/Swapchain.h"
+#include "../scene/Camera.h"
+#include "../scene/RenderScene.h"
+#include "../scene/RenderWindow.h"
+#include "../pipeline/ForwardPipeline.h"
+#include "../pipeline/DeferredPipeline.h"
+
+#include <algorithm>
 
 namespace ll
 {
@@ -107,7 +109,6 @@ bool ll::Root::SetRenderPipeline(RenderPipeline* rppl)
         {
             if (isCreateDefaultPipeline) 
             {
-                CC_SAFE_DESTROY(_pipeline);
             }
 
             _pipeline = nullptr;
@@ -116,13 +117,7 @@ bool ll::Root::SetRenderPipeline(RenderPipeline* rppl)
     }
     else 
     {
-        _pipelineRuntime = std::make_unique<NativePipeline>(boost::container::pmr::get_default_resource());
-        if (!_pipelineRuntime->Activate(_mainWindow->GetSwapchain())) 
-        {
-            _pipelineRuntime->Destroy();
-            _pipelineRuntime.reset();
-            return false;
-        }
+
     }
 
     OnGlobalPipelineStateChanged();
@@ -254,7 +249,7 @@ void ll::Root::FrameMoveEnd()
 
         std::stable_sort(_cameraList.begin(), _cameraList.end(), [](const auto* a, const auto* b) 
         {
-            return a->getPriority() < b->getPriority();
+            return a->GetPriority() < b->GetPriority();
         });
 
 #if CC_USE_GEOMETRY_RENDERER

@@ -1,9 +1,6 @@
 #include "GlobalDSManager.h"
 
 #include "Define.h"
-#include "Light.h"
-#include "Sampler.h"
-#include "DescriptorSet.h"
 
 void ll::GlobalDSManager::Activate(Device* device)
 {

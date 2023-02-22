@@ -111,6 +111,18 @@
     <ClInclude Include="Agent.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMeshBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDrawInfo.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture.cpp">
@@ -189,6 +201,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Director.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UIMeshBuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderEntity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDrawInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

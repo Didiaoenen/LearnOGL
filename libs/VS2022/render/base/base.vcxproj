@@ -37,6 +37,7 @@
     <ClInclude Include="GeneralBarrier.h" />
     <ClInclude Include="InputAssembler.h" />
     <ClInclude Include="Macros.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PipelineLayout.h" />
     <ClInclude Include="PipelineState.h" />
@@ -44,12 +45,15 @@
     <ClInclude Include="QueryPool.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="Ray.h" />
+    <ClInclude Include="RenderDrawInfo.h" />
+    <ClInclude Include="RenderEntity.h" />
     <ClInclude Include="RenderPass.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Swapchain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureBarrier.h" />
+    <ClInclude Include="UIMeshBuffer.h" />
     <ClInclude Include="Value.h" />
   </ItemGroup>
   <ItemGroup>
@@ -66,18 +70,22 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GeneralBarrier.cpp" />
     <ClCompile Include="InputAssembler.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PipelineLayout.cpp" />
     <ClCompile Include="PipelineState.cpp" />
     <ClCompile Include="QueryPool.cpp" />
     <ClCompile Include="Queue.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="RenderDrawInfo.cpp" />
+    <ClCompile Include="RenderEntity.cpp" />
     <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Swapchain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureBarrier.cpp" />
+    <ClCompile Include="UIMeshBuffer.cpp" />
     <ClCompile Include="Value.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -169,7 +177,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./../gl;./../core;./../pipeline;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../../includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>

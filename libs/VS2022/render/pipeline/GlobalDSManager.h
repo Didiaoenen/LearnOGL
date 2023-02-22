@@ -1,14 +1,17 @@
 #pragma once
 
-#include "Ptr.h"
-#include <unordered_map>
+#include "../base/Ptr.h"
+
+#include "../base/Texture.h"
+
+#include <map>
 
 namespace ll
 {
+
     class Light;
     class Buffer;
     class Device;
-    class Texture;
     class Sampler;
     class DescriptorSet;
     class DescriptorSetLayout;
@@ -46,7 +49,7 @@ private:
     IntrusivePtr<DescriptorSetLayout> _descriptorSetLayout;
     IntrusivePtr<DescriptorSet> _globalDescriptorSet;
     std::vector<IntrusivePtr<Buffer>> _shadowUBOs;
-    std::unordered_map<const Light*, IntrusivePtr<DescriptorSet>> _descriptorSetMap;
+    std::map<const Light*, IntrusivePtr<DescriptorSet>> _descriptorSetMap;
 };
 
 }

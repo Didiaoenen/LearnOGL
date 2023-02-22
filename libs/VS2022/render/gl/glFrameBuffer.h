@@ -1,9 +1,6 @@
 #pragma once
 
-#include "glObjects.h"
-#include "glTexture.h"
-#include "glRenderPass.h"
-#include "FrameBuffer.h"
+#include "../base/FrameBuffer.h"
 
 namespace ll
 {

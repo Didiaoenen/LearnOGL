@@ -1,8 +1,8 @@
 #pragma once
 
-#include "glObjects.h"
 #include "../base/Device.h"
-#include "../common/CommandPool.h"
+
+#include "glCommands.h"
 
 #include <algorithm>
 
@@ -50,7 +50,7 @@ public:
     {
         return std::any_of(_extensions.begin(), _extensions.end(), [&extension](auto& ext) 
             {
-                return ext.find(extension) != ccstd::string::npos;
+                return ext.find(extension) != std::string::npos;
             });
     }
 
@@ -122,3 +122,8 @@ protected:
 
 }
 
+/*
+严重性	代码	说明	项目	文件	行	禁止显示状态
+错误	LNK2019	无法解析的外部符号 "public: static void __cdecl ll::GlobalDSManager::SetDescriptorSetLayout(void)" (?SetDescriptorSetLayout@GlobalDSManager@ll@@SAXXZ)，函数 "public: virtual int __cdecl ll::Game::Init(void)" (?Init@Game@ll@@UEAAHXZ) 中引用了该符号	application	D:\Users\admin\Documents\GitHub\LearnOGL\libs\VS2022\render\application\Game.obj	1
+
+*/

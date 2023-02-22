@@ -6,6 +6,7 @@ namespace ll
 class ClusterLightCulling
 {
 public:
+
 };
 
 }

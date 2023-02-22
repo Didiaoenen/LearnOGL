@@ -21,10 +21,6 @@ public:
     virtual void BindTexture(uint32_t binding, Texture* texture, uint32_t index);
     virtual void BindSampler(uint32_t binding, Sampler* sampler, uint32_t index);
 
-    bool BindBufferJSB(uint32_t binding, Buffer* buffer, uint32_t index);
-    bool BindTextureJSB(uint32_t binding, Texture* texture, uint32_t index);
-    bool BindSamplerJSB(uint32_t binding, Sampler* sampler, uint32_t index);
-
     Buffer* GetBuffer(uint32_t binding, uint32_t index) const;
     Texture* GetTexture(uint32_t binding, uint32_t index) const;
     Sampler* GetSampler(uint32_t binding, uint32_t index) const;

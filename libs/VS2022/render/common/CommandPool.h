@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../core/CachedArray.h"
+
 #include <string>
 
 namespace ll
@@ -47,18 +49,20 @@ enum class FBFSupportLevel
     NON_COHERENT_QCOM,
 };
 
+#define COMMAND_POOL_INITIAL_CAPACITY 1
+
 template <typename T, typename = std::enable_if_t<std::is_base_of<Cmd, T>::value>>
 class CommandPool 
 {
 public:
-    CommandPool() : _freeCmds(GLES_COMMAND_POOL_INITIAL_CAPACITY) 
+    CommandPool() : _freeCmds(COMMAND_POOL_INITIAL_CAPACITY)
     {
-        _frees = ccnew T * [GLES_COMMAND_POOL_INITIAL_CAPACITY];
-        _count = GLES_COMMAND_POOL_INITIAL_CAPACITY;
-        _freeIdx = GLES_COMMAND_POOL_INITIAL_CAPACITY - 1;
+        _frees = new T * [COMMAND_POOL_INITIAL_CAPACITY];
+        _count = COMMAND_POOL_INITIAL_CAPACITY;
+        _freeIdx = COMMAND_POOL_INITIAL_CAPACITY - 1;
         for (uint32_t i = 0; i < _count; ++i) 
         {
-            _frees[i] = ccnew T;
+            _frees[i] = new T;
         }
     }
 
@@ -83,11 +87,11 @@ public:
         {
             T** oldFrees = _frees;
             uint32_t size = _count * 2;
-            _frees = ccnew T * [size];
+            _frees = new T * [size];
             uint32_t increase = size - _count;
             for (uint32_t i = 0; i < increase; ++i) 
             {
-                _frees[i] = ccnew T;
+                _frees[i] = new T;
             }
             for (uint32_t i = increase, j = 0; i < size; ++i, ++j) 
             {

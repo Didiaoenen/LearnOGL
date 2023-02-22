@@ -1,5 +1,7 @@
 #include "Device.h"
 
+ll::Device* ll::Device::instance = nullptr;
+
 ll::Device* ll::Device::GetInstance()
 {
     return nullptr;

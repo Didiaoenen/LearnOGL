@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Def_common.h"
-#include "RenderPass.h"
 
 namespace ll
 {
+
+    class RenderPass;
 
 class FrameBuffer
 {

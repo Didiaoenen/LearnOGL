@@ -1,11 +1,9 @@
 #pragma once
 
-#include "Ptr.h"
-#include "Light.h"
-#include "Model.h"
-#include "RenderWindow.h"
-#include "RenderPipeline.h"
-#include "RenderInterfaceTypes.h"
+#include "../scene/Light.h"
+#include "../scene/Model.h"
+#include "../pipeline/RenderPipeline.h"
+#include "../pipeline/RenderInterfaceTypes.h"
 
 #include <tuple>
 #include <string>
@@ -15,12 +13,16 @@
 
 namespace ll
 {
-	class Device;
-	class Camera;
-	class Pipeline;
-	class Batcher2d;
-	class SwapChain;
-	class DrawBatch2D;
+
+    class Camera;
+    class Device;
+    class Pipeline;
+    class Batcher2d;
+    class Swapchain;
+    class RenderWindow;
+    class RenderPipeline;
+    class PipelineRuntime;
+    class IRenderWindowInfo;
 
 class Root final
 {
@@ -37,7 +39,7 @@ public:
     bool SetRenderPipeline(RenderPipeline* rppl = nullptr);
     void OnGlobalPipelineStateChanged();
 
-    void ActiveWindow(RenderWindow*);
+    void ActiveWindow(RenderWindow* window);
 
     void ResetCumulativeTime();
 
@@ -49,7 +51,7 @@ public:
 
     void DestroyWindows();
 
-    void DestroyScene(RenderScene*);
+    void DestroyScene(RenderScene* scene);
 
     void DestroyScenes();
 

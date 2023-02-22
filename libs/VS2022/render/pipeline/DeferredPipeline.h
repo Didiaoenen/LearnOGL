@@ -2,9 +2,15 @@
 
 #include "RenderPipeline.h"
 
+#include "Define.h"
+
+#include <vector>
+
 namespace ll
 {
 
+    class Buffer;
+    class Swapchain;
     class ClusterLightCulling;
 
 class DeferredPipeline : public RenderPipeline
@@ -39,12 +45,12 @@ private:
 public:
     static constexpr uint32_t GBUFFER_COUNT = 3;
 
-    static StringHandle fgStrHandleGbufferTexture[GBUFFER_COUNT];
+    static std::string fgStrHandleGbufferTexture[GBUFFER_COUNT];
 
-    static StringHandle fgStrHandleGbufferPass;
-    static StringHandle fgStrHandleLightingPass;
-    static StringHandle fgStrHandleTransparentPass;
-    static StringHandle fgStrHandleSsprPass;
+    static std::string fgStrHandleGbufferPass;
+    static std::string fgStrHandleLightingPass;
+    static std::string fgStrHandleTransparentPass;
+    static std::string fgStrHandleSsprPass;
 };
 
 }

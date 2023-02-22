@@ -1,12 +1,13 @@
 #include "RenderPipeline.h"
 
-#include "Camera.h"
-#include "Device.h"
+#include "../base/Device.h"
+#include "../scene/Camera.h"
+#include "../scene/RenderWindow.h"
+
+#include "RenderFlow.h"
 #include "PipelineUBO.h"
-#include "RenderWindow.h"
 #include "GlobalDSManager.h"
 #include "PipelineSceneData.h"
-#include "DescriptorSetLayout.h"
 
 ll::RenderPipeline* ll::RenderPipeline::GetInstance()
 {
@@ -29,7 +30,7 @@ ll::Rect ll::RenderPipeline::GetRenderArea(Camera* camera)
 }
 
 ll::RenderPipeline::RenderPipeline()
-	: _device(Device::GetInstance())
+	: _device(ll::Device::GetInstance())
 {
 	RenderPipeline::instance = this;
 
