@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Macros.h"
 #include "BaseEngine.h"
 
+#include <glm/glm.hpp>
 #include <map>
 #include <thread>
 #include <chrono>
@@ -43,7 +43,7 @@ private:
     bool _resune{ false };
     int64_t _prefererredNanosecondsPerFrame{ NANOSECONDS_60FPS };
     uint32_t _totalFrames{ 0 };
-    Vec2 _viewLogicalSize{ 0, 0 };
+    glm::vec2 _viewLogicalSize{ 0, 0 };
     bool _needRestart{ false };
     bool _inited{ false };
 
@@ -53,7 +53,7 @@ private:
     ProgramLib* _programLib{ nullptr };
     BuiltinResManager* _builtinResManager{ nullptr };
 
-    CC_DISALLOW_COPY_MOVE_ASSIGN(Engine)
+    DISALLOW_COPY_MOVE_ASSIGN(Engine)
 };
 
 }

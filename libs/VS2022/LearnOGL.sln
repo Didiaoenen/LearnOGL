@@ -77,6 +77,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "render\appli
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pipeline", "render\pipeline\pipeline.vcxproj", "{517E8B55-E1F6-4086-BAED-31218F95A2CD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "agent", "render\agent\agent.vcxproj", "{B4726882-B8E7-4B44-B9B4-BBECCED48251}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -333,6 +335,14 @@ Global
 		{517E8B55-E1F6-4086-BAED-31218F95A2CD}.Release|x64.Build.0 = Release|x64
 		{517E8B55-E1F6-4086-BAED-31218F95A2CD}.Release|x86.ActiveCfg = Release|Win32
 		{517E8B55-E1F6-4086-BAED-31218F95A2CD}.Release|x86.Build.0 = Release|Win32
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Debug|x64.ActiveCfg = Debug|x64
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Debug|x64.Build.0 = Debug|x64
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Debug|x86.ActiveCfg = Debug|Win32
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Debug|x86.Build.0 = Debug|Win32
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Release|x64.ActiveCfg = Release|x64
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Release|x64.Build.0 = Release|x64
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Release|x86.ActiveCfg = Release|Win32
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -368,6 +378,7 @@ Global
 		{83929990-CF0B-4A8A-913B-1B4CF6F6F132} = {7CE3E301-192C-4421-97CA-351F4A4071EE}
 		{16EB750E-82C3-4729-A056-D0B7E66FD074} = {7CE3E301-192C-4421-97CA-351F4A4071EE}
 		{517E8B55-E1F6-4086-BAED-31218F95A2CD} = {7CE3E301-192C-4421-97CA-351F4A4071EE}
+		{B4726882-B8E7-4B44-B9B4-BBECCED48251} = {7CE3E301-192C-4421-97CA-351F4A4071EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9F91B1D-DCEE-4CF4-84EA-B3EE1F242270}

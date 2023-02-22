@@ -1,9 +1,5 @@
 #include "Engine.h"
 
-#include "ProgramLib.h"
-#include "DeviceManager.h"
-#include "BuiltinResManager.h"
-
 ll::Engine::Engine()
 {
 }
@@ -14,9 +10,9 @@ ll::Engine::~Engine()
 
 int32_t ll::Engine::Init()
 {
-    _gfxDevice = ll::DeviceManager::Create();
-    _programLib = new ProgramLib();
-    _builtinResManager = new BuiltinResManager;
+    //_gfxDevice = ll::DeviceManager::Create();
+    //_programLib = new ProgramLib();
+    //_builtinResManager = new BuiltinResManager;
 
     _inited = true;
 

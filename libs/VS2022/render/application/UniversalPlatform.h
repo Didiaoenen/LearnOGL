@@ -9,7 +9,7 @@ namespace ll
 class UniversalPlatform : public BasePlatform
 {
 public:
-    int32_t Run(int argc, const char** argv) override;
+    int32_t Run(int argc, char* argv[]) override;
     ISystem::OSType GetOSType() const override;
 
     void PollEvent() override;

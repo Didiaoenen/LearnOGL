@@ -3,8 +3,8 @@
 #include "Def_common.h"
 #include "Define.h"
 #include "PassUtils.h"
-#include "FrameGraph.h"
 
+#include <glm/glm.hpp>
 #include <unordered_map>
 
 namespace ll
@@ -19,6 +19,7 @@ namespace ll
 
     class PipelineUBO;
     class RenderStage;
+    class InputAssembler;
     class GlobalDSManager;
     class GeometryRenderer;
     class PipelineSceneData;
@@ -33,10 +34,10 @@ class RenderPipeline
 {
 public:
     static RenderPipeline* GetInstance();
-    static StringHandle fgStrHandleOutDepthTexture;
-    static StringHandle fgStrHandleOutColorTexture;
-    static StringHandle fgStrHandlePostprocessPass;
-    static StringHandle fgStrHandleBloomOutTexture;
+    static std::string fgStrHandleOutDepthTexture;
+    static std::string fgStrHandleOutColorTexture;
+    static std::string fgStrHandlePostprocessPass;
+    static std::string fgStrHandleBloomOutTexture;
     static Rect GetRenderArea(Camera* camera);
 
     RenderPipeline();
@@ -73,13 +74,12 @@ public:
     bool IsEnvmapEnabled() const;
     Viewport GetViewport(Camera* camera);
     Rect GetScissor(Camera* camera);
-    void GenQuadVertexData(const Vec4& viewport, float* data);
+    void GenQuadVertexData(const glm::vec4& viewport, float* data);
     uint32_t GetWidth() const { return _width; }
     uint32_t GetHeight() const { return _height; }
-    FrameGraph& GetFrameGraph() { return _fg; }
     Color GetClearcolor(Camera* camera) const;
     InputAssembler* GetIAByRenderArea(const Rect& renderArea);
-    void UpdateQuadVertexData(const Vec4& viewport, Buffer* buffer);
+    void UpdateQuadVertexData(const glm::vec4& viewport, Buffer* buffer);
     void EnsureEnoughSize(const std::vector<Camera*>& cameras);
     bool OreateQuadInputAssembler(Buffer* quadIB, Buffer** quadVB, InputAssembler** quadIA);
 
@@ -127,9 +127,8 @@ protected:
     uint32_t _height{ 0 };
     Buffer* _quadIB{ nullptr };
     std::vector<Buffer*> _quadVB;
-    std::unordered_map<Vec4, InputAssembler*, std::hash<Vec4>> _quadIA;
+    std::unordered_map<glm::vec4, InputAssembler*, std::hash<glm::vec4>> _quadIA;
 
-    FrameGraph _fg;
     std::unordered_map<ClearFlags, RenderPass*> _renderPasses;
 
     bool _clusterEnabled{ false };

@@ -4,6 +4,7 @@
 #include "Node.h"
 #include "Macros.h"
 
+#include <glm/glm.hpp>
 #include <string>
 
 namespace ll
@@ -22,6 +23,7 @@ enum class LightType
 
 class Light
 {
+public:
     Light();
     virtual ~Light();
 
@@ -32,7 +34,7 @@ class Light
 
     virtual void Initialize() 
     {
-        _color = Vec3(1, 1, 1);
+        _color = glm::vec3(1, 1, 1);
         _colorTemp = 6550.F;
     }
 
@@ -41,8 +43,8 @@ class Light
     inline bool IsBaked() const { return _baked; }
     inline void SetBaked(bool val) { _baked = val; }
 
-    inline const Vec3& getColor() const { return _color; }
-    inline void SetColor(const Vec3& color) { _color = color; }
+    inline const glm::vec3& getColor() const { return _color; }
+    inline void SetColor(const glm::vec3& color) { _color = color; }
 
     inline bool IsUseColorTemperature() const { return _useColorTemperature; }
     inline void SetUseColorTemperature(bool value) { _useColorTemperature = value; }
@@ -65,11 +67,11 @@ class Light
 
     inline RenderScene* GetScene() const { return _scene; }
 
-    inline const Vec3& GetColorTemperatureRGB() const { return _colorTemperatureRGB; }
-    inline void SetColorTemperatureRGB(const Vec3& value) { _colorTemperatureRGB = value; }
+    inline const glm::vec3& GetColorTemperatureRGB() const { return _colorTemperatureRGB; }
+    inline void SetColorTemperatureRGB(const glm::vec3& value) { _colorTemperatureRGB = value; }
 
     static float nt2lm(float size);
-    static Vec3 ColorTemperatureToRGB(float kelvin);
+    static glm::vec3 ColorTemperatureToRGB(float kelvin);
 
 protected:
     bool _useColorTemperature{ false };
@@ -79,9 +81,9 @@ protected:
     LightType _type{ LightType::UNKNOWN };
     std::string _name;
     RenderScene* _scene{ nullptr };
-    Vec3 _color{ 1, 1, 1 };
-    Vec3 _colorTemperatureRGB;
-    Vec3 _forward{ 0, 0, -1 };
+    glm::vec3 _color{ 1, 1, 1 };
+    glm::vec3 _colorTemperatureRGB;
+    glm::vec3 _forward{ 0, 0, -1 };
 
 private:
     CC_DISALLOW_COPY_MOVE_ASSIGN(Light)

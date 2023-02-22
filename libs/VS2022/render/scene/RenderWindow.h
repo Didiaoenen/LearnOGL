@@ -1,9 +1,20 @@
 #pragma once
 
+#include "Ptr.h"
+#include "Macros.h"
+#include "Def_common.h"
+
+#include "FrameBuffer.h"
+
+#include <string>
+#include <vector>
 #include <optional>
 
 namespace ll
 {
+
+    class Camera;
+    class Device;
 
 struct IRenderWindowInfo 
 {
@@ -44,9 +55,9 @@ private:
     IntrusivePtr<Texture> _depthStencilTexture;
     IntrusivePtr<FrameBuffer> _frameBuffer;
     std::vector<IntrusivePtr<Camera>> _cameras;
-    RefVector<Texture*> _colorTextures;
+    std::vector<Texture*> _colorTextures;
 
-    CC_DISALLOW_COPY_MOVE_ASSIGN(RenderWindow);
+    CC_DISALLOW_COPY_MOVE_ASSIGN(RenderWindow)
 
 };
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Def.h"
-#include "Def_common.h"
 
 namespace ll
 {

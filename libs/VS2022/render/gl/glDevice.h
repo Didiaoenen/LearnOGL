@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Device.h"
+#include "glObjects.h"
+#include "../base/Device.h"
+#include "../common/CommandPool.h"
 
 #include <algorithm>
 
@@ -55,8 +57,8 @@ public:
     inline uint8_t* GetStagingBuffer(uint32_t size = 0) 
     {
         if (size > _stagingBufferSize) {
-            CC_FREE(_stagingBuffer);
-            _stagingBuffer = static_cast<uint8_t*>(CC_MALLOC(size));
+            //CC_FREE(_stagingBuffer);
+            //_stagingBuffer = static_cast<uint8_t*>(CC_MALLOC(size));
             _stagingBufferSize = size;
         }
 

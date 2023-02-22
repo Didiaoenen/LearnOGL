@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "ISystemWindow.h"
+
 ll::Application::Application()
 {
     _engine = BaseEngine::CreateEngine();
@@ -20,7 +22,7 @@ int32_t ll::Application::Init()
     return 0;
 }
 
-int32_t ll::Application::Run(int argc, const char** argv)
+int32_t ll::Application::Run(int argc, char* argv[])
 {
     return _engine->Run();
 }

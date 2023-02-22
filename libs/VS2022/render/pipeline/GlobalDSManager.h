@@ -10,8 +10,8 @@ namespace ll
     class Device;
     class Texture;
     class Sampler;
-    class DescriptorSetLayout;
     class DescriptorSet;
+    class DescriptorSetLayout;
 
 
 class GlobalDSManager

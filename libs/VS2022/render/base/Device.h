@@ -1,12 +1,21 @@
 #pragma once
 
-#include "Def_common.h"
-#include "Shader.h"
+#include "Def.h"
+
 #include "Sampler.h"
-#include "PipelineLayout.h"
+#include "BufferBarrier.h"
+#include "GeneralBarrier.h"
+#include "TextureBarrier.h"
+
+#include <array>
 
 namespace ll
 {
+    class Shader;
+    class FrameBuffer;
+    class PipelineState;
+    class DescriptorSet;
+    class InputAssembler;
 
 class Device
 {
@@ -141,13 +150,18 @@ protected:
     uint32_t _numTriangles{ 0U };
     MemoryStatus _memoryStatus;
 
-    std::unordered_map<SamplerInfo, Sampler*, Hasher<SamplerInfo>> _samplers;
-    std::unordered_map<GeneralBarrierInfo, GeneralBarrier*, Hasher<GeneralBarrierInfo>> _generalBarriers;
-    std::unordered_map<TextureBarrierInfo, TextureBarrier*, Hasher<TextureBarrierInfo>> _textureBarriers;
-    std::unordered_map<BufferBarrierInfo, BufferBarrier*, Hasher<BufferBarrierInfo>> _bufferBarriers;
+    std::unordered_map<SamplerInfo, Sampler*, std::hash<SamplerInfo>> _samplers;
+    std::unordered_map<GeneralBarrierInfo, GeneralBarrier*, std::hash<GeneralBarrierInfo>> _generalBarriers;
+    std::unordered_map<TextureBarrierInfo, TextureBarrier*, std::hash<TextureBarrierInfo>> _textureBarriers;
+    std::unordered_map<BufferBarrierInfo, BufferBarrier*, std::hash<BufferBarrierInfo>> _bufferBarriers;
 
 private:
     std::vector<Swapchain*> _swapchains;
 };
+
+template<typename ExecuteMethod>
+inline void Device::RegisterOnAcquireCallback(ExecuteMethod&& execute)
+{
+}
 
 }

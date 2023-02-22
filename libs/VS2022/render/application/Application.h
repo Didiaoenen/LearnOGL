@@ -16,7 +16,7 @@ public:
     ~Application() override;
 
     int32_t Init() override;
-    int32_t Run(int argc, const char** argv) override;
+    int32_t Run(int argc, char* argv[]) override;
     void Pause() override;
     void Resume() override;
     void Restart() override;

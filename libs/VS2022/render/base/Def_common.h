@@ -1,23 +1,26 @@
 #pragma once
 
+#include "Def_type.h"
+
 #include <string>
 #include <vector>
 
-#include "Def_type.h"
-
-#include "Queue.h"
-#include "Texture.h"
-#include "QueryPool.h"
-#include "CommandBuffer.h"
-#include "TextureBarrier.h"
-#include "GeneralBarrier.h"
-#include "DescriptorSetLayout.h"
-
 namespace ll
 {
-
-class Swapchain;
-class Sampler;
+    class Queue;
+    class Shader;
+    class Buffer;
+    class Texture;
+    class Sampler;
+    class Swapchain;
+    class RenderPass;
+    class QueryPool;
+    class BufferBarrier;
+    class CommandBuffer;
+    class TextureBarrier;
+    class GeneralBarrier;
+    class PipelineLayout;
+    class DescriptorSetLayout;
 
 using BufferBarrierList = std::vector<BufferBarrier*>;
 using TextureBarrierList = std::vector<TextureBarrier*>;
@@ -34,6 +37,8 @@ using BufferSrcList = std::vector<uint8_t*>;
 constexpr uint32_t MAX_ATTACHMENTS = 4U;
 constexpr uint32_t INVALID_BINDING = ~0U;
 constexpr uint32_t SUBPASS_EXTERNAL = ~0U;
+
+constexpr uint32_t DEFAULT_MAX_QUERY_OBJECTS = 32767;
 
 using BufferList = std::vector<Buffer*>;
 
@@ -641,6 +646,29 @@ enum class StencilOp : uint32_t
 };
 CC_ENUM_CONVERSION_OPERATOR(StencilOp);
 
+enum class PolygonMode : uint32_t
+{
+    FILL,
+    POINT,
+    LINE,
+};
+CC_ENUM_CONVERSION_OPERATOR(PolygonMode);
+
+enum class ShadeModel : uint32_t
+{
+    GOURAND,
+    FLAT,
+};
+CC_ENUM_CONVERSION_OPERATOR(ShadeModel);
+
+enum class CullMode : uint32_t
+{
+    NONE,
+    FRONT,
+    BACK,
+};
+CC_ENUM_CONVERSION_OPERATOR(CullMode);
+
 struct RasterizerState 
 {
     uint32_t isDiscard{ 0 };
@@ -663,29 +691,6 @@ struct RasterizerState
 
     EXPOSE_COPY_FN(RasterizerState)
 };
-
-enum class PolygonMode : uint32_t 
-{
-    FILL,
-    POINT,
-    LINE,
-};
-CC_ENUM_CONVERSION_OPERATOR(PolygonMode);
-
-enum class ShadeModel : uint32_t 
-{
-    GOURAND,
-    FLAT,
-};
-CC_ENUM_CONVERSION_OPERATOR(ShadeModel);
-
-enum class CullMode : uint32_t 
-{
-    NONE,
-    FRONT,
-    BACK,
-};
-CC_ENUM_CONVERSION_OPERATOR(CullMode);
 
 enum class ResolveMode : uint32_t 
 {
@@ -800,6 +805,96 @@ enum class SurfaceTransform : uint32_t
 };
 CC_ENUM_CONVERSION_OPERATOR(SurfaceTransform);
 
+struct ShaderStage
+{
+    ShaderStageFlagBit stage{ ShaderStageFlagBit::NONE };
+    std::string source;
+
+    EXPOSE_COPY_FN(ShaderStage)
+};
+using ShaderStageList = std::vector<ShaderStage>;
+
+enum class MemoryAccessBit : uint32_t
+{
+    NONE = 0,
+    READ_ONLY = 0x1,
+    WRITE_ONLY = 0x2,
+    READ_WRITE = READ_ONLY | WRITE_ONLY,
+};
+using MemoryAccess = MemoryAccessBit;
+CC_ENUM_BITWISE_OPERATORS(MemoryAccessBit);
+
+struct UniformStorageBuffer
+{
+    uint32_t set{ 0 };
+    uint32_t binding{ 0 };
+    std::string name;
+    uint32_t count{ 0 };
+    MemoryAccess memoryAccess{ MemoryAccessBit::READ_WRITE };
+
+    EXPOSE_COPY_FN(UniformStorageBuffer)
+};
+using UniformStorageBufferList = std::vector<UniformStorageBuffer>;
+
+struct UniformSamplerTexture
+{
+    uint32_t set{ 0 };
+    uint32_t binding{ 0 };
+    std::string name;
+    Type type{ Type::UNKNOWN };
+    uint32_t count{ 0 };
+
+    EXPOSE_COPY_FN(UniformSamplerTexture)
+};
+using UniformSamplerTextureList = std::vector<UniformSamplerTexture>;
+
+struct UniformSampler
+{
+    uint32_t set{ 0 };
+    uint32_t binding{ 0 };
+    std::string name;
+    uint32_t count{ 0 };
+
+    EXPOSE_COPY_FN(UniformSampler)
+};
+using UniformSamplerList = std::vector<UniformSampler>;
+
+struct UniformTexture
+{
+    uint32_t set{ 0 };
+    uint32_t binding{ 0 };
+    std::string name;
+    Type type{ Type::UNKNOWN };
+    uint32_t count{ 0 };
+
+    EXPOSE_COPY_FN(UniformTexture)
+};
+using UniformTextureList = std::vector<UniformTexture>;
+
+struct UniformStorageImage
+{
+    uint32_t set{ 0 };
+    uint32_t binding{ 0 };
+    std::string name;
+    Type type{ Type::UNKNOWN };
+    uint32_t count{ 0 };
+    MemoryAccess memoryAccess{ MemoryAccessBit::READ_WRITE };
+
+    EXPOSE_COPY_FN(UniformStorageImage)
+};
+using UniformStorageImageList = std::vector<UniformStorageImage>;
+
+struct UniformInputAttachment
+{
+    uint32_t set{ 0 };
+    uint32_t binding{ 0 };
+    std::string name;
+    uint32_t count{ 0 };
+
+    EXPOSE_COPY_FN(UniformInputAttachment)
+};
+using UniformInputAttachmentList = std::vector<UniformInputAttachment>;
+
 struct ShaderInfo 
 {
     std::string name;
@@ -815,96 +910,6 @@ struct ShaderInfo
 
     EXPOSE_COPY_FN(ShaderInfo)
 };
-
-struct ShaderStage 
-{
-    ShaderStageFlagBit stage{ ShaderStageFlagBit::NONE };
-    std::string source;
-
-    EXPOSE_COPY_FN(ShaderStage)
-};
-using ShaderStageList = std::vector<ShaderStage>;
-
-enum class MemoryAccessBit : uint32_t 
-{
-    NONE = 0,
-    READ_ONLY = 0x1,
-    WRITE_ONLY = 0x2,
-    READ_WRITE = READ_ONLY | WRITE_ONLY,
-};
-using MemoryAccess = MemoryAccessBit;
-CC_ENUM_BITWISE_OPERATORS(MemoryAccessBit);
-
-struct UniformStorageBuffer 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    uint32_t count{ 0 };
-    MemoryAccess memoryAccess{ MemoryAccessBit::READ_WRITE };
-
-    EXPOSE_COPY_FN(UniformStorageBuffer)
-};
-using UniformStorageBufferList = std::vector<UniformStorageBuffer>;
-
-struct UniformSamplerTexture 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    Type type{ Type::UNKNOWN };
-    uint32_t count{ 0 };
-
-    EXPOSE_COPY_FN(UniformSamplerTexture)
-};
-using UniformSamplerTextureList = std::vector<UniformSamplerTexture>;
-
-struct UniformSampler 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    uint32_t count{ 0 };
-
-    EXPOSE_COPY_FN(UniformSampler)
-};
-using UniformSamplerList = std::vector<UniformSampler>;
-
-struct UniformTexture 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    Type type{ Type::UNKNOWN };
-    uint32_t count{ 0 };
-
-    EXPOSE_COPY_FN(UniformTexture)
-};
-using UniformTextureList = std::vector<UniformTexture>;
-
-struct UniformStorageImage 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    Type type{ Type::UNKNOWN };
-    uint32_t count{ 0 };
-    MemoryAccess memoryAccess{ MemoryAccessBit::READ_WRITE };
-
-    EXPOSE_COPY_FN(UniformStorageImage)
-};
-using UniformStorageImageList = std::vector<UniformStorageImage>;
-
-struct UniformInputAttachment 
-{
-    uint32_t set{ 0 };
-    uint32_t binding{ 0 };
-    std::string name;
-    uint32_t count{ 0 };
-
-    EXPOSE_COPY_FN(UniformInputAttachment)
-};
-using UniformInputAttachmentList = std::vector<UniformInputAttachment>;
 
 enum class MemoryUsageBit : uint32_t 
 {
@@ -1133,6 +1138,70 @@ struct PipelineLayoutInfo
     EXPOSE_COPY_FN(PipelineLayoutInfo)
 };
 
+struct DepthStencilState 
+{
+    uint32_t depthTest{ 1 };  // @ts-boolean
+    uint32_t depthWrite{ 1 }; // @ts-boolean
+    ComparisonFunc depthFunc{ ComparisonFunc::LESS };
+    uint32_t stencilTestFront{ 0 }; // @ts-boolean
+    ComparisonFunc stencilFuncFront{ ComparisonFunc::ALWAYS };
+    uint32_t stencilReadMaskFront{ 0xffffffff };
+    uint32_t stencilWriteMaskFront{ 0xffffffff };
+    StencilOp stencilFailOpFront{ StencilOp::KEEP };
+    StencilOp stencilZFailOpFront{ StencilOp::KEEP };
+    StencilOp stencilPassOpFront{ StencilOp::KEEP };
+    uint32_t stencilRefFront{ 1 };
+    uint32_t stencilTestBack{ 0 }; // @ts-boolean
+    ComparisonFunc stencilFuncBack{ ComparisonFunc::ALWAYS };
+    uint32_t stencilReadMaskBack{ 0xffffffff };
+    uint32_t stencilWriteMaskBack{ 0xffffffff };
+    StencilOp stencilFailOpBack{ StencilOp::KEEP };
+    StencilOp stencilZFailOpBack{ StencilOp::KEEP };
+    StencilOp stencilPassOpBack{ StencilOp::KEEP };
+    uint32_t stencilRefBack{ 1 };
+
+    void reset() 
+    {
+        *this = DepthStencilState();
+    }
+
+    EXPOSE_COPY_FN(DepthStencilState)
+};
+
+struct InputState
+{
+    AttributeList attributes;
+
+    EXPOSE_COPY_FN(InputState)
+};
+
+enum class PrimitiveMode : uint32_t
+{
+    POINT_LIST,
+    LINE_LIST,
+    LINE_STRIP,
+    LINE_LOOP,
+    LINE_LIST_ADJACENCY,
+    LINE_STRIP_ADJACENCY,
+    ISO_LINE_LIST,
+    TRIANGLE_LIST,
+    TRIANGLE_STRIP,
+    TRIANGLE_FAN,
+    TRIANGLE_LIST_ADJACENCY,
+    TRIANGLE_STRIP_ADJACENCY,
+    TRIANGLE_PATCH_ADJACENCY,
+    QUAD_PATCH_LIST,
+};
+CC_ENUM_CONVERSION_OPERATOR(PrimitiveMode);
+
+enum class PipelineBindPoint : uint32_t
+{
+    GRAPHICS,
+    COMPUTE,
+    RAY_TRACING,
+};
+CC_ENUM_CONVERSION_OPERATOR(PipelineBindPoint);
+
 struct PipelineStateInfo 
 {
     Shader* shader{ nullptr };
@@ -1163,6 +1232,52 @@ struct alignas(8) SamplerInfo
 
     EXPOSE_COPY_FN(SamplerInfo)
 };
+
+enum class AccessFlagBit : uint32_t
+{
+    NONE = 0,
+
+    // Read accesses
+    INDIRECT_BUFFER = 1 << 0,                                     // Read as an indirect buffer for drawing or dispatch
+    INDEX_BUFFER = 1 << 1,                                        // Read as an index buffer for drawing
+    VERTEX_BUFFER = 1 << 2,                                       // Read as a vertex buffer for drawing
+    VERTEX_SHADER_READ_UNIFORM_BUFFER = 1 << 3,                   // Read as a uniform buffer in a vertex shader
+    VERTEX_SHADER_READ_TEXTURE = 1 << 4,                          // Read as a sampled image/uniform texel buffer in a vertex shader
+    VERTEX_SHADER_READ_OTHER = 1 << 5,                            // Read as any other resource in a vertex shader
+    FRAGMENT_SHADER_READ_UNIFORM_BUFFER = 1 << 6,                 // Read as a uniform buffer in a fragment shader
+    FRAGMENT_SHADER_READ_TEXTURE = 1 << 7,                        // Read as a sampled image/uniform texel buffer in a fragment shader
+    FRAGMENT_SHADER_READ_COLOR_INPUT_ATTACHMENT = 1 << 8,         // Read as an input attachment with a color format in a fragment shader
+    FRAGMENT_SHADER_READ_DEPTH_STENCIL_INPUT_ATTACHMENT = 1 << 9, // Read as an input attachment with a depth/stencil format in a fragment shader
+    FRAGMENT_SHADER_READ_OTHER = 1 << 10,                         // Read as any other resource in a fragment shader
+    COLOR_ATTACHMENT_READ = 1 << 11,                              // Read by standard blending/logic operations or subpass load operations
+    DEPTH_STENCIL_ATTACHMENT_READ = 1 << 12,                      // Read by depth/stencil tests or subpass load operations
+    COMPUTE_SHADER_READ_UNIFORM_BUFFER = 1 << 13,                 // Read as a uniform buffer in a compute shader
+    COMPUTE_SHADER_READ_TEXTURE = 1 << 14,                        // Read as a sampled image/uniform texel buffer in a compute shader
+    COMPUTE_SHADER_READ_OTHER = 1 << 15,                          // Read as any other resource in a compute shader
+    TRANSFER_READ = 1 << 16,                                      // Read as the source of a transfer operation
+    HOST_READ = 1 << 17,                                          // Read on the host
+    PRESENT = 1 << 18,                                            // Read by the presentation engine
+
+    // Write accesses
+    VERTEX_SHADER_WRITE = 1 << 19,            // Written as any resource in a vertex shader
+    FRAGMENT_SHADER_WRITE = 1 << 20,          // Written as any resource in a fragment shader
+    COLOR_ATTACHMENT_WRITE = 1 << 21,         // Written as a color attachment during rendering, or via a subpass store op
+    DEPTH_STENCIL_ATTACHMENT_WRITE = 1 << 22, // Written as a depth/stencil attachment during rendering, or via a subpass store op
+    COMPUTE_SHADER_WRITE = 1 << 23,           // Written as any resource in a compute shader
+    TRANSFER_WRITE = 1 << 24,                 // Written as the destination of a transfer operation
+    HOST_PREINITIALIZED = 1 << 25,            // Data pre-filled by host before device access starts
+    HOST_WRITE = 1 << 26,                     // Written on the host
+};
+CC_ENUM_BITWISE_OPERATORS(AccessFlagBit);
+using AccessFlags = AccessFlagBit;
+
+enum class BarrierType : uint32_t
+{
+    FULL,
+    SPLIT_BEGIN,
+    SPLIT_END,
+};
+CC_ENUM_BITWISE_OPERATORS(BarrierType);
 
 struct alignas(8) GeneralBarrierInfo
 {
@@ -1215,6 +1330,15 @@ struct alignas(8) BufferBarrierInfo
     EXPOSE_COPY_FN(BufferBarrierInfo)
 };
 using BufferBarrierInfoList = std::vector<BufferBarrierInfo>;
+
+struct Size 
+{
+    uint32_t x{ 0 };
+    uint32_t y{ 0 };
+    uint32_t z{ 0 };
+
+    EXPOSE_COPY_FN(Size)
+};
 
 struct DeviceCaps 
 {
@@ -1290,21 +1414,6 @@ struct DeviceOptions
     bool enableBarrierDeduce{ true };
 };
 
-struct BindingMappingInfo 
-{
-    IndexList maxBlockCounts{ 0 };
-    IndexList maxSamplerTextureCounts{ 0 };
-    IndexList maxSamplerCounts{ 0 };
-    IndexList maxTextureCounts{ 0 };
-    IndexList maxBufferCounts{ 0 };
-    IndexList maxImageCounts{ 0 };
-    IndexList maxSubpassInputCounts{ 0 };
-
-    IndexList setIndices{ 0 };
-
-    EXPOSE_COPY_FN(BindingMappingInfo)
-};
-
 struct DynamicStencilStates 
 {
     uint32_t writeMask{ 0 };
@@ -1330,40 +1439,6 @@ struct DynamicStates
     DynamicStencilStates stencilStatesBack;
 
     EXPOSE_COPY_FN(DynamicStates)
-};
-
-enum class PipelineBindPoint : uint32_t 
-{
-    GRAPHICS,
-    COMPUTE,
-    RAY_TRACING,
-};
-CC_ENUM_CONVERSION_OPERATOR(PipelineBindPoint);
-
-enum class PrimitiveMode : uint32_t 
-{
-    POINT_LIST,
-    LINE_LIST,
-    LINE_STRIP,
-    LINE_LOOP,
-    LINE_LIST_ADJACENCY,
-    LINE_STRIP_ADJACENCY,
-    ISO_LINE_LIST,
-    TRIANGLE_LIST,
-    TRIANGLE_STRIP,
-    TRIANGLE_FAN,
-    TRIANGLE_LIST_ADJACENCY,
-    TRIANGLE_STRIP_ADJACENCY,
-    TRIANGLE_PATCH_ADJACENCY,
-    QUAD_PATCH_LIST,
-};
-CC_ENUM_CONVERSION_OPERATOR(PrimitiveMode);
-
-struct InputState 
-{
-    AttributeList attributes;
-
-    EXPOSE_COPY_FN(InputState)
 };
 
 enum class ObjectType : uint32_t 

@@ -1,14 +1,16 @@
 #pragma once
 
+#include "OSInterface.h"
+
+#include <glm/glm.hpp>
 #include <string>
 
 namespace ll
 {
 
-class ISystemWindow
+class ISystemWindow : public OSInterface
 {
 public:
-    using Size = Vec2;
     using WindowFlags = enum 
     {
         CC_WINDOW_FULLSCREEN = 0x00000001,
@@ -46,7 +48,7 @@ public:
 
     virtual void CloseWindow() {}
     virtual uintptr_t GetWindowHandle() const = 0;
-    virtual Size GetViewSize() const = 0;
+    virtual glm::vec2 GetViewSize() const = 0;
     virtual void SetViewSize(uint32_t width, uint32_t height) {}
     virtual void SetCursorEnabled(bool value) = 0;
 };

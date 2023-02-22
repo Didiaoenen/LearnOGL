@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Macros.h"
+#include "../base//Macros.h"
 
 #include <memory>
 
@@ -16,7 +16,7 @@ public:
     using Ptr = std::shared_ptr<OSInterface>;
 
 private:
-    CC_DISALLOW_COPY_MOVE_ASSIGN(OSInterface)
+    DISALLOW_COPY_MOVE_ASSIGN(OSInterface)
 };
 
 }

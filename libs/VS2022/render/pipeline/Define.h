@@ -1,25 +1,27 @@
 
-#include "Ptr.h"
-#include "Def_type.h"
-#include "Value.h"
-#include "Buffer.h"
-#include "RenderFlow.h"
+#pragma once
+
+#include "../base/Ptr.h"
+#include "../base/Value.h"
+#include "../base/Def_type.h"
+#include "../base/Def_common.h"
 
 #include <vector>
+#include <string>
 
 namespace ll
 {
 
     class Light;
     class Model;
+    class RenderFlow;
+    class RenderStage;
 
 using RenderStageList = std::vector<IntrusivePtr<RenderStage>>;
 using RenderFlowList = std::vector<IntrusivePtr<RenderFlow>>;
 using RenderObjectList = std::vector<struct RenderObject>;
 using LightList = std::vector<Light*>;
 using UintList = std::vector<uint32_t>;
-
-const uint32_t CAMERA_DEFAULT_MASK = ~static_cast<uint32_t>(LayerList::UI_2D) & ~static_cast<uint32_t>(LayerList::PROFILER);
 
 enum class RenderFlowType : uint8_t 
 {
@@ -77,9 +79,6 @@ struct DescriptorSetLayoutInfos
 };
 DescriptorSetLayoutInfos globalDescriptorSetLayout;
 DescriptorSetLayoutInfos localDescriptorSetLayout;
-
-extern DescriptorSetLayoutInfos globalDescriptorSetLayout;
-extern DescriptorSetLayoutInfos localDescriptorSetLayout;
 
 struct InternalBindingDesc 
 {
@@ -213,5 +212,7 @@ void LocalDescriptorSetLayoutResizeMaxJoints(uint32_t maxCount)
     localDescriptorSetLayout.blocks[UBOSkinning::NAME] = UBOSkinning::layout;
     localDescriptorSetLayout.bindings[UBOSkinning::BINDING] = UBOSkinning::DESCRIPTOR;
 }
+
+const uint32_t CAMERA_DEFAULT_MASK = ~static_cast<uint32_t>(LayerList::UI_2D) & ~static_cast<uint32_t>(LayerList::PROFILER);
 
 }

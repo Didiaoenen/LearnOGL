@@ -40,9 +40,9 @@ uintptr_t ll::SystemWindow::GetWindowHandle() const
     return uintptr_t();
 }
 
-ll::SystemWindow::Size ll::SystemWindow::GetViewSize() const
+glm::vec2 ll::SystemWindow::GetViewSize() const
 {
-    return Size();
+    return glm::vec2();
 }
 
 void ll::SystemWindow::SetCursorEnabled(bool value)

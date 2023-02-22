@@ -143,4 +143,11 @@ protected:
     int _freeIdx = 0;
 };
 
+struct BindingMapping 
+{
+    std::vector<int32_t> blockOffsets;
+    std::vector<int32_t> samplerTextureOffsets;
+    uint32_t flexibleSet{ 0 };
+};
+
 }

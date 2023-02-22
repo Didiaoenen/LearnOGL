@@ -33,19 +33,16 @@ private:
     std::vector<ApplicationPtr> _apps;
 };
 
-}
 
-#define CC_APPLICATION_MANAGER()        ll::ApplicationManager::GetInstance()
-#define CC_CURRENT_APPLICATION()        CC_APPLICATION_MANAGER()->GetCurrentApp()
-#define CC_CURRENT_APPLICATION_SAFE()   CC_APPLICATION_MANAGER()->GetCurrentAppSafe()
-#define CC_CURRENT_ENGINE()             CC_CURRENT_APPLICATION_SAFE()->GetEngine()
-#define CC_GET_PLATFORM_INTERFACE(intf) CC_CURRENT_ENGINE()->GetInterface<intf>()
-#define CC_GET_XR_INTERFACE() BasePlatform::GetPlatform()->GetInterface<IXRInterface>()
+#define APPLICATION_MANAGER()        ApplicationManager::GetInstance()
+#define CURRENT_APPLICATION()        APPLICATION_MANAGER()->GetCurrentApp()
+#define CURRENT_APPLICATION_SAFE()   APPLICATION_MANAGER()->GetCurrentAppSafe()
+#define CURRENT_ENGINE()             CURRENT_APPLICATION_SAFE()->GetEngine()
 
-#define CC_START_APPLICATION(className)                                         \
+#define START_APPLICATION(className)                                            \
     do                                                                          \
     {                                                                           \
-        auto app = CC_APPLICATION_MANAGER()->CreateApplication<className>();    \
+        auto app = APPLICATION_MANAGER()->CreateApplication<className>();       \
         if (app->Init())                                                        \
         {                                                                       \
             return -1;                                                          \
@@ -53,8 +50,10 @@ private:
         return app->Run(argc, argv);                                            \
     } while (0)
 
-#define CC_REGISTER_APPLICATION(className)          \
-    int cocos_main(int argc, const char** argv)     \
+#define REGISTER_APPLICATION(className)             \
+    int _Init(int argc, char* argv[])               \
     {                                               \
-        CC_START_APPLICATION(className);            \
+        START_APPLICATION(className);               \
     }
+
+}

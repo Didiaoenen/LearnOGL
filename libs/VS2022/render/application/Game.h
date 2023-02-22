@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Application.h"
-#include "GlobalDSManager.h"
+
+#include "ApplicationManager.h"
 
 namespace ll
 {
+
+    class Director;
 
 class Game : public Application
 {
@@ -17,6 +20,12 @@ public:
     void OnPause() override;
     void OnResume() override;
     void OnClose() override;
+
+private:
+    Director* _director{ nullptr };
+
 };
+
+REGISTER_APPLICATION(ll::Game)
 
 }

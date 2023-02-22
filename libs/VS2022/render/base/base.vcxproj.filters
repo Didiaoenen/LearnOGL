@@ -108,6 +108,9 @@
     <ClInclude Include="Director.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Agent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Texture.cpp">

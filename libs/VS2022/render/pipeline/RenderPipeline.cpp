@@ -119,7 +119,7 @@ ll::Rect ll::RenderPipeline::GetScissor(Camera* camera)
 	return Rect();
 }
 
-void ll::RenderPipeline::GenQuadVertexData(const Vec4& viewport, float* data)
+void ll::RenderPipeline::GenQuadVertexData(const glm::vec4& viewport, float* data)
 {
 }
 
@@ -133,7 +133,7 @@ ll::InputAssembler* ll::RenderPipeline::GetIAByRenderArea(const Rect& renderArea
 	return nullptr;
 }
 
-void ll::RenderPipeline::UpdateQuadVertexData(const Vec4& viewport, Buffer* buffer)
+void ll::RenderPipeline::UpdateQuadVertexData(const glm::vec4& viewport, Buffer* buffer)
 {
 }
 

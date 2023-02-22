@@ -7,6 +7,8 @@
 #include "RenderPipeline.h"
 #include "RenderInterfaceTypes.h"
 
+#include <tuple>
+#include <string>
 #include <vector>
 #include <memory>
 #include <cstdint>

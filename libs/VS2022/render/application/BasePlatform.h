@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Macros.h"
 #include "ISystem.h"
 
 #include <vector>
@@ -10,6 +9,8 @@
 namespace ll
 {
 
+    extern int _Init(int argc, char* argv[]);
+
 class BasePlatform
 {
 public:
@@ -18,7 +19,7 @@ public:
 
     static BasePlatform* GetPlatform();
     virtual int32_t Init() = 0;
-    virtual int32_t Run(int argc, const char** argv) = 0;
+    virtual int32_t Run(int argc, char* argv[]) = 0;
     virtual int32_t Loop() = 0;
 
     virtual void PollEvent() = 0;
@@ -89,18 +90,7 @@ private:
 
     static BasePlatform* _currentPlatform;
     std::vector<OSInterface::Ptr> _osInterfaces;
-    CC_DISALLOW_COPY_MOVE_ASSIGN(BasePlatform)
+    DISALLOW_COPY_MOVE_ASSIGN(BasePlatform)
 };
 
 }
-
-#define START_PLATFORM(argc, argv)                                      \
-    do                                                                  \
-    {                                                                   \
-        ll::BasePlatform *platform = ll::BasePlatform::GetPlatform();   \
-        if (platform->Init())                                           \
-        {                                                               \
-            return -1;                                                  \
-        }                                                               \
-        return platform->Run(argc, argv);                               \
-    } while (0)

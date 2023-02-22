@@ -3,6 +3,7 @@
 #include "ISystemWindow.h"
 #include "IEventDispatch.h"
 
+#include <glm/glm.hpp>
 #include <memory>
 
 namespace ll
@@ -22,7 +23,7 @@ public:
     bool _CreateWindow(const char* title, int x, int y, int w, int h, int flags) override;
     void CloseWindow() override;
     uintptr_t GetWindowHandle() const override;
-    Size GetViewSize() const override;
+    glm::vec2 GetViewSize() const override;
     
     void SetViewSize(uint32_t width, uint32_t height) override 
     {

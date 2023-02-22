@@ -1,10 +1,8 @@
 #include "UniversalPlatform.h"
 
-extern int cocos_main(int argc, const char** argv);
-
-int32_t ll::UniversalPlatform::Run(int argc, const char** argv)
+int32_t ll::UniversalPlatform::Run(int argc, char* argv[])
 {
-    if (cocos_main(argc, argv) != 0)
+    if (_Init(argc, argv) != 0)
     {
         return -1;
     }

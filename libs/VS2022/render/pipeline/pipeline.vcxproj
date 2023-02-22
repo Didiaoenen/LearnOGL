@@ -25,10 +25,13 @@
     <ClInclude Include="ForwardPipeline.h" />
     <ClInclude Include="GeometryRenderer.h" />
     <ClInclude Include="GlobalDSManager.h" />
+    <ClInclude Include="LayoutGraphTypes.h" />
     <ClInclude Include="NativePipelineTypes.h" />
     <ClInclude Include="PipelineSceneData.h" />
     <ClInclude Include="PipelineUBO.h" />
+    <ClInclude Include="RenderCommonTypes.h" />
     <ClInclude Include="RenderFlow.h" />
+    <ClInclude Include="RenderGraphTypes.h" />
     <ClInclude Include="RenderInterfaceTypes.h" />
     <ClInclude Include="RenderPipeline.h" />
     <ClInclude Include="RenderStage.h" />
@@ -42,10 +45,13 @@
     <ClCompile Include="ForwardPipeline.cpp" />
     <ClCompile Include="GeometryRenderer.cpp" />
     <ClCompile Include="GlobalDSManager.cpp" />
+    <ClCompile Include="LayoutGraphTypes.cpp" />
     <ClCompile Include="NativePipelineTypes.cpp" />
     <ClCompile Include="PipelineSceneData.cpp" />
     <ClCompile Include="PipelineUBO.cpp" />
+    <ClCompile Include="RenderCommonTypes.cpp" />
     <ClCompile Include="RenderFlow.cpp" />
+    <ClCompile Include="RenderGraphTypes.cpp" />
     <ClCompile Include="RenderInterfaceTypes.cpp" />
     <ClCompile Include="RenderPipeline.cpp" />
     <ClCompile Include="RenderStage.cpp" />
@@ -137,7 +143,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>./../gl;./../base;./../core;./../scene;./../graph;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./../../../includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

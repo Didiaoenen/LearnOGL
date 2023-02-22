@@ -726,4 +726,49 @@ private:
     std::vector<std::string> _extensions;
 };
 
+class GPUBlitManager final 
+{
+public:
+    void initialize();
+    void destroy();
+    void draw(GPUTexture* gpuTextureSrc, GPUTexture* gpuTextureDst, const TextureBlit* regions, uint32_t count, Filter filter);
+
+private:
+    GPUShader _gpuShader;
+    GPUDescriptorSetLayout _gpuDescriptorSetLayout;
+    GPUPipelineLayout _gpuPipelineLayout;
+    GPUPipelineState _gpuPipelineState;
+
+    GPUBuffer _gpuVertexBuffer;
+    GPUInputAssembler _gpuInputAssembler;
+    GPUSampler _gpuPointSampler;
+    GPUSampler _gpuLinearSampler;
+    GPUBuffer _gpuUniformBuffer;
+    GPUDescriptorSet _gpuDescriptorSet;
+    DrawInfo _drawInfo;
+    float _uniformBuffer[8];
+};
+
+class GPUFramebufferHub final 
+{
+public:
+    void connect(GPUTexture* texture, GPUFramebuffer* framebuffer) {
+        _framebuffers[texture].push_back(framebuffer);
+    }
+
+    void disengage(GPUTexture* texture) {
+        _framebuffers.erase(texture);
+    }
+
+    void disengage(GPUTexture* texture, GPUFramebuffer* framebuffer) {
+        auto& pool = _framebuffers[texture];
+        pool.erase(std::remove(pool.begin(), pool.end(), framebuffer), pool.end());
+    }
+
+    void update(GPUTexture* texture);
+
+private:
+    std::unordered_map<GPUTexture*, std::vector<GPUFramebuffer*>> _framebuffers;
+};
+
 }
