@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../base/Ptr.h"
+#include "../base/Math.h"
 #include "../base/Value.h"
 #include "../base/Def_type.h"
 #include "../base/Def_common.h"
@@ -9,20 +10,82 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <functional>
 
 namespace ll
 {
 
-    class Light;
-    class Model;
-    class RenderFlow;
-    class RenderStage;
+class Light;
+class Model;
+class Device;
+class RenderFlow;
+class RenderStage;
 
-using RenderStageList = std::vector<IntrusivePtr<RenderStage>>;
-using RenderFlowList = std::vector<IntrusivePtr<RenderFlow>>;
+class SkinningJointCapacity 
+{
+public:
+    static uint32_t jointUniformCapacity;
+};
+
+constexpr float SHADOW_CAMERA_MAX_FAR = 2000.0F;
+const float COEFFICIENT_OF_EXPANSION = 2.0F * sqrtf(3.0F);
+
+struct RenderObject 
+{
+    float depth = 0.0F;
+    const Model* model = nullptr;
+};
 using RenderObjectList = std::vector<struct RenderObject>;
-using LightList = std::vector<Light*>;
-using UintList = std::vector<uint32_t>;
+
+struct RenderTargetInfo 
+{
+    uint32_t width = 0;
+    uint32_t height = 0;
+};
+
+struct RenderPass 
+{
+    uint32_t priority = 0;
+    uint32_t hash = 0;
+    float depth = 0.0F;
+    uint32_t shaderID = 0;
+    uint32_t passIndex = 0;
+    //const SubModel* subModel = nullptr;
+};
+using RenderPassList = std::vector<RenderPass>;
+
+using ColorDesc = ColorAttachment;
+using ColorDescList = std::vector<ColorDesc>;
+
+using DepthStencilDesc = DepthStencilAttachment;
+
+struct RenderPassDesc 
+{
+    uint32_t index = 0;
+    ColorDescList colorAttachments;
+    DepthStencilDesc depthStencilAttachment;
+};
+using RenderPassDescList = std::vector<RenderPassDesc>;
+
+struct RenderTextureDesc 
+{
+    std::string name;
+    TextureType type = TextureType::TEX2D;
+    TextureUsage usage = TextureUsage::COLOR_ATTACHMENT;
+    Format format = Format::UNKNOWN;
+    int width = -1;
+    int height = -1;
+};
+using RenderTextureDescList = std::vector<RenderTextureDesc>;
+
+struct FrameBufferDesc 
+{
+    std::string name;
+    uint32_t renderPass = 0;
+    std::vector<std::string> colorTextures;
+    std::string depthStencilTexture;
+};
+using FrameBufferDescList = std::vector<FrameBufferDesc>;
 
 enum class RenderFlowType : uint8_t 
 {
@@ -32,12 +95,133 @@ enum class RenderFlowType : uint8_t
 };
 CC_ENUM_CONVERSION_OPERATOR(RenderFlowType)
 
-enum class PipelineGlobalBindings
+using RenderStageList = std::vector<IntrusivePtr<RenderStage>>;
+using RenderFlowList = std::vector<IntrusivePtr<RenderFlow>>;
+using LightList = std::vector<Light*>;
+using UintList = std::vector<uint32_t>;
+
+enum class RenderPassStage 
+{
+    DEFAULT = 100,
+    UI = 200,
+};
+CC_ENUM_CONVERSION_OPERATOR(RenderPassStage)
+
+    struct InternalBindingDesc 
+{
+    DescriptorType type;
+    UniformBlock blockInfo;
+    UniformSamplerTexture samplerInfo;
+    Value defaultValue;
+};
+
+struct InternalBindingInst : public InternalBindingDesc 
+{
+    Buffer* buffer = nullptr;
+    Sampler* sampler = nullptr;
+    Texture* texture = nullptr;
+};
+
+struct RenderQueueCreateInfo 
+{
+    bool isTransparent = false;
+    uint32_t phases = 0;
+    std::function<bool(const RenderPass& a, const RenderPass& b)> sortFunc;
+};
+
+enum class RenderPriority {
+    MIN = 0,
+    MAX = 0xff,
+    DEFAULT = 0x80,
+};
+CC_ENUM_CONVERSION_OPERATOR(RenderPriority)
+
+    enum class RenderQueueSortMode 
+{
+    FRONT_TO_BACK,
+    BACK_TO_FRONT,
+};
+CC_ENUM_CONVERSION_OPERATOR(RenderQueueSortMode)
+
+struct RenderQueueDesc 
+{
+    bool isTransparent = false;
+    RenderQueueSortMode sortMode = RenderQueueSortMode::FRONT_TO_BACK;
+    std::vector<std::string> stages;
+};
+using RenderQueueDescList = std::vector<RenderQueueDesc>;
+
+uint32_t getPhaseID(const std::string& phase);
+
+inline bool opaqueCompareFn(const RenderPass& a, const RenderPass& b) 
+{
+    if (a.hash != b.hash) 
+    {
+        return a.hash < b.hash;
+    }
+
+    if (IsNotEqualF(a.depth, b.depth)) {
+        return a.depth < b.depth;
+    }
+
+    return a.shaderID < b.shaderID;
+}
+
+inline bool transparentCompareFn(const RenderPass& a, const RenderPass& b) 
+{
+    if (a.priority != b.priority) 
+    {
+        return a.priority < b.priority;
+    }
+
+    if (a.hash != b.hash) 
+    {
+        return a.hash < b.hash;
+    }
+
+    if (IsNotEqualF(a.depth, b.depth)) 
+    {
+        return b.depth < a.depth;
+    }
+
+    return a.shaderID < b.shaderID;
+}
+
+inline uint32_t convertPhase(const std::vector<std::string>& stages) 
+{
+    uint32_t phase = 0;
+    for (const auto& stage : stages) 
+    {
+        phase |= getPhaseID(stage);
+    }
+    return phase;
+}
+
+using RenderQueueSortFunc = std::function<int(const RenderPass&, const RenderPass&)>;
+
+inline RenderQueueSortFunc convertQueueSortFunc(const RenderQueueSortMode& mode) 
+{
+    std::function<int(const RenderPass&, const RenderPass&)> sortFunc = opaqueCompareFn;
+    switch (mode) {
+    case RenderQueueSortMode::BACK_TO_FRONT:
+        sortFunc = transparentCompareFn;
+        break;
+    case RenderQueueSortMode::FRONT_TO_BACK:
+        sortFunc = opaqueCompareFn;
+        break;
+    default:
+        break;
+    }
+
+    return sortFunc;
+}
+
+enum class PipelineGlobalBindings 
 {
     UBO_GLOBAL,
     UBO_CAMERA,
     UBO_SHADOW,
-    UBO_CSM,
+    UBO_CSM, // should reserve slot for this optional ubo
 
     SAMPLER_SHADOWMAP,
     SAMPLER_ENVIRONMENT,
@@ -71,103 +255,20 @@ enum class ModelLocalBindings
 };
 CC_ENUM_CONVERSION_OPERATOR(ModelLocalBindings)
 
-struct DescriptorSetLayoutInfos
+enum class SetIndex 
 {
-    DescriptorSetLayoutBindingList bindings;
-    std::map<std::string, UniformBlock> blocks;
-    std::map<std::string, UniformSamplerTexture> samplers;
-    std::map<std::string, UniformStorageImage> storeImages;
+    GLOBAL,
+    MATERIAL,
+    LOCAL,
+    COUNT,
 };
-DescriptorSetLayoutInfos globalDescriptorSetLayout;
-DescriptorSetLayoutInfos localDescriptorSetLayout;
+CC_ENUM_CONVERSION_OPERATOR(SetIndex)
 
-struct InternalBindingDesc 
-{
-    DescriptorType type;
-    UniformBlock blockInfo;
-    UniformSamplerTexture samplerInfo;
-    Value defaultValue;
-};
+extern uint32_t globalSet;
+extern uint32_t materialSet;
+extern uint32_t localSet;
 
-struct InternalBindingInst : public InternalBindingDesc
-{
-    Buffer* buffer = nullptr;
-    Sampler* sampler = nullptr;
-    Texture* texture = nullptr;
-};
-
-struct RenderObject 
-{
-    float depth = 0.0F;
-    const Model* model = nullptr;
-};
-
-static uint32_t globalUBOCount = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);
-static uint32_t globalSamplerCount = static_cast<uint32_t>(PipelineGlobalBindings::COUNT) - globalUBOCount;
-
-static uint32_t localUBOCount = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_JOINTS);
-static uint32_t localSamplerCount = static_cast<uint32_t>(ModelLocalBindings::STORAGE_REFLECTION) - localUBOCount;
-static uint32_t localStorageImageCount = static_cast<uint32_t>(ModelLocalBindings::COUNT) - localUBOCount - localSamplerCount;
-
-BindingMappingInfo bindingMappingInfo = 
-{
-    {globalUBOCount, 0, localUBOCount},
-    {globalSamplerCount, 0, localSamplerCount},
-    {0, 0, 0},                                 
-    {0, 0, 0},                                
-    {0, 0, 0},                             
-    {0, 0, localStorageImageCount},          
-    {0, 0, 0},                               
-    {0, 2, 1},                             
-};
-
-enum class LayerList : uint32_t 
-{
-    NONE = 0,
-    IGNORE_RAYCAST = (1 << 20),
-    GIZMOS = (1 << 21),
-    EDITOR = (1 << 22),
-    UI_3D = (1 << 23),
-    SCENE_GIZMO = (1 << 24),
-    UI_2D = (1 << 25),
-
-    PROFILER = (1 << 28),
-    DEFAULT = (1 << 30),
-    ALL = 0xffffffff,
-};
-CC_ENUM_CONVERSION_OPERATOR(LayerList)
-
-struct SHADOWMAP 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
-
-struct ENVIRONMENT 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
-
-struct SPOTSHADOWMAP 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_SPOT_SHADOW_MAP);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
-
-struct DIFFUSEMAP 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_DIFFUSEMAP);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
+extern BindingMappingInfo bindingMappingInfo;
 
 struct UBOLocalBatched 
 {
@@ -222,6 +323,11 @@ struct UBOForwardLight
     static const std::string NAME;
 };
 
+struct UBODeferredLight 
+{
+    static constexpr uint32_t LIGHTS_PER_PASS = 10;
+};
+
 struct UBOSkinningTexture 
 {
     static constexpr uint32_t JOINTS_TEXTURE_INFO_OFFSET = 0;
@@ -242,6 +348,17 @@ struct UBOSkinningAnimation
     static const DescriptorSetLayoutBinding DESCRIPTOR;
     static const UniformBlock LAYOUT;
     static const std::string NAME;
+};
+
+struct UBOSkinning 
+{
+    static uint32_t count;
+    static uint32_t size;
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::UBO_SKINNING_TEXTURE);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static UniformBlock layout;
+    static const std::string NAME;
+    static void InitLayout(uint32_t capacity);
 };
 
 struct UBOMorph 
@@ -267,77 +384,47 @@ struct UBOUILocal
     static const std::string NAME;
 };
 
-struct JOINTTEXTURE 
+enum class ForwardStagePriority 
 {
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_JOINTS);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
+    FORWARD = 10,
+    UI = 20
 };
+CC_ENUM_CONVERSION_OPERATOR(ForwardStagePriority)
 
-struct REALTIMEJOINTTEXTURE 
+enum class ForwardFlowPriority 
 {
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_JOINTS);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
+    SHADOW = 0,
+    FORWARD = 1,
+    UI = 10,
 };
+CC_ENUM_CONVERSION_OPERATOR(ForwardFlowPriority)
 
-struct POSITIONMORPH 
+enum class RenderFlowTag 
 {
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_MORPH_POSITION);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
+    SCENE,
+    POSTPROCESS,
+    UI,
 };
+CC_ENUM_CONVERSION_OPERATOR(RenderFlowTag)
 
-struct NORMALMORPH 
+enum class DeferredStagePriority 
 {
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_MORPH_NORMAL);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
+    GBUFFER = 10,
+    LIGHTING = 15,
+    TRANSPARANT = 18,
+    BLOOM = 19,
+    POSTPROCESS = 20,
+    UI = 30
 };
+CC_ENUM_CONVERSION_OPERATOR(DeferredStagePriority)
 
-struct TANGENTMORPH 
+enum class DeferredFlowPriority 
 {
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_MORPH_TANGENT);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
+    SHADOW = 0,
+    MAIN = 1,
+    UI = 10
 };
-
-struct LIGHTMAPTEXTURE 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_LIGHTMAP);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
-
-struct SPRITETEXTURE 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_SPRITE);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
-
-struct REFLECTIONTEXTURE 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_REFLECTION);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformSamplerTexture LAYOUT;
-    static const std::string NAME;
-};
-
-struct REFLECTIONSTORAGE 
-{
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::STORAGE_REFLECTION);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static const UniformStorageImage LAYOUT;
-    static const std::string NAME;
-};
+CC_ENUM_CONVERSION_OPERATOR(DeferredFlowPriority)
 
 struct UBOGlobal 
 {
@@ -427,19 +514,150 @@ struct UBOCSM
     static const std::string NAME;
 };
 
-struct UBOSkinning 
+struct DescriptorSetLayoutInfos 
 {
-    static uint32_t count;
-    static uint32_t size;
-    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::UBO_SKINNING_TEXTURE);
-    static const DescriptorSetLayoutBinding DESCRIPTOR;
-    static UniformBlock layout;
-    static const std::string NAME;
-    static void InitLayout(uint32_t capacity) {}
+    DescriptorSetLayoutBindingList bindings;
+    std::unordered_map<std::string, UniformBlock> blocks;
+    std::unordered_map<std::string, UniformSamplerTexture> samplers;
+    std::unordered_map<std::string, UniformStorageImage> storeImages;
 };
+extern DescriptorSetLayoutInfos globalDescriptorSetLayout;
+extern DescriptorSetLayoutInfos localDescriptorSetLayout;
 
-void LocalDescriptorSetLayoutResizeMaxJoints(uint32_t maxCount);
+enum class LayerList : uint32_t 
+{
+    NONE = 0,
+    IGNORE_RAYCAST = (1 << 20),
+    GIZMOS = (1 << 21),
+    EDITOR = (1 << 22),
+    UI_3D = (1 << 23),
+    SCENE_GIZMO = (1 << 24),
+    UI_2D = (1 << 25),
+
+    PROFILER = (1 << 28),
+    DEFAULT = (1 << 30),
+    ALL = 0xffffffff,
+};
+CC_ENUM_CONVERSION_OPERATOR(LayerList)
 
 const uint32_t CAMERA_DEFAULT_MASK = ~static_cast<uint32_t>(LayerList::UI_2D) & ~static_cast<uint32_t>(LayerList::PROFILER);
+
+uint32_t nextPow2(uint32_t val);
+
+bool supportsR16HalfFloatTexture(const Device* device);
+
+bool supportsR32FloatTexture(const Device* device);
+
+extern uint32_t skyboxFlag;
+
+struct SHADOWMAP 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct ENVIRONMENT 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_ENVIRONMENT);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct SPOTSHADOWMAP 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_SPOT_SHADOW_MAP);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct DIFFUSEMAP 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(PipelineGlobalBindings::SAMPLER_DIFFUSEMAP);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct JOINTTEXTURE 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_JOINTS);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct REALTIMEJOINTTEXTURE 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_JOINTS);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct POSITIONMORPH 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_MORPH_POSITION);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct NORMALMORPH 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_MORPH_NORMAL);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct TANGENTMORPH 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_MORPH_TANGENT);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct LIGHTMAPTEXTURE 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_LIGHTMAP);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct SPRITETEXTURE 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_SPRITE);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct REFLECTIONTEXTURE 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::SAMPLER_REFLECTION);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformSamplerTexture LAYOUT;
+    static const std::string NAME;
+};
+
+struct REFLECTIONSTORAGE 
+{
+    static constexpr uint32_t BINDING = static_cast<uint32_t>(ModelLocalBindings::STORAGE_REFLECTION);
+    static const DescriptorSetLayoutBinding DESCRIPTOR;
+    static const UniformStorageImage LAYOUT;
+    static const std::string NAME;
+};
+
+static constexpr uint32_t CLUSTER_LIGHT_BINDING = 4;
+static constexpr uint32_t CLUSTER_LIGHT_INDEX_BINDING = 5;
+static constexpr uint32_t CLUSTER_LIGHT_GRID_BINDING = 6;
+
+void LocalDescriptorSetLayoutResizeMaxJoints(uint32_t maxCount);
 
 }

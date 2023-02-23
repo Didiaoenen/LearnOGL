@@ -1,5 +1,10 @@
 #include "DeviceAgent.h"
 
+namespace ll
+{
+    DeviceAgent* DeviceAgent::instance = nullptr;
+}
+
 ll::DeviceAgent* ll::DeviceAgent::GetInstance()
 {
     return nullptr;
@@ -128,6 +133,12 @@ void ll::DeviceAgent::PresentWait()
 
 void ll::DeviceAgent::PresentSignal()
 {
+}
+
+ll::DeviceAgent::DeviceAgent(Device* device) 
+    : Agent(device) 
+{
+    ll::DeviceAgent::instance = this;
 }
 
 bool ll::DeviceAgent::DoInit(const DeviceInfo& info)

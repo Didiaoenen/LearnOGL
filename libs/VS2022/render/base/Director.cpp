@@ -1,6 +1,16 @@
 #include "Director.h"
 
+#include "../core/Root.h"
+
 #include "Device.h"
+
+ll::Director::Director()
+{
+}
+
+ll::Director::~Director()
+{
+}
 
 double ll::Director::GetDeltaTime()
 {
@@ -33,6 +43,6 @@ void ll::Director::Tick(double dt)
 void ll::Director::Init()
 {
     _totalFrames = 0;
-    //_root = new ll::Root(Device::GetInstance());
-    //_root->Initialize({});
+    _root = new ll::Root(ll::Device::GetInstance());
+    _root->Initialize({});
 }

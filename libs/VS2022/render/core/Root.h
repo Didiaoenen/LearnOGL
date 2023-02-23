@@ -14,15 +14,17 @@
 namespace ll
 {
 
-    class Camera;
-    class Device;
-    class Pipeline;
-    class Batcher2d;
-    class Swapchain;
-    class RenderWindow;
-    class RenderPipeline;
-    class PipelineRuntime;
-    class IRenderWindowInfo;
+class RenderPipelineBridge;
+
+class Camera;
+class Device;
+class Pipeline;
+class Batcher2d;
+class Swapchain;
+class RenderWindow;
+class RenderPipeline;
+class PipelineRuntime;
+class IRenderWindowInfo;
 
 class Root final
 {

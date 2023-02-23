@@ -9,6 +9,11 @@
 #include "GlobalDSManager.h"
 #include "PipelineSceneData.h"
 
+namespace ll
+{
+	RenderPipeline* RenderPipeline::instance = nullptr;
+}
+
 ll::RenderPipeline* ll::RenderPipeline::GetInstance()
 {
 	return RenderPipeline::instance;

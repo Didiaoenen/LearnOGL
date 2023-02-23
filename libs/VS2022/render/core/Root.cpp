@@ -41,27 +41,27 @@ void ll::Root::Initialize(Swapchain* swapchain)
     RenderPassInfo renderPassInfo;
 
     ColorAttachment colorAttachment;
-    colorAttachment.format = swapchain->GetColorTexture()->GetFormat();
-    renderPassInfo.colorAttachments.emplace_back(colorAttachment);
+    //colorAttachment.format = swapchain->GetColorTexture()->GetFormat();
+    //renderPassInfo.colorAttachments.emplace_back(colorAttachment);
 
-    auto& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
-    depthStencilAttachment.format = swapchain->GetDepthStencilTexture()->GetFormat();
-    depthStencilAttachment.depthStoreOp = StoreOp::DISCARD;
-    depthStencilAttachment.stencilStoreOp = StoreOp::DISCARD;
+    //auto& depthStencilAttachment = renderPassInfo.depthStencilAttachment;
+    //depthStencilAttachment.format = swapchain->GetDepthStencilTexture()->GetFormat();
+    //depthStencilAttachment.depthStoreOp = StoreOp::DISCARD;
+    //depthStencilAttachment.stencilStoreOp = StoreOp::DISCARD;
 
     IRenderWindowInfo info;
-    info.title = std::string{ "rootMainWindow" };
-    info.width = swapchain->GetWidth();
-    info.height = swapchain->GetHeight();
-    info.renderPassInfo = renderPassInfo;
-    info.swapchain = swapchain;
+    //info.title = std::string{ "rootMainWindow" };
+    //info.width = swapchain->GetWidth();
+    //info.height = swapchain->GetHeight();
+    //info.renderPassInfo = renderPassInfo;
+    //info.swapchain = swapchain;
     _mainWindow = CreateWindow(info);
 
     _curWindow = _mainWindow;
 
-    uint32_t maxJoints = (_device->GetCapabilities().maxVertexUniformVectors - 38) / 3;
-    maxJoints = maxJoints < 256 ? maxJoints : 256;
-    ll::LocalDescriptorSetLayoutResizeMaxJoints(maxJoints);
+    //uint32_t maxJoints = (_device->GetCapabilities().maxVertexUniformVectors - 38) / 3;
+    //maxJoints = maxJoints < 256 ? maxJoints : 256;
+    //ll::LocalDescriptorSetLayoutResizeMaxJoints(maxJoints);
 }
 
 void ll::Root::Destroy()
@@ -105,15 +105,15 @@ bool ll::Root::SetRenderPipeline(RenderPipeline* rppl)
         }
         _pipeline->SetBloomEnabled(false);
 
-        if (!_pipeline->Activate(_mainWindow->GetSwapchain())) 
-        {
-            if (isCreateDefaultPipeline) 
-            {
-            }
+        //if (!_pipeline->Activate(_mainWindow->GetSwapchain())) 
+        //{
+        //    if (isCreateDefaultPipeline) 
+        //    {
+        //    }
 
-            _pipeline = nullptr;
-            return false;
-        }
+        //    _pipeline = nullptr;
+        //    return false;
+        //}
     }
     else 
     {
@@ -224,7 +224,7 @@ void ll::Root::FrameMoveProcess(bool isNeedUpdateScene, int32_t totalFrames, con
     {
         _swapchains.clear();
         _swapchains.emplace_back(_swapchain);
-        _device->Acquire(_swapchains);
+        //_device->Acquire(_swapchains);
         uint32_t stamp = totalFrames;
 
         if (_batcher != nullptr) 

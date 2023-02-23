@@ -5,11 +5,14 @@
 namespace ll
 {
 
-	class Root;
+class Root;
 
 class Director
 {
 public:
+	Director();
+	~Director();
+
 	double GetDeltaTime();
 	double GetTotalTime();
 	double GetCurrentTime();

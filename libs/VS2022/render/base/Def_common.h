@@ -421,11 +421,22 @@ struct alignas(8) DepthStencilAttachment
     EXPOSE_COPY_FN(DepthStencilAttachment)
 };
 
+struct Uniform 
+{
+    std::string name;
+    //Type type{ Type::UNKNOWN };
+    uint32_t count{ 0 };
+
+    EXPOSE_COPY_FN(Uniform)
+};
+using UniformList = std::vector<Uniform>;
+
 struct UniformBlock 
 {
     uint32_t set{ 0 };
     uint32_t binding{ 0 };
     std::string name;
+    UniformList members;
     uint32_t count{ 0 };
 
     EXPOSE_COPY_FN(UniformBlock)

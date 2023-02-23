@@ -33,7 +33,7 @@ public:
 
     static bool IsDetachDeviceThread() 
     {
-        return DETACH_DEVICE_THREAD && Device::isSupportDetachDeviceThread;
+        return DETACH_DEVICE_THREAD && ll::Device::isSupportDetachDeviceThread;
     }
 
     static std::string GetGFXName() 

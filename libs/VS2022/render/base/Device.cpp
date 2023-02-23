@@ -1,6 +1,12 @@
 #include "Device.h"
 
-ll::Device* ll::Device::instance = nullptr;
+namespace ll
+{
+
+Device* Device::instance = nullptr;
+bool Device::isSupportDetachDeviceThread = true;
+
+}
 
 ll::Device* ll::Device::GetInstance()
 {
