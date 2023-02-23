@@ -66,6 +66,18 @@
     <ClInclude Include="LayoutGraphTypes.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowFlow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardFlow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCulling.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RenderPipeline.cpp">
@@ -123,6 +135,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Define.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowFlow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardFlow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneCulling.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

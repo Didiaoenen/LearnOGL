@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include <iostream>
+
 ll::Engine::Engine()
 {
 }
@@ -80,6 +82,8 @@ void ll::Engine::Tick()
     now = std::chrono::steady_clock::now();
     dtNS = dtNS * 0.1 + 0.9 * static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(now - prevTime).count());
     dt = static_cast<float>(dtNS) / NANOSECONDS_PER_SECOND;
+
+    std::cout << "this is game tick => " + std::to_string(dt) << std::endl;
 }
 
 void ll::Engine::DoRestart()

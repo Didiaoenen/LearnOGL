@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core/PassUtils.h"
+#include "../graph/FrameGraph.h"
 
 #include "Define.h"
 
@@ -9,20 +10,21 @@
 
 namespace ll
 {
-    class CommandBuffer;
-    class DescriptorSet;
-    class DescriptorSetLayout;
-    
-    class Device;
-    class Camera;
-    class SubModel;
 
-    class PipelineUBO;
-    class RenderStage;
-    class InputAssembler;
-    class GlobalDSManager;
-    class GeometryRenderer;
-    class PipelineSceneData;
+class CommandBuffer;
+class DescriptorSet;
+class DescriptorSetLayout;
+    
+class Device;
+class Camera;
+class SubModel;
+
+class PipelineUBO;
+class RenderStage;
+class InputAssembler;
+class GlobalDSManager;
+class GeometryRenderer;
+class PipelineSceneData;
 
 struct RenderPipelineInfo 
 {
@@ -129,6 +131,7 @@ protected:
     std::vector<Buffer*> _quadVB;
     std::map<glm::vec4, InputAssembler*> _quadIA;
 
+    FrameGraph _fg;
     std::map<ClearFlags, RenderPass*> _renderPasses;
 
     bool _clusterEnabled{ false };

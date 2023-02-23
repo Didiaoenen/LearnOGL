@@ -5,7 +5,7 @@
 namespace ll
 {
 
-    class RenderPass;
+class RenderPass;
 
 class FrameBuffer
 {

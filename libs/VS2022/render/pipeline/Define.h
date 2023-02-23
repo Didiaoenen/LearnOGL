@@ -43,7 +43,7 @@ struct RenderTargetInfo
     uint32_t height = 0;
 };
 
-struct RenderPass 
+struct RenderPassData
 {
     uint32_t priority = 0;
     uint32_t hash = 0;
@@ -52,7 +52,7 @@ struct RenderPass
     uint32_t passIndex = 0;
     //const SubModel* subModel = nullptr;
 };
-using RenderPassList = std::vector<RenderPass>;
+using RenderPassList = std::vector<RenderPassData>;
 
 using ColorDesc = ColorAttachment;
 using ColorDescList = std::vector<ColorDesc>;
@@ -126,7 +126,7 @@ struct RenderQueueCreateInfo
 {
     bool isTransparent = false;
     uint32_t phases = 0;
-    std::function<bool(const RenderPass& a, const RenderPass& b)> sortFunc;
+    std::function<bool(const RenderPassData& a, const RenderPassData& b)> sortFunc;
 };
 
 enum class RenderPriority {
@@ -153,7 +153,7 @@ using RenderQueueDescList = std::vector<RenderQueueDesc>;
 
 uint32_t getPhaseID(const std::string& phase);
 
-inline bool opaqueCompareFn(const RenderPass& a, const RenderPass& b) 
+inline bool OpaqueCompareFn(const RenderPassData& a, const RenderPassData& b)
 {
     if (a.hash != b.hash) 
     {
@@ -167,7 +167,7 @@ inline bool opaqueCompareFn(const RenderPass& a, const RenderPass& b)
     return a.shaderID < b.shaderID;
 }
 
-inline bool transparentCompareFn(const RenderPass& a, const RenderPass& b) 
+inline bool TransparentCompareFn(const RenderPassData& a, const RenderPassData& b)
 {
     if (a.priority != b.priority) 
     {
@@ -187,7 +187,7 @@ inline bool transparentCompareFn(const RenderPass& a, const RenderPass& b)
     return a.shaderID < b.shaderID;
 }
 
-inline uint32_t convertPhase(const std::vector<std::string>& stages) 
+inline uint32_t ConvertPhase(const std::vector<std::string>& stages) 
 {
     uint32_t phase = 0;
     for (const auto& stage : stages) 
@@ -197,17 +197,17 @@ inline uint32_t convertPhase(const std::vector<std::string>& stages)
     return phase;
 }
 
-using RenderQueueSortFunc = std::function<int(const RenderPass&, const RenderPass&)>;
+using RenderQueueSortFunc = std::function<int(const RenderPassData&, const RenderPassData&)>;
 
-inline RenderQueueSortFunc convertQueueSortFunc(const RenderQueueSortMode& mode) 
+inline RenderQueueSortFunc ConvertQueueSortFunc(const RenderQueueSortMode& mode) 
 {
-    std::function<int(const RenderPass&, const RenderPass&)> sortFunc = opaqueCompareFn;
+    std::function<int(const RenderPassData&, const RenderPassData&)> sortFunc = OpaqueCompareFn;
     switch (mode) {
     case RenderQueueSortMode::BACK_TO_FRONT:
-        sortFunc = transparentCompareFn;
+        sortFunc = TransparentCompareFn;
         break;
     case RenderQueueSortMode::FRONT_TO_BACK:
-        sortFunc = opaqueCompareFn;
+        sortFunc = OpaqueCompareFn;
         break;
     default:
         break;

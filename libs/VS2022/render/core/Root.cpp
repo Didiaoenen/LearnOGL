@@ -83,7 +83,7 @@ bool ll::Root::SetRenderPipeline(RenderPipeline* rppl)
 {
     if (!_usesCustomPipeline) 
     {
-        if (rppl != nullptr && dynamic_cast<DeferredPipeline*>(rppl) != nullptr) 
+        if (rppl && dynamic_cast<DeferredPipeline*>(rppl)) 
         {
             _useDeferredPipeline = true;
         }
@@ -122,7 +122,7 @@ bool ll::Root::SetRenderPipeline(RenderPipeline* rppl)
 
     OnGlobalPipelineStateChanged();
 
-    if (_batcher == nullptr) 
+    if (!_batcher) 
     {
         _batcher = new Batcher2d(this);
         if (!_batcher->Initialize()) 

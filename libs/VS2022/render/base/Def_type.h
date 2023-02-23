@@ -7,6 +7,7 @@ namespace ll
 {
 
 using index_t = int32_t;
+#define CC_INVALID_INDEX (-1)
 
 #define Record std::unordered_map
 
