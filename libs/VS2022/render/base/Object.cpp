@@ -1,7 +1,7 @@
-#include "Object.h"
+#include "RenderObject.h"
 
-ll::Object::Object(ObjectType type)
+ll::RenderObject::RenderObject(ObjectType type)
 	: _objectType(type),
-	_objectID(GenerateObjectID<Object>())
+	_objectID(GenerateObjectID<RenderObject>())
 {
 }

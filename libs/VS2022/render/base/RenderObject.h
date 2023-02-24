@@ -5,11 +5,11 @@
 namespace ll
 {
 
-class Object
+class RenderObject
 {
 public:
-    explicit Object(ObjectType type);
-    virtual ~Object() = default;
+    explicit RenderObject(ObjectType type);
+    virtual ~RenderObject() = default;
 
     inline ObjectType GetObjectType() const { return _objectType; }
     inline uint32_t GetObjectID() const { return _objectID; }
