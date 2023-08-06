@@ -1,0 +1,1 @@
+#include "SceneObjectLight.h"

@@ -5,7 +5,7 @@ namespace OGL
 	LearnOGLMesh::LearnOGLMesh(std::vector<Vertex> vertices, std::vector<uint32_t> indices)
 		:mVertices(vertices), mIndices(indices)
 	{
-		SetupMesh();
+		//SetupMesh();
 	}
 
 	LearnOGLMesh::~LearnOGLMesh()

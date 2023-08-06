@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\Graphics">
+      <UniqueIdentifier>{cd180aa7-14f1-49b2-a5ce-4b3b3c2532a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Graphics">
+      <UniqueIdentifier>{0bdb7690-30c4-4ad6-a644-8a14bfcc3339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\SceneGraph">
+      <UniqueIdentifier>{c8d45de4-e453-4431-9874-2de6c1d6dbcf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LearnOGLApp.cpp">
@@ -68,6 +77,111 @@
     </ClCompile>
     <ClCompile Include="LearnOGLTriangleBatch.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectTexture.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneBaseObject.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLGraphicsCommonBaseManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLGraphicsManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLPipelineStateCommonBaseManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineStateManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenGLPipelineStateManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseApplication.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseDispatchPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseDrawPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BRDFIntegrator.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMapPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ForwardGeometryPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Mesh.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Light.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Transform.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Texture.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Camera.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Material.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_SkyBox.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_Application.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometrySubPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseSubPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxSubPass.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGeometryNode.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectGeometry.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectCamera.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneLightNode.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectLight.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectSkyBox.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectMesh.cpp">
+      <Filter>源文件\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +244,171 @@
     </ClInclude>
     <ClInclude Include="LearnOGLTriangleBatch.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IGraphicsManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameStructure.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="CBuffer.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IPipelineStateManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLGraphicsCommonBaseManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLGraphicsManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GfxConfiguration.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IDispatchPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLPipelineStateCommonBaseManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineStateManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLPipelineStateManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IApplication.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseApplication.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDispatchPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseDrawPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ISubPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IDrawSubPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BRDFIntegrator.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardGeometryPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OverlayPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ISceneManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseSceneNode.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseSceneObject.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBaseObject.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCameraNode.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNode.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectGeometry.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectSkyBox.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectTexture.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMapPass.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeNode.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Mesh.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Light.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Transform.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Texture.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Camera.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Material.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_SkyBox.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="IRuntimeModule.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_Application.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="IGameLogic.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometrySubPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseSubPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxSubPass.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGeometryNode.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectCamera.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneLightNode.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectLight.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectMesh.h">
+      <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

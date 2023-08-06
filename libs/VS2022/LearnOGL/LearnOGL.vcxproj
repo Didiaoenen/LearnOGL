@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -108,6 +108,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./../../includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +134,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseApplication.cpp" />
+    <ClCompile Include="BaseDispatchPass.cpp" />
+    <ClCompile Include="BaseDrawPass.cpp" />
+    <ClCompile Include="BaseSubPass.cpp" />
+    <ClCompile Include="BRDFIntegrator.cpp" />
+    <ClCompile Include="ForwardGeometryPass.cpp" />
+    <ClCompile Include="GeometrySubPass.cpp" />
+    <ClCompile Include="GraphicsManager.cpp" />
+    <ClCompile Include="OGL_Application.cpp" />
+    <ClCompile Include="OGL_Camera.cpp" />
+    <ClCompile Include="OGL_Light.cpp" />
+    <ClCompile Include="OGL_Material.cpp" />
+    <ClCompile Include="OGL_Mesh.cpp" />
+    <ClCompile Include="OGL_SkyBox.cpp" />
+    <ClCompile Include="OGL_Texture.cpp" />
+    <ClCompile Include="OGL_Transform.cpp" />
+    <ClCompile Include="OpenGLGraphicsManager.cpp" />
+    <ClCompile Include="OpenGLGraphicsCommonBaseManager.cpp" />
+    <ClCompile Include="OpenGLPipelineStateCommonBaseManager.cpp" />
+    <ClCompile Include="OpenGLPipelineStateManager.cpp" />
+    <ClCompile Include="OverlayPass.cpp" />
+    <ClCompile Include="PipelineStateManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneBaseObject.cpp" />
     <ClCompile Include="LearnOGLApp.cpp" />
     <ClCompile Include="LearnOGLBatch.cpp" />
     <ClCompile Include="LearnOGLCamera.cpp" />
@@ -151,8 +176,43 @@
     <ClCompile Include="LearnOGLTexture.cpp" />
     <ClCompile Include="LearnOGLTools.cpp" />
     <ClCompile Include="LearnOGLTriangleBatch.cpp" />
+    <ClCompile Include="SceneGeometryNode.cpp" />
+    <ClCompile Include="SceneLightNode.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneObjectCamera.cpp" />
+    <ClCompile Include="SceneObjectGeometry.cpp" />
+    <ClCompile Include="SceneObjectLight.cpp" />
+    <ClCompile Include="SceneObjectMesh.cpp" />
+    <ClCompile Include="SceneObjectSkyBox.cpp" />
+    <ClCompile Include="SceneObjectTexture.cpp" />
+    <ClCompile Include="ShadowMapPass.cpp" />
+    <ClCompile Include="SkyBoxSubPass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseApplication.h" />
+    <ClInclude Include="BaseDispatchPass.h" />
+    <ClInclude Include="BaseDrawPass.h" />
+    <ClInclude Include="BaseSceneNode.h" />
+    <ClInclude Include="BaseSceneObject.h" />
+    <ClInclude Include="BaseSubPass.h" />
+    <ClInclude Include="BRDFIntegrator.h" />
+    <ClInclude Include="CBuffer.h" />
+    <ClInclude Include="ForwardGeometryPass.h" />
+    <ClInclude Include="FrameStructure.h" />
+    <ClInclude Include="GeometrySubPass.h" />
+    <ClInclude Include="GfxConfiguration.h" />
+    <ClInclude Include="GraphicsManager.h" />
+    <ClInclude Include="IApplication.h" />
+    <ClInclude Include="IDispatchPass.h" />
+    <ClInclude Include="IDrawPass.h" />
+    <ClInclude Include="IDrawSubPass.h" />
+    <ClInclude Include="IGameLogic.h" />
+    <ClInclude Include="IGraphicsManager.h" />
+    <ClInclude Include="IPass.h" />
+    <ClInclude Include="IPipelineStateManager.h" />
+    <ClInclude Include="IRuntimeModule.h" />
+    <ClInclude Include="ISceneManager.h" />
+    <ClInclude Include="ISubPass.h" />
     <ClInclude Include="LearnOGLApp.h" />
     <ClInclude Include="LearnOGLBatch.h" />
     <ClInclude Include="LearnOGLCamera.h" />
@@ -173,6 +233,37 @@
     <ClInclude Include="LearnOGLTools.h" />
     <ClInclude Include="LearnOGLMathExt.h" />
     <ClInclude Include="LearnOGLTriangleBatch.h" />
+    <ClInclude Include="OGL_Application.h" />
+    <ClInclude Include="OGL_Camera.h" />
+    <ClInclude Include="OGL_Light.h" />
+    <ClInclude Include="OGL_Material.h" />
+    <ClInclude Include="OGL_Mesh.h" />
+    <ClInclude Include="OGL_SkyBox.h" />
+    <ClInclude Include="OGL_Texture.h" />
+    <ClInclude Include="OGL_Transform.h" />
+    <ClInclude Include="OpenGLGraphicsManager.h" />
+    <ClInclude Include="OpenGLGraphicsCommonBaseManager.h" />
+    <ClInclude Include="OpenGLPipelineStateCommonBaseManager.h" />
+    <ClInclude Include="OpenGLPipelineStateManager.h" />
+    <ClInclude Include="OverlayPass.h" />
+    <ClInclude Include="PipelineStateManager.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneBaseObject.h" />
+    <ClInclude Include="SceneCameraNode.h" />
+    <ClInclude Include="SceneGeometryNode.h" />
+    <ClInclude Include="SceneLightNode.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SceneNode.h" />
+    <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="SceneObjectCamera.h" />
+    <ClInclude Include="SceneObjectGeometry.h" />
+    <ClInclude Include="SceneObjectLight.h" />
+    <ClInclude Include="SceneObjectMesh.h" />
+    <ClInclude Include="SceneObjectSkyBox.h" />
+    <ClInclude Include="SceneObjectTexture.h" />
+    <ClInclude Include="ShadowMapPass.h" />
+    <ClInclude Include="SkyBoxSubPass.h" />
+    <ClInclude Include="TreeNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
