@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <unordered_map>
 
 #include "SceneNode.h"
@@ -26,6 +27,8 @@ public:
 	unordered_map<string, shared_ptr<SceneObjectCamera>> mCameras;
 
 	unordered_map<string, shared_ptr<SceneObjectGeometry>> mGeometries;
+
+	unordered_map<string, shared_ptr<SceneObjectMaterial>> mMaterials;
 
 	unordered_multimap<string, weak_ptr<SceneLightNode>> mLightNodes;
 

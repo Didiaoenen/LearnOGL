@@ -4,6 +4,7 @@
 #include <iostream>
 #include <functional>
 
+#include <glm/glm.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
@@ -12,6 +13,7 @@
 
 using namespace OGL;
 using namespace std;
+using namespace glm;
 
 bool SceneManager::Initialize()
 {
@@ -57,6 +59,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 		function<void(const aiScene* scene, aiNode* node)> _ProcessNode;
 		function<shared_ptr<SceneObjectGeometry>(const aiScene* scene, aiMesh* mesh)> _ProcessMesh;
+		function<vector<shared_ptr<SceneObjectTexture>>(const aiMaterial* material, aiTextureType type)> _ProcessTexture;
 
 		_ProcessMesh = [&](const aiScene* scene, aiMesh* mesh) -> shared_ptr<SceneObjectGeometry> 
 		{
@@ -122,12 +125,103 @@ bool SceneManager::LoadScene(const string& sceneName)
 			return geometry;
 		};
 
+		_ProcessTexture = [&](const aiMaterial* material, aiTextureType type) -> vector<shared_ptr<SceneObjectTexture>>
+		{
+			vector<shared_ptr<SceneObjectTexture>> textures;
+
+			for (GLuint i = 0; i < material->GetTextureCount(type); i++)
+			{
+				aiString str;
+				material->GetTexture(type, i, &str);
+				textures.push_back(make_shared<SceneObjectTexture>(str.C_Str()));
+			}
+
+			return textures;
+		};
+
 		_ProcessNode = [&](const aiScene* scene, aiNode* node) 
 		{
 			for (size_t i = 0; i < node->mNumMeshes; i++)
 			{
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 				scenePtr->mGeometries.emplace(mesh->mName.C_Str(), _ProcessMesh(scene, mesh));
+
+				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+				
+				auto materialPtr = make_shared<SceneObjectMaterial>();
+
+				aiString name;
+				if (AI_SUCCESS == aiGetMaterialString(material, AI_MATKEY_NAME, &name))
+				{
+					materialPtr->mName = name.C_Str();
+				}
+
+				vector<shared_ptr<SceneObjectTexture>> diffuseMaps = _ProcessTexture(material, aiTextureType_DIFFUSE);
+				vector<shared_ptr<SceneObjectTexture>> specularMaps = _ProcessTexture(material, aiTextureType_SPECULAR);
+				vector<shared_ptr<SceneObjectTexture>> ambientMaps = _ProcessTexture(material, aiTextureType_AMBIENT);
+				vector<shared_ptr<SceneObjectTexture>> emissiveMaps = _ProcessTexture(material, aiTextureType_EMISSIVE);
+				vector<shared_ptr<SceneObjectTexture>> normalMaps = _ProcessTexture(material, aiTextureType_NORMALS);
+			
+				if (diffuseMaps.size() > 0)
+				{
+					materialPtr->mDiffuse = diffuseMaps.at(0);
+				}
+				if (specularMaps.size() > 0)
+				{
+					materialPtr->mSpecular = specularMaps.at(0);
+				}
+				if (ambientMaps.size() > 0)
+				{
+					materialPtr->mAmbient = ambientMaps.at(0);
+				}
+				if (emissiveMaps.size() > 0)
+				{
+					materialPtr->mEmissive = emissiveMaps.at(0);
+				}
+				if (normalMaps.size() > 0)
+				{
+					materialPtr->mNormal = normalMaps.at(0);
+				}
+
+				aiColor4D diffuse, specular, ambient, emission;
+				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
+				{
+					materialPtr->mDiffuse = Color(vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+				}
+				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) 
+				{
+					materialPtr->mDiffuse = Color(vec4(specular.r, specular.g, specular.b, specular.a));
+				}
+				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
+				{
+					materialPtr->mDiffuse = Color(vec4(ambient.r, ambient.g, ambient.b, ambient.a));
+				}
+				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission))
+				{
+					materialPtr->mDiffuse = Color(vec4(emission.r, emission.g, emission.b, emission.a));
+				}
+
+				ai_real diffuse_intensity, specular_hardness, specular_intensity;
+				if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.diffuse.intensity", 0, 0, &diffuse_intensity))
+				{
+					materialPtr->mDiffuseIntensity = Parameter(diffuse_intensity);
+				}
+				if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.hardness", 0, 0, &specular_hardness))
+				{
+					materialPtr->mSpecularPower = Parameter(specular_hardness);
+				}
+				if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.intensity", 0, 0, &specular_intensity))
+				{
+					materialPtr->mSpecularIntensity = Parameter(specular_intensity);
+				}
+
+				for (size_t i = 0; i < material->mNumProperties; i++)
+				{
+					auto property = material->mProperties[i];
+					cout << property->mKey.C_Str() << " " << property->mType << endl;
+				}
+
+				scenePtr->mMaterials.emplace(mesh->mName.C_Str(), materialPtr);
 			}
 
 			for (size_t i = 0; i < node->mNumChildren; i++)
@@ -135,6 +229,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 				_ProcessNode(scene, node->mChildren[i]);
 			}
 		};
+
+		_ProcessNode(scene, scene->mRootNode);
 	}
 
     return true;

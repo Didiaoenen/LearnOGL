@@ -183,6 +183,9 @@
     <ClCompile Include="SceneObjectMesh.cpp">
       <Filter>源文件\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObjectMaterial.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -409,6 +412,12 @@
     </ClInclude>
     <ClInclude Include="SceneObjectMesh.h">
       <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectMaterial.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="ParameterValueMap.h">
+      <Filter>头文件\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

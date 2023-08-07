@@ -182,6 +182,7 @@
     <ClCompile Include="SceneObjectCamera.cpp" />
     <ClCompile Include="SceneObjectGeometry.cpp" />
     <ClCompile Include="SceneObjectLight.cpp" />
+    <ClCompile Include="SceneObjectMaterial.cpp" />
     <ClCompile Include="SceneObjectMesh.cpp" />
     <ClCompile Include="SceneObjectSkyBox.cpp" />
     <ClCompile Include="SceneObjectTexture.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="OpenGLPipelineStateCommonBaseManager.h" />
     <ClInclude Include="OpenGLPipelineStateManager.h" />
     <ClInclude Include="OverlayPass.h" />
+    <ClInclude Include="ParameterValueMap.h" />
     <ClInclude Include="PipelineStateManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneBaseObject.h" />
@@ -258,6 +260,7 @@
     <ClInclude Include="SceneObjectCamera.h" />
     <ClInclude Include="SceneObjectGeometry.h" />
     <ClInclude Include="SceneObjectLight.h" />
+    <ClInclude Include="SceneObjectMaterial.h" />
     <ClInclude Include="SceneObjectMesh.h" />
     <ClInclude Include="SceneObjectSkyBox.h" />
     <ClInclude Include="SceneObjectTexture.h" />

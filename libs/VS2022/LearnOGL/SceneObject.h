@@ -7,3 +7,4 @@
 #include "SceneObjectGeometry.h"
 #include "SceneObjectCamera.h"
 #include "SceneObjectLight.h"
+#include "SceneObjectMaterial.h"

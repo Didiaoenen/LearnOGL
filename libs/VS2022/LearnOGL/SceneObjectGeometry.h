@@ -16,6 +16,5 @@ class SceneObjectGeometry : public BaseSceneObject
 {
 public:
 	vector<shared_ptr<SceneObjectMesh>> mMeshs;
-
 };
 }
