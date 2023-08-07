@@ -17,11 +17,6 @@ public:
     {
     };
 
-    SceneObjectCamera(const aiCamera& camera)
-    {
-
-    }
-
 public:
 
     [[nodiscard]] float GetNearClipDistance() const { return mNearClipDistance; };

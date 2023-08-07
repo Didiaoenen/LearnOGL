@@ -3,10 +3,14 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
 #include "TreeNode.h"
 #include "SceneObject.h"
+
+using namespace std;
+using namespace glm;
 
 namespace OGL
 {
@@ -14,9 +18,18 @@ class BaseSceneNode : public TreeNode
 {
 public:
 
-	[[nodiscard]] std::shared_ptr<glm::mat4x4> GetCalculatedTransform() const
+	BaseSceneNode() 
 	{
-		std::shared_ptr<glm::mat4x4> result(new glm::mat4x4());
+	};
+	
+	explicit BaseSceneNode(const string& name) 
+	{
+		mName = name;
+	};
+
+	[[nodiscard]] shared_ptr<mat4x4> GetCalculatedTransform() const
+	{
+		std::shared_ptr<mat4x4> result(new mat4x4());
 		//for (auto it = mTransforms.rbegin(); it != mTransforms.rend(); it++)
 		//{
 		//	*result = *result * static_cast<glm::mat4x4>(**it);
@@ -36,7 +49,9 @@ public:
 		};
 	}
 protected:
-	glm::mat4x4 mRuntimeTransform;
+
+	string mName;
+	mat4x4 mRuntimeTransform;
 	//std::vector<std::shared_ptr<SceneObjectTransform>> mTransforms;
 
 };
@@ -45,16 +60,16 @@ template<typename T>
 class SceneNode : public BaseSceneNode
 {
 public:
+	using BaseSceneNode::BaseSceneNode;
+
 	SceneNode() = default;
 
-	void AddSceneObjectRef(const std::string& key) { mKeySceneObject = key; };
+	void AddSceneObjectRef(const string& key) { mKeySceneObject = key; };
 
-	const std::string& GetSceneObjectRef() { return mKeySceneObject; };
-
-
+	const string& GetSceneObjectRef() { return mKeySceneObject; };
 
 protected:
-	std::string mKeySceneObject;
+	string mKeySceneObject;
 
 };
 }

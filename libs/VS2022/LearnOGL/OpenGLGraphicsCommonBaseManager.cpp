@@ -265,6 +265,20 @@ void OpenGLGraphicsCommonBaseManager::EndFrame(Frame& frame)
 
 void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 {
+	uint32_t batchIndex = 0;
+
+	for (const auto& it : scene.mGeometryNodes)
+	{
+		const auto& geometryNode = it.second.lock();
+		const auto& geometry = scene.GetGeometry(geometryNode->GetSceneObjectRef());
+		const auto& mesh = geometry->mMeshs[0];
+		
+		uint32_t vao;
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+
+
+	}
 }
 
 void OpenGLGraphicsCommonBaseManager::InitializeSkyBox(const Scene& scene)

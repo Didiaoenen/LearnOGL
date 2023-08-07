@@ -9,7 +9,7 @@ namespace OGL
 class SceneObjectLight : public BaseSceneObject
 {
 public:
-	SceneObjectLight(const aiLight& light) 
+	SceneObjectLight() 
 	{
 
 	}

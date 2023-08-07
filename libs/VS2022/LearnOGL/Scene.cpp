@@ -14,6 +14,17 @@ shared_ptr<SceneObjectCamera> Scene::GetCamera(const string& key) const
     return i->second;
 }
 
+shared_ptr<SceneObjectGeometry> Scene::GetGeometry(const string& key) const
+{
+    auto i = mGeometries.find(key);
+    if (i == mGeometries.end())
+    {
+        return nullptr;
+    }
+
+    return i->second;
+}
+
 shared_ptr<SceneObjectLight> Scene::GetLight(const string& key) const
 {
     return nullptr;

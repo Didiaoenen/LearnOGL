@@ -14,6 +14,9 @@ namespace OGL
 {
 class SceneObjectGeometry : public BaseSceneObject
 {
+
+public:
+
 public:
 	vector<shared_ptr<SceneObjectMesh>> mMeshs;
 };

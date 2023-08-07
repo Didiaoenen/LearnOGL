@@ -47,14 +47,24 @@ bool SceneManager::LoadScene(const string& sceneName)
 		for (size_t i = 0; i < scene->mNumLights; i++)
 		{
 			auto light = scene->mLights[i];
-			scenePtr->mLights.emplace(light->mName.C_Str(), make_shared<SceneObjectLight>(*light));
+			auto keyName = light->mName.C_Str();
+			scenePtr->mLights.emplace(keyName, make_shared<SceneObjectLight>());
+
+			auto node = make_shared<SceneLightNode>(keyName);
+			node->AddSceneObjectRef(keyName);
+			scenePtr->mLightNodes.emplace(keyName, node);
 		}
 
 		//
 		for (size_t i = 0; i < scene->mNumCameras; i++)
 		{
 			auto camera = scene->mCameras[i];
-			scenePtr->mCameras.emplace(camera->mName.C_Str(), make_shared<SceneObjectCamera>(*camera));
+			auto keyName = camera->mName.C_Str();
+			scenePtr->mCameras.emplace(camera->mName.C_Str(), make_shared<SceneObjectCamera>());
+
+			auto node = make_shared<SceneCameraNode>(keyName);
+			node->AddSceneObjectRef(keyName);
+			scenePtr->mCameraNodes.emplace(keyName, node);
 		}
 
 		function<void(const aiScene* scene, aiNode* node)> _ProcessNode;
@@ -145,6 +155,11 @@ bool SceneManager::LoadScene(const string& sceneName)
 			{
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 				scenePtr->mGeometries.emplace(mesh->mName.C_Str(), _ProcessMesh(scene, mesh));
+
+				auto keyName = mesh->mName.C_Str();
+				auto nodePtr = make_shared<SceneGeometryNode>(keyName);
+				nodePtr->AddSceneObjectRef(keyName);
+				scenePtr->mGeometryNodes.emplace(keyName, nodePtr);
 
 				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 				
