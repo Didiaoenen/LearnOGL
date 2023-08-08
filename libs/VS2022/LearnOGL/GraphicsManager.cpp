@@ -411,35 +411,35 @@ void GraphicsManager::CreateFrameBuffers()
 
     for (int32_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
     {
-        Texture2D color_texture;
-        color_texture.width = mCanvasWidth;
-        color_texture.height = mCanvasHeight;
-        color_texture.mips = 1;
-        color_texture.samples = 1;
+        Texture2D colorTexture;
+        colorTexture.width = mCanvasWidth;
+        colorTexture.height = mCanvasHeight;
+        colorTexture.mips = 1;
+        colorTexture.samples = 1;
 
-        GenerateTexture(color_texture);
+        GenerateTexture(colorTexture);
 
-        mFrames[i].colorTextures.push_back(color_texture);
+        mFrames[i].colorTextures.push_back(colorTexture);
 
         if (i == 0) 
         {
             if (conf.msaaSamples > 1) 
             {
-                color_texture.samples = conf.msaaSamples;
-                GenerateTexture(color_texture);
-                mFrames[0].colorTextures.push_back(color_texture);
+                colorTexture.samples = conf.msaaSamples;
+                GenerateTexture(colorTexture);
+                mFrames[0].colorTextures.push_back(colorTexture);
                 mFrames[0].enableMSAA = true;
             }
 
-            Texture2D depth_buffer;
-            depth_buffer.width = mCanvasWidth;
-            depth_buffer.height = mCanvasHeight;
-            depth_buffer.mips = 1;
-            depth_buffer.samples = conf.msaaSamples;
+            Texture2D depthbuffer;
+            depthbuffer.width = mCanvasWidth;
+            depthbuffer.height = mCanvasHeight;
+            depthbuffer.mips = 1;
+            depthbuffer.samples = conf.msaaSamples;
 
-            GenerateTexture(depth_buffer);
+            GenerateTexture(depthbuffer);
 
-            mFrames[0].depthTexture = depth_buffer;
+            mFrames[0].depthTexture = depthbuffer;
         }
         else 
         {

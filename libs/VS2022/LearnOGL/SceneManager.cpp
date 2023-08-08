@@ -144,6 +144,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 			meshPtr->mVertices = vertices;
 			meshPtr->mIndices = indices;
 
+			meshPtr->mPrimitiveTypes = mesh->mPrimitiveTypes;
+
 			auto meshPtrs = vector<shared_ptr<SceneObjectMesh>>();
 			meshPtrs.push_back(meshPtr);
 

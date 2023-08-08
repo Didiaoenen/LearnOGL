@@ -9,6 +9,9 @@ namespace OGL
 {
 #define MAX_LIGHTS 100
 
+#define SHADER_ROOT "Shaders/OpenGL/"
+#define SHADER_SUFFIX ".glsl"
+
 enum LightType 
 { 
 	Omni = 0, 
@@ -159,6 +162,15 @@ enum class _VertAttrib
     TexCoord,
     Tangent,
     Bitangent,
+};
+
+enum  class PrimitiveType : uint16_t
+{
+    NONE,
+    POINT,
+    LINE,
+    TRIANGLE,
+    POLYGON,
 };
 
 struct Light 

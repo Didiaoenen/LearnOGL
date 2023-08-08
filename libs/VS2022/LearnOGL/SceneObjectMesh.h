@@ -22,6 +22,8 @@ public:
     bool hasTextureCoords{ false };
     bool hasTangentsAndBitangents{ false };
 
+    uint32_t mPrimitiveTypes{ 0 };
+
     vector<_Vertex> mVertices;
     vector<uint32_t> mIndices;
 };

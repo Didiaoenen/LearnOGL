@@ -435,6 +435,34 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 		}
 
 		glBindVertexArray(0);
+
+		PrimitiveType primitiveType;
+		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT) == (uint32_t)PrimitiveType::POINT)
+		{
+			primitiveType = PrimitiveType::POINT;
+		}
+		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE) == (uint32_t)PrimitiveType::LINE)
+		{
+			primitiveType = PrimitiveType::LINE;
+		}
+		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE) == (uint32_t)PrimitiveType::TRIANGLE)
+		{
+			primitiveType = PrimitiveType::TRIANGLE;
+		}
+		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON) == (uint32_t)PrimitiveType::POLYGON)
+		{
+			primitiveType = PrimitiveType::POLYGON;
+		}
+
+		dbc->batchIndex = batchIndex++;
+		dbc->vao = vao;
+		dbc->node = geometryNode;
+		dbc->type = (uint32_t)primitiveType;
+
+		for (size_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
+		{
+			mFrames[i].batchContexts.push_back(dbc);
+		}
 	}
 }
 
