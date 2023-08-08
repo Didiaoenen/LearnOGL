@@ -591,3 +591,5 @@ bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& para
 	
 	return false;
 }
+
+

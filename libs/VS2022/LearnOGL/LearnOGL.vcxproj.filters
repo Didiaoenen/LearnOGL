@@ -189,6 +189,9 @@
     <ClCompile Include="Image.cpp">
       <Filter>源文件\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="AssetLoader.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -423,6 +426,12 @@
       <Filter>头文件\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Image.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetLoader.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="IAssetLoader.h">
       <Filter>头文件\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

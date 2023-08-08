@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetLoader.cpp" />
     <ClCompile Include="BaseApplication.cpp" />
     <ClCompile Include="BaseDispatchPass.cpp" />
     <ClCompile Include="BaseDrawPass.cpp" />
@@ -191,6 +192,7 @@
     <ClCompile Include="SkyBoxSubPass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetLoader.h" />
     <ClInclude Include="BaseApplication.h" />
     <ClInclude Include="BaseDispatchPass.h" />
     <ClInclude Include="BaseDrawPass.h" />
@@ -205,6 +207,7 @@
     <ClInclude Include="GfxConfiguration.h" />
     <ClInclude Include="GraphicsManager.h" />
     <ClInclude Include="IApplication.h" />
+    <ClInclude Include="IAssetLoader.h" />
     <ClInclude Include="IDispatchPass.h" />
     <ClInclude Include="IDrawPass.h" />
     <ClInclude Include="IDrawSubPass.h" />
