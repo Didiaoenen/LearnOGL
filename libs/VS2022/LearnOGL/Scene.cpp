@@ -25,6 +25,17 @@ shared_ptr<SceneObjectGeometry> Scene::GetGeometry(const string& key) const
     return i->second;
 }
 
+shared_ptr<SceneObjectMaterial> Scene::GetMaterial(const string& key) const
+{
+    auto i = mMaterials.find(key);
+    if (i == mMaterials.end())
+    {
+        return mDefaultMaterial;
+    }
+
+    return i->second;
+}
+
 shared_ptr<SceneObjectLight> Scene::GetLight(const string& key) const
 {
     return nullptr;

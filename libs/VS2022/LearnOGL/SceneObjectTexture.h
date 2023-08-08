@@ -1,8 +1,11 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 #include "BaseSceneObject.h"
+
+#include "Image.h"
 
 using namespace std;
 
@@ -21,8 +24,18 @@ public:
     {
     }
 
+    bool LoadTexture();
+    shared_ptr<Image> GetTextureImage();
+
 public:
     string mName;
+    shared_ptr<Image> mImage;
+
+    bool mHDR;
+    bool mFlip;
+    bool mGammaCorrection;
+
+    bool mLoaded;
 };
 }
 

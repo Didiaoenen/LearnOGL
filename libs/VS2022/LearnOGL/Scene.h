@@ -19,6 +19,8 @@ public:
 
 	[[nodiscard]] shared_ptr<SceneObjectGeometry> GetGeometry(const string& key) const;
 
+	[[nodiscard]] shared_ptr<SceneObjectMaterial> GetMaterial(const string& key) const;
+
 	[[nodiscard]] shared_ptr<SceneCameraNode> GetFirstCameraNode() const;
 	
 public:
@@ -39,5 +41,8 @@ public:
 	unordered_multimap<string, weak_ptr<SceneGeometryNode>> mGeometryNodes;
 
 	shared_ptr<SceneObjectSkyBox> mSkyBox;
+
+private:
+	shared_ptr<SceneObjectMaterial> mDefaultMaterial = make_shared<SceneObjectMaterial>("default");
 };
 }

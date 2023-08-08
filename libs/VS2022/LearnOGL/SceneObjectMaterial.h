@@ -25,15 +25,11 @@ public:
 	{
 		mName = name;
 	}
+
 	explicit SceneObjectMaterial(const string& name)
 		: SceneObjectMaterial() 
 	{
 		mName = name;
-	}
-	explicit SceneObjectMaterial(string&& name) 
-		: SceneObjectMaterial() 
-	{
-		mName = move(name);
 	}
 
 public:

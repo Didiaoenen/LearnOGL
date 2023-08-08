@@ -103,6 +103,26 @@ void OGL::OpenGLGraphicsManager::EndPass(Frame& frame)
 
 void OpenGLGraphicsManager::GetOpenGLTextureFormat(const PixelFormat pixelFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type)
 {
+    switch (pixelFormat) 
+    {
+    case PixelFormat::R8:
+        format = GL_RED;
+        internalFormat = GL_R8;
+        type = GL_UNSIGNED_BYTE;
+        break;
+    case PixelFormat::RGB8:
+        format = GL_RGB;
+        internalFormat = GL_RGB8;
+        type = GL_UNSIGNED_BYTE;
+        break;
+    case PixelFormat::RGBA8:
+        format = GL_RGBA;
+        internalFormat = GL_RGBA8;
+        type = GL_UNSIGNED_BYTE;
+        break;
+    default:
+        break;
+    }
 }
 
 void OpenGLGraphicsManager::GetOpenGLTextureFormat(const CompressedFormat compressedFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type)

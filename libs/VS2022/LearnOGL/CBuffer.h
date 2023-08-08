@@ -3,6 +3,8 @@
 #include <glm/ext.hpp>
 #include <glad/glad.h>
 
+using namespace glm;
+
 namespace OGL
 {
 #define MAX_LIGHTS 100
@@ -19,6 +21,7 @@ enum class _VertAttrib
 {
 	Position,
 	Normal,
+    Color,
 	TexCoord,
 	Tangent,
 	Bitangent,
@@ -122,13 +125,40 @@ enum class PixelFormat : uint16_t
     D32
 };
 
+enum class ImageDataType : uint16_t
+{
+    UNKNOWN,
+    BYTE,
+    UNSIGNED_BYTE,
+};
+
+
+enum class ImageDataFormat : uint16_t
+{
+    UNKNOWN,
+    RED,
+    RGB,
+    RGBA
+};
+
 struct _Vertex
 {
 	glm::vec3 position;
 	glm::vec3 normal;
+    glm::vec4 color;
 	glm::vec2 texcoord;
 	glm::vec3 tangent;
 	glm::vec3 bitangent;
+};
+
+enum class _VertAttrib
+{
+    Position,
+    Normal,
+    Color,
+    TexCoord,
+    Tangent,
+    Bitangent,
 };
 
 struct Light 
@@ -159,6 +189,7 @@ struct TextureBase
 {
 	TextureHandler handler = 0;
 	TextureFormat format = 0;
+    PixelFormat pixelFormat;
 
 	uint32_t width = 0;
 	uint32_t height = 0;
@@ -228,8 +259,9 @@ struct FrameTextures
 struct MaterialTexture
 {
     Texture2D diffuseMap;
+    Texture2D specularMap;
+    Texture2D ambientMap;
+    Texture2D emissiveMap;
     Texture2D normalMap;
-    Texture2D metallicMap;
-    Texture2D roughnessMap;
 };
 }

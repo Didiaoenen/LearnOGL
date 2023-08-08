@@ -17,6 +17,11 @@ public:
     ~SceneObjectMesh() {}
 
 public:
+    bool hasNormal{ false };
+    bool hasVertexColors{ false };
+    bool hasTextureCoords{ false };
+    bool hasTangentsAndBitangents{ false };
+
     vector<_Vertex> mVertices;
     vector<uint32_t> mIndices;
 };

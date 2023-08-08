@@ -67,11 +67,9 @@ protected:
 	bool SetShaderParameter(const std::string& paramName, const uint32_t param);
 	bool SetShaderParameter(const std::string& paramName, const bool param);
 
-	//virtual void GetOpenGLTextureFormat(const Image& img, uint32_t& format, uint32_t& internal_format, uint32_t& type);
+	virtual void GetOpenGLTextureFormat(const PixelFormat pixelFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type) = 0;
 
-	virtual void GetOpenGLTextureFormat(const PixelFormat pixelFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type);
-
-	virtual void GetOpenGLTextureFormat(const CompressedFormat compressedFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type);
+	virtual void GetOpenGLTextureFormat(const CompressedFormat compressedFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type) = 0;
 
 private:
 	uint32_t mShadowMapFrameBuffer;

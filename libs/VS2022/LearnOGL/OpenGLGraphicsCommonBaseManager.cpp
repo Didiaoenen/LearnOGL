@@ -1,8 +1,11 @@
 #include "OpenGLGraphicsCommonBaseManager.h"
 
 #include <sstream>
+#include <functional>
 
 #include <glad/glad.h>
+
+#include "Image.h"
 
 using namespace OGL;
 using namespace std;
@@ -118,19 +121,24 @@ void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
 		glBindTexture(GL_TEXTURE_2D, dbc.material.diffuseMap.handler);
 
 		//
-		SetShaderParameter("normalMap", 1);
+		SetShaderParameter("specularMap", 1);
+		glActiveTexture(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, dbc.material.specularMap.handler);
+
+		//
+		SetShaderParameter("ambientMap", 2);
+		glActiveTexture(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, dbc.material.ambientMap.handler);
+
+		//
+		SetShaderParameter("emissiveMap", 3);
+		glActiveTexture(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, dbc.material.emissiveMap.handler);
+
+		//
+		SetShaderParameter("normalMap", 3);
 		glActiveTexture(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, dbc.material.normalMap.handler);
-
-		//
-		SetShaderParameter("metallicMap", 2);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.metallicMap.handler);
-
-		//
-		SetShaderParameter("roughnessMap", 3);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.roughnessMap.handler);
 
 		//
 		glBindVertexArray(dbc.vao);
@@ -271,13 +279,162 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 	{
 		const auto& geometryNode = it.second.lock();
 		const auto& geometry = scene.GetGeometry(geometryNode->GetSceneObjectRef());
+		const auto& material = scene.GetMaterial(geometryNode->GetMaterialRef(0));
 		const auto& mesh = geometry->mMeshs[0];
 		
-		uint32_t vao;
+		uint32_t vao, vbo, ebo;
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 
+		glGenBuffers(1, &vbo);
 
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, mesh->mVertices.size() * sizeof(_Vertex), &mesh->mVertices[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
+		glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
+
+		if (mesh->hasNormal)
+		{
+			glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
+			glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
+		}
+
+		if (mesh->hasVertexColors)
+		{
+			glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
+			glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
+		}
+
+		if (mesh->hasTextureCoords)
+		{
+			glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
+			glVertexAttribPointer((GLuint)_VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::texcoord));
+		}
+
+		if (mesh->hasTangentsAndBitangents)
+		{
+			glEnableVertexAttribArray((GLuint)_VertAttrib::Tangent);
+			glVertexAttribPointer((GLuint)_VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::tangent));
+		
+			glEnableVertexAttribArray((GLuint)_VertAttrib::Bitangent);
+			glVertexAttribPointer((GLuint)_VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::bitangent));
+		}
+
+		mBuffers.push_back(vbo);
+
+		glGenBuffers(1, &ebo);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndices.size() * sizeof(uint32_t), &mesh->mIndices[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
+		glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
+
+		mBuffers.push_back(ebo);
+
+		function<Texture2D(const string, const shared_ptr<Image>&)> uploadTexture;
+
+		uploadTexture = [this](const string& name, const shared_ptr<Image>& image)
+		{
+
+			GLuint id;
+
+			glGenTextures(1, &id);
+			glBindTexture(GL_TEXTURE_2D, id);
+					
+			uint32_t format, internalFormat, type;
+			GetOpenGLTextureFormat(image->pixelFormat, format, internalFormat, type);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image->width, image->height, 0, format, type, image->data);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			Texture2D texture;
+			texture.handler = static_cast<TextureHandler>(id);
+			texture.format = internalFormat;
+			texture.pixelFormat = image->pixelFormat;
+			texture.width = image->width;
+			texture.height = image->height;
+
+			return texture;
+		};
+
+		auto dbc = make_shared<OpenGLDrawBatchContext>();
+
+		/*
+		* 	Color mDiffuse;
+			Color mSpecular;
+			Color mAmbient;
+			Color mEmissive;
+			Normal mNormal;
+		*/
+		const auto& diffuse = material->mDiffuse;
+		if (diffuse.ValueMap)
+		{
+			const auto& keyName = diffuse.ValueMap->mName;
+			const auto& image = diffuse.ValueMap->GetTextureImage();
+			if (image) 
+			{
+				dbc->material.diffuseMap = uploadTexture(keyName, image);
+			}
+		}
+
+		//
+		const auto& specular = material->mSpecular;
+		if (specular.ValueMap) 
+		{
+			const auto& keyName = specular.ValueMap->mName;
+			const auto& image = specular.ValueMap->GetTextureImage();
+			if (image) 
+			{
+				dbc->material.specularMap = uploadTexture(keyName, image);
+			}
+		}
+
+		//
+		const auto& ambient = material->mAmbient;
+		if (ambient.ValueMap) 
+		{
+			const auto& keyName = ambient.ValueMap->mName;
+			const auto& image = ambient.ValueMap->GetTextureImage();
+			if (image) 
+			{
+				dbc->material.ambientMap = uploadTexture(keyName, image);
+			}
+		}
+
+		//
+		const auto& emissive = material->mEmissive;
+		if (emissive.ValueMap) 
+		{
+			const auto& keyName = emissive.ValueMap->mName;
+			const auto& image = emissive.ValueMap->GetTextureImage();
+			if (image) 
+			{
+				dbc->material.emissiveMap = uploadTexture(keyName, image);
+			}
+		}
+
+		//
+		const auto& normal = material->mNormal;
+		if (normal.ValueMap) 
+		{
+			const auto& keyName = normal.ValueMap->mName;
+			const auto& image = normal.ValueMap->GetTextureImage();
+			if (image) 
+			{
+				dbc->material.normalMap = uploadTexture(keyName, image);
+			}
+		}
+
+		glBindVertexArray(0);
 	}
 }
 
@@ -405,12 +562,4 @@ bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& para
 	glUniform1f(location, param);
 	
 	return false;
-}
-
-void OpenGLGraphicsCommonBaseManager::GetOpenGLTextureFormat(const PixelFormat pixelFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type)
-{
-}
-
-void OpenGLGraphicsCommonBaseManager::GetOpenGLTextureFormat(const CompressedFormat compressedFormat, uint32_t& format, uint32_t& internalFormat, uint32_t& type)
-{
 }

@@ -76,6 +76,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 			std::vector<_Vertex> vertices;
 			std::vector<uint32_t> indices;
 
+			auto meshPtr = make_shared<SceneObjectMesh>();
+
 			for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 			{
 				_Vertex vertex;
@@ -86,16 +88,16 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasNormals())
 				{
+					meshPtr->hasNormal = true;
+
 					vertex.normal.x = mesh->mNormals[i].x;
 					vertex.normal.y = mesh->mNormals[i].y;
 					vertex.normal.z = mesh->mNormals[i].z;
 				}
-				if (mesh->mTextureCoords[0])
-				{
-					glm::vec2 vec2;
 
-					vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
-					vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
+				if (mesh->HasTangentsAndBitangents())
+				{
+					meshPtr->hasTangentsAndBitangents = true;
 
 					vertex.tangent.x = mesh->mTangents[i].x;
 					vertex.tangent.y = mesh->mTangents[i].y;
@@ -104,6 +106,23 @@ bool SceneManager::LoadScene(const string& sceneName)
 					vertex.bitangent.x = mesh->mBitangents[i].x;
 					vertex.bitangent.y = mesh->mBitangents[i].y;
 					vertex.bitangent.z = mesh->mBitangents[i].z;
+				}
+
+				if (mesh->HasVertexColors(0))
+				{
+					meshPtr->hasVertexColors = true;
+
+					vertex.color.r = mesh->mColors[0]->r;
+					vertex.color.g = mesh->mColors[0]->g;
+					vertex.color.b = mesh->mColors[0]->b;
+				}
+
+				if (mesh->HasTextureCoords(0))
+				{
+					meshPtr->hasTextureCoords = true;
+
+					vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
+					vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
 				}
 				else
 				{
@@ -122,7 +141,6 @@ bool SceneManager::LoadScene(const string& sceneName)
 				}
 			}
 
-			auto meshPtr = make_shared<SceneObjectMesh>();
 			meshPtr->mVertices = vertices;
 			meshPtr->mIndices = indices;
 
@@ -235,6 +253,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 					auto property = material->mProperties[i];
 					cout << property->mKey.C_Str() << " " << property->mType << endl;
 				}
+
+				nodePtr->AddMaterialRef(materialPtr->mName);
 
 				scenePtr->mMaterials.emplace(mesh->mName.C_Str(), materialPtr);
 			}

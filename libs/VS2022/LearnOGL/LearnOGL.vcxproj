@@ -142,6 +142,7 @@
     <ClCompile Include="ForwardGeometryPass.cpp" />
     <ClCompile Include="GeometrySubPass.cpp" />
     <ClCompile Include="GraphicsManager.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="OGL_Application.cpp" />
     <ClCompile Include="OGL_Camera.cpp" />
     <ClCompile Include="OGL_Light.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="IDrawSubPass.h" />
     <ClInclude Include="IGameLogic.h" />
     <ClInclude Include="IGraphicsManager.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="IPass.h" />
     <ClInclude Include="IPipelineStateManager.h" />
     <ClInclude Include="IRuntimeModule.h" />
