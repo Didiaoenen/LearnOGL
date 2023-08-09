@@ -437,7 +437,7 @@ void GraphicsManager::CreateFrameBuffers()
             Texture2D depthbuffer;
             depthbuffer.width = mCanvasWidth;
             depthbuffer.height = mCanvasHeight;
-            depthbuffer.pixelFormat = PixelFormat::R8;
+            depthbuffer.pixelFormat = PixelFormat::DEPTH;
             depthbuffer.mips = 1;
             depthbuffer.samples = conf.msaaSamples;
 

@@ -38,6 +38,6 @@ public:
 	virtual void UnregisterPipelineState(PipelineState& pipelineState) = 0;
 	virtual void Clear() = 0;
 
-	[[nodiscard]] virtual const std::shared_ptr<PipelineState> GetPipelineState(std::string name) const = 0;
+	[[nodiscard]] virtual const shared_ptr<PipelineState> GetPipelineState(string name) const = 0;
 };
 }

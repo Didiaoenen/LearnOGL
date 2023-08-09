@@ -6,7 +6,7 @@ using namespace OGL;
 
 void GeometrySubPass::Draw(Frame& frame)
 {
-	const auto& pipelineState = mPipelineStateManager->GetPipelineState("");
+	const auto& pipelineState = mPipelineStateManager->GetPipelineState("BASIC");
 	if (pipelineState)
 	{
 		mGraphicsManager->SetPipelineState(pipelineState, frame);

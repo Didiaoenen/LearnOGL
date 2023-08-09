@@ -34,7 +34,7 @@ void PipelineStateManager::Finalize()
 
 void PipelineStateManager::RegisterPipelineState(PipelineState& pipelineState)
 {
-	mPipelineStates.emplace(pipelineState.pipelineName, &pipelineState);
+	mPipelineStates.emplace(pipelineState.pipelineName, make_shared<PipelineState>(pipelineState));
 }
 
 void PipelineStateManager::UnregisterPipelineState(PipelineState& pipelineState)

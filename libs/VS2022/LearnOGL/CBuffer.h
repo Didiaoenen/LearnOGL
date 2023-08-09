@@ -107,18 +107,7 @@ enum class PixelFormat : uint16_t
     RG8,
     RGB8,
     RGBA8,
-    R16,
-    RG16,
-    RGB16,
-    RGBA16,
-    R32,
-    RG32,
-    RGB32,
-    RGBA32,
-    R10G10B10A2,
-    R5G6B5,
-    D24R8,
-    D32
+    DEPTH,
 };
 
 enum class ImageDataType : uint16_t
