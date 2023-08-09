@@ -43,5 +43,5 @@ shared_ptr<SceneObjectLight> Scene::GetLight(const string& key) const
 
 shared_ptr<SceneCameraNode> Scene::GetFirstCameraNode() const
 {
-    return nullptr;
+    return mCameraNodes.empty() ? nullptr : mCameraNodes.cbegin()->second;
 }

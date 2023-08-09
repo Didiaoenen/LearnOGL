@@ -14,7 +14,7 @@ struct GfxConfiguration
 	uint32_t screenWidth{ 960 };
 	uint32_t screenHeight{ 720 };
 
-	uint32_t msaaSamples{ 4 };
+	uint32_t msaaSamples{ 0 };
 
 	static const uint32_t kMaxInFlightFrameCount{2};
 	static const uint32_t kMaxShadowMapCount{8};

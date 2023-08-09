@@ -1,28 +1,34 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include "BaseSceneNode.h"
+
+using namespace std;
 
 namespace OGL
 {
 class SceneCameraNode : public SceneNode<SceneCameraNode>
 {
 public:
-    void SetTarget(const glm::vec3& target) { mTarget = target; };
-    const glm::vec3& GetTarget() { return mTarget; };
+    using SceneNode::SceneNode;
 
-    glm::mat3x3 GetLocalAxis() override 
+    void SetTarget(const vec3& target) { mTarget = target; };
+    const vec3& GetTarget() { return mTarget; };
+
+    mat3x3 GetLocalAxis() override 
     {
-        glm::mat3x3 result;
-        auto pTransform = GetCalculatedTransform();
-        glm::vec3 target = GetTarget();
-        auto camera_position = glm::vec3(0.0f);
-        glm::translate(*pTransform, camera_position);
-        glm::vec3 camera_z_axis({ 0.0f, 0.0f, 1.0f });
-        glm::vec3 camera_y_axis = target - camera_position;
-        glm::normalize(camera_y_axis);
-        glm::vec3 camera_x_axis;
-        camera_x_axis = glm::cross(camera_y_axis, camera_z_axis);
-        camera_z_axis = glm::cross(camera_x_axis, camera_y_axis);
+        mat3x3 result;
+        auto transform = GetCalculatedTransform();
+        vec3 target = GetTarget();
+        auto cameraPosition = vec3(0.0f);
+        translate(*transform, cameraPosition);
+        vec3 camera_z_axis({ 0.0f, 0.0f, 1.0f });
+        vec3 camera_y_axis = target - cameraPosition;
+        normalize(camera_y_axis);
+        vec3 camera_x_axis;
+        camera_x_axis = cross(camera_y_axis, camera_z_axis);
+        camera_z_axis = cross(camera_x_axis, camera_y_axis);
         result[0] = camera_x_axis;
         result[1] = camera_y_axis;
         result[2] = camera_z_axis;
@@ -31,6 +37,6 @@ public:
     }
 
 protected:
-    glm::vec3 mTarget{ 0.0f, 0.0f, 0.0f };
+    vec3 mTarget{ 0.0f, 0.0f, -1.0f };
 };
 }

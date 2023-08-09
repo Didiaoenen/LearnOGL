@@ -1,8 +1,12 @@
 #pragma once
 
 #include <stack>
+#include <string>
+#include <memory>
 
 #include "ISceneManager.h"
+
+using namespace std;
 
 namespace OGL
 {
@@ -17,15 +21,17 @@ public:
 
 	void Tick() override;
 
-	bool LoadScene(const std::string& sceneName) override;
+	bool LoadScene(const string& sceneName) override;
 
 	uint64_t GetSceneRevision() const override { return mSceneRevision; }
 
-	const std::shared_ptr<Scene> GetSceneForRendering() const override;
+	const shared_ptr<Scene> GetSceneForRendering() const override;
 
-	std::weak_ptr<BaseSceneNode> GetRootNode() const override;
-	std::weak_ptr<SceneGeometryNode> GetSceneGeometryNode(const std::string& name) const override;
-	std::weak_ptr<SceneObjectGeometry> GetSceneGeometryObject(const std::string& key) const override;
+	void ResetScene() override { mSceneRevision++; };
+
+	weak_ptr<BaseSceneNode> GetRootNode() const override;
+	weak_ptr<SceneGeometryNode> GetSceneGeometryNode(const string& name) const override;
+	weak_ptr<SceneObjectGeometry> GetSceneGeometryObject(const string& key) const override;
 
 protected:
 	stack<shared_ptr<Scene>> mScenes;

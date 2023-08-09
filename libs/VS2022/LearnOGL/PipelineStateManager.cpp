@@ -3,6 +3,9 @@
 using namespace OGL;
 using namespace std;
 
+#define VS_BASIC_SOURCE_FILE "basic.vert"
+#define PS_BASIC_SOURCE_FILE "basic.frag"
+
 PipelineStateManager::~PipelineStateManager()
 {
 }
@@ -10,9 +13,9 @@ PipelineStateManager::~PipelineStateManager()
 bool PipelineStateManager::Initialize()
 {
 	PipelineState pipelineState;
-	pipelineState.pipelineName = "";
-	pipelineState.vertexShaderName = "";
-	pipelineState.fragmentShaderName = "";
+	pipelineState.pipelineName = "BASIC";
+	pipelineState.vertexShaderName = VS_BASIC_SOURCE_FILE;
+	pipelineState.fragmentShaderName = PS_BASIC_SOURCE_FILE;
 	pipelineState.bWriteDepth = true;
 	pipelineState.depthTest = DepthTest::LEQUAL;
 	pipelineState.stencilTest = StencilTest::NONE;

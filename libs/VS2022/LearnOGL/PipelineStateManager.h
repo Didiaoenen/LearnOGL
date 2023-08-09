@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include "IPipelineStateManager.h"
 
@@ -30,6 +31,6 @@ protected:
 	virtual void DestroyPipelineState(PipelineState& pipelineState) {}
 
 protected:
-	map<std::string, shared_ptr<PipelineState>> mPipelineStates;
+	map<string, shared_ptr<PipelineState>> mPipelineStates;
 };
 }

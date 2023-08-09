@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 
 #include "Image.h"
+#include "CBuffer.h"
 
 using namespace OGL;
 using namespace std;
@@ -151,6 +152,29 @@ void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
 
 void OpenGLGraphicsCommonBaseManager::GenerateTexture(Texture2D& texture)
 {
+	GLenum format, internalFormat, type;
+	GetOpenGLTextureFormat(texture.pixelFormat, format, internalFormat, type);
+
+	uint32_t id;
+	glGenTextures(1, &id);
+	if (texture.samples > 1) 
+	{
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, id);
+		glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, texture.samples, internalFormat, texture.width, texture.height, GL_TRUE);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	}
+	else 
+	{
+		glBindTexture(GL_TEXTURE_2D, id);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	texture.handler = static_cast<TextureHandler>(id);
+	texture.format = static_cast<TextureHandler>(internalFormat);
 }
 
 void OpenGLGraphicsCommonBaseManager::GenerateCubemapArray(TextureCubeArray& textureArray)
@@ -277,7 +301,7 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 
 	for (const auto& it : scene.mGeometryNodes)
 	{
-		const auto& geometryNode = it.second.lock();
+		const auto& geometryNode = it.second;
 		const auto& geometry = scene.GetGeometry(geometryNode->GetSceneObjectRef());
 		const auto& material = scene.GetMaterial(geometryNode->GetMaterialRef(0));
 		const auto& mesh = geometry->mMeshs[0];
@@ -436,7 +460,7 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 
 		glBindVertexArray(0);
 
-		PrimitiveType primitiveType;
+		PrimitiveType primitiveType = PrimitiveType::NONE;
 		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT) == (uint32_t)PrimitiveType::POINT)
 		{
 			primitiveType = PrimitiveType::POINT;
@@ -472,10 +496,34 @@ void OpenGLGraphicsCommonBaseManager::InitializeSkyBox(const Scene& scene)
 
 void OpenGLGraphicsCommonBaseManager::SetPerFrameConstants(const DrawFrameContext& context)
 {
+	if (!mUBODrawFrameConstant[mFrameIndex]) 
+	{
+		glGenBuffers(1, &mUBODrawFrameConstant[mFrameIndex]);
+	}
+
+	glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawFrameConstant[mFrameIndex]);
+
+	auto constants = static_cast<PerFrameConstants>(context);
+
+	glBufferData(GL_UNIFORM_BUFFER, kSizePerFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void OpenGLGraphicsCommonBaseManager::SetPerBatchConstants(const DrawBatchContext& context)
 {
+	if (!mUBODrawBatchConstant[mFrameIndex]) 
+	{
+		glGenBuffers(1, &mUBODrawBatchConstant[mFrameIndex]);
+	}
+
+	glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawBatchConstant[mFrameIndex]);
+
+	const auto& constant = static_cast<const PerBatchConstants&>(context);
+
+	glBufferData(GL_UNIFORM_BUFFER, kSizePerBatchConstantBuffer, &constant, GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void OpenGLGraphicsCommonBaseManager::SetLightInfo(const LightInfo& lightInfo)

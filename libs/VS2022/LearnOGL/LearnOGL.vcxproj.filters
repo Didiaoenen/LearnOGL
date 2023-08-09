@@ -434,5 +434,16 @@
     <ClInclude Include="IAssetLoader.h">
       <Filter>头文件\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Asset\Shaders\basic.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="Asset\Shaders\basic.frag">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

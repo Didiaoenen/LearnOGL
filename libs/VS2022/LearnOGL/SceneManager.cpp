@@ -10,6 +10,7 @@
 #include <assimp/Importer.hpp>
 
 #include "CBuffer.h"
+#include "AssetLoader.h"
 
 using namespace OGL;
 using namespace std;
@@ -32,8 +33,10 @@ bool SceneManager::LoadScene(const string& sceneName)
 {
 	if (sceneName.length() > 0)
 	{
+		AssetLoader assetLoader;
+		auto buffer = assetLoader.SyncOpenAndReadBinary(sceneName.c_str());
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(sceneName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFileFromMemory(buffer.GetData(), buffer.GetDataSize(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
 			cout << "Error::Assimp: " << importer.GetErrorString() << std::endl;
@@ -60,7 +63,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 		{
 			auto camera = scene->mCameras[i];
 			auto keyName = camera->mName.C_Str();
-			scenePtr->mCameras.emplace(camera->mName.C_Str(), make_shared<SceneObjectCamera>());
+			scenePtr->mCameras.emplace(camera->mName.C_Str(), make_shared<SceneObjectPerspectiveCamera>());
 
 			auto node = make_shared<SceneCameraNode>(keyName);
 			node->AddSceneObjectRef(keyName);
@@ -225,15 +228,15 @@ bool SceneManager::LoadScene(const string& sceneName)
 				}
 				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) 
 				{
-					materialPtr->mDiffuse = Color(vec4(specular.r, specular.g, specular.b, specular.a));
+					materialPtr->mSpecular = Color(vec4(specular.r, specular.g, specular.b, specular.a));
 				}
 				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
 				{
-					materialPtr->mDiffuse = Color(vec4(ambient.r, ambient.g, ambient.b, ambient.a));
+					materialPtr->mAmbient = Color(vec4(ambient.r, ambient.g, ambient.b, ambient.a));
 				}
 				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission))
 				{
-					materialPtr->mDiffuse = Color(vec4(emission.r, emission.g, emission.b, emission.a));
+					materialPtr->mEmissive = Color(vec4(emission.r, emission.g, emission.b, emission.a));
 				}
 
 				ai_real diffuse_intensity, specular_hardness, specular_intensity;
@@ -270,10 +273,12 @@ bool SceneManager::LoadScene(const string& sceneName)
 		_ProcessNode(scene, scene->mRootNode);
 	}
 
+	mSceneRevision++;
+
     return true;
 }
 
-const std::shared_ptr<Scene> SceneManager::GetSceneForRendering() const
+const shared_ptr<Scene> SceneManager::GetSceneForRendering() const
 {
     return mScenes.top();
 }
@@ -283,12 +288,12 @@ std::weak_ptr<BaseSceneNode> SceneManager::GetRootNode() const
     return mScenes.top()->mSceneGraph;
 }
 
-std::weak_ptr<SceneGeometryNode> SceneManager::GetSceneGeometryNode(const std::string& name) const
+weak_ptr<SceneGeometryNode> SceneManager::GetSceneGeometryNode(const string& name) const
 {
-    return std::weak_ptr<SceneGeometryNode>();
+    return weak_ptr<SceneGeometryNode>();
 }
 
-std::weak_ptr<SceneObjectGeometry> SceneManager::GetSceneGeometryObject(const std::string& key) const
+weak_ptr<SceneObjectGeometry> SceneManager::GetSceneGeometryObject(const string& key) const
 {
-    return std::weak_ptr<SceneObjectGeometry>();
+    return weak_ptr<SceneObjectGeometry>();
 }

@@ -10,6 +10,8 @@
 using namespace OGL;
 using namespace std;
 
+#define SHADER_ROOT "resources/shaders/"
+
 static void OutputShaderErrorMessage(unsigned int shaderId, const char* shaderFilename) 
 {
     int logSize;
@@ -99,7 +101,7 @@ static bool LoadShaderProgram(const vector<pair<GLenum, string>>& source, GLuint
         if (!it->second.empty())
         {
             GLuint shader;
-            status = LoadShaderFromFile((SHADER_ROOT + it->second + SHADER_SUFFIX).c_str(), it->first, shader);
+            status = LoadShaderFromFile((SHADER_ROOT + it->second).c_str(), it->first, shader);
             if (!status) 
             {
                 return false;

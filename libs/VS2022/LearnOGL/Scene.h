@@ -34,11 +34,11 @@ public:
 
 	unordered_map<string, shared_ptr<SceneObjectMaterial>> mMaterials;
 
-	unordered_multimap<string, weak_ptr<SceneLightNode>> mLightNodes;
+	unordered_multimap<string, shared_ptr<SceneLightNode>> mLightNodes;
 
-	unordered_multimap<string, weak_ptr<SceneCameraNode>> mCameraNodes;
+	unordered_multimap<string, shared_ptr<SceneCameraNode>> mCameraNodes;
 
-	unordered_multimap<string, weak_ptr<SceneGeometryNode>> mGeometryNodes;
+	unordered_multimap<string, shared_ptr<SceneGeometryNode>> mGeometryNodes;
 
 	shared_ptr<SceneObjectSkyBox> mSkyBox;
 

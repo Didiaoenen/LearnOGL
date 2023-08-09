@@ -12,6 +12,8 @@ namespace OGL
 class SceneGeometryNode : public SceneNode<SceneObjectGeometry>
 {
 public:
+    using SceneNode::SceneNode;
+
     void AddMaterialRef(const string& key) { mMaterials.push_back(key); };
 
     string GetMaterialRef(const size_t index) 
@@ -21,7 +23,7 @@ public:
             return mMaterials[index];
         }
 
-        return std::string("default");
+        return string("default");
     }
 
 public:

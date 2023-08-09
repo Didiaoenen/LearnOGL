@@ -98,13 +98,13 @@ protected:
 	map<string, MaterialTexture> mMaterialMap;
 
 	vector<TextureBase> mTextures;
-	uint32_t mCanvasWidth{ 0 };
-	uint32_t mCanvasHeight{ 0 };
+	uint32_t mCanvasWidth{ 960 };
+	uint32_t mCanvasHeight{ 720 };
 
 private:
 	void CreateFrameBuffers();
 
-private:
+protected:
 	bool mInitialize = false;
 };
 }

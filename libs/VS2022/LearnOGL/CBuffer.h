@@ -7,10 +7,13 @@ using namespace glm;
 
 namespace OGL
 {
-#define MAX_LIGHTS 100
+#ifdef ALIGN
+#undef ALIGN
+#endif
 
-#define SHADER_ROOT "Shaders/OpenGL/"
-#define SHADER_SUFFIX ".glsl"
+#define ALIGN(x, a) (((x) + ((a)-1)) & ~((a)-1))
+
+#define MAX_LIGHTS 100
 
 enum LightType 
 { 
@@ -18,16 +21,6 @@ enum LightType
 	Spot = 1, 
 	Infinity = 2, 
 	Area = 3 
-};
-
-enum class _VertAttrib
-{
-	Position,
-	Normal,
-    Color,
-	TexCoord,
-	Tangent,
-	Bitangent,
 };
 
 enum class DepthTest
@@ -229,7 +222,7 @@ struct Texture2D : virtual TextureBase
 
 };
 
-struct 	Texture2DArray : Texture2D, TextureArrayBase
+struct Texture2DArray : Texture2D, TextureArrayBase
 {
 
 };
@@ -241,9 +234,9 @@ struct LightInfo
 
 struct PerFrameConstants
 {
-	glm::vec4 camPos;
-	glm::mat4 viewMatrix;
-	glm::mat4 projectionMatrix;
+	vec4 camPos;
+	mat4 viewMatrix;
+	mat4 projectionMatrix;
 	int32_t numLights;
 	int32_t clipSpaceType;
 };
@@ -276,4 +269,8 @@ struct MaterialTexture
     Texture2D emissiveMap;
     Texture2D normalMap;
 };
+
+const size_t kSizePerFrameConstantBuffer = ALIGN(sizeof(PerFrameConstants), 256);
+const size_t kSizePerBatchConstantBuffer = ALIGN(sizeof(PerBatchConstants), 256);
+
 }

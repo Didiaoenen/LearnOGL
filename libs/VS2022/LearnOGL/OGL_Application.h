@@ -11,6 +11,7 @@
 #include "OpenGLGraphicsManager.h"
 #include "OpenGLPipelineStateManager.h"
 #include "SceneManager.h"
+#include "AssetLoader.h"
 
 #include "LearnOGLDefine.h"
 
@@ -19,7 +20,7 @@ namespace OGL
 class OGL_Application : public BaseApplication
 {
 public:
-	OGL_Application() = default;
+	OGL_Application();
 	virtual ~OGL_Application() override = default;
 
 	virtual bool Initialize();
@@ -68,6 +69,7 @@ private:
 	GraphicsManager* mGraphicManager;
 	PipelineStateManager* mPipelineStateManager;
 	SceneManager* mSceneManager;
+	AssetLoader* mAssetLoader;
 };
 
 #define DECLARE_MAIN(App)			\

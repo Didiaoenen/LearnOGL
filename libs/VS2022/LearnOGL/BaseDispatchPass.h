@@ -8,8 +8,8 @@ namespace OGL
 class BaseDispatchPass : public IDispatchPass
 {
 public:
-	BaseDispatchPass(IGraphicsManager* pGfxMgr, IPipelineStateManager* pPipeMgr)
-		: mGraphicsManager(pGfxMgr), mPipelineStateManager(pPipeMgr)
+	BaseDispatchPass(IGraphicsManager* gfxManager, IPipelineStateManager* pipeManager)
+		: mGraphicsManager(gfxManager), mPipelineStateManager(pipeManager)
 	{}
 		
 	void BeginPass(Frame& frame) override;

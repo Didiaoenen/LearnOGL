@@ -5,48 +5,14 @@ using namespace std;
 
 OGL_Application* OGL_Application::mApp = nullptr;
 
-bool OGL_Application::Initialize()
+OGL_Application::OGL_Application()
 {
 	info.title = "Default Window";
-	info.majorVersion = 4;
+	info.majorVersion = 3;
 	info.minorVersion = 3;
 	info.windowWidth = 960;
 	info.windowHeight = 720;
 
-	mSceneManager = new SceneManager();
-	
-	//
-	mGraphicManager = new OpenGLGraphicsManager();
-	mPipelineStateManager = new OpenGLPipelineStateManager();
-	RegisterRuntimeModule(mGraphicManager);
-	RegisterRuntimeModule(mPipelineStateManager);
-
-    return true;
-}
-
-void OGL_Application::Finalize()
-{
-}
-
-void OGL_Application::Setup()
-{
-	mApp = this;
-
-	//
-	mSceneManager->LoadScene("../../../resources/objects/ttest.blend");
-}
-
-void OGL_Application::Update(double dt)
-{
-	//BaseApplication::Tick();
-}
-
-void OGL_Application::Input()
-{
-}
-
-void OGL_Application::Run()
-{
 	if (!WindowHint())
 	{
 		cout << "Faild to create GLFW window" << endl;
@@ -59,6 +25,47 @@ void OGL_Application::Run()
 		return;
 	}
 
+	mGraphicManager = new OpenGLGraphicsManager();
+	mPipelineStateManager = new OpenGLPipelineStateManager();
+
+	mSceneManager = new SceneManager();
+	mAssetLoader = new AssetLoader();
+
+	RegisterRuntimeModule(mGraphicManager);
+	RegisterRuntimeModule(mPipelineStateManager);
+	RegisterRuntimeModule(mSceneManager);
+	RegisterRuntimeModule(mAssetLoader);
+}
+
+bool OGL_Application::Initialize()
+{
+	BaseApplication::Initialize();
+    return true;
+}
+
+void OGL_Application::Finalize()
+{
+}
+
+void OGL_Application::Setup()
+{
+	mApp = this;
+
+	//
+	mSceneManager->LoadScene("resources/objects/ttest.blend");
+}
+
+void OGL_Application::Update(double dt)
+{
+	BaseApplication::Tick();
+}
+
+void OGL_Application::Input()
+{
+}
+
+void OGL_Application::Run()
+{
 	Setup();
 
 	bool running = true;

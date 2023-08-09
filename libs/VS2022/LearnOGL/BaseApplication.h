@@ -32,7 +32,7 @@ public:
 	void RegisterRuntimeModule(IRuntimeModule* rmodule);
 
 	template<typename T>
-	T* GetModule(const type_info& type);
+	T* GetModule();
 
 protected:
 	bool mQuit{ false };
@@ -45,13 +45,14 @@ private:
 };
 
 template<typename T>
-inline T* BaseApplication::GetModule(const type_info& type)
+inline T* BaseApplication::GetModule()
 {
-	for (const auto& rmodule : mRuntimeModules)
+	for (auto rmodule : mRuntimeModules)
 	{
-		if (typeid(rmodule) == type)
+		auto ptr = dynamic_cast<T*>(rmodule);
+		if (ptr)
 		{
-			return static_cast<T*>(rmodule);
+			return ptr;
 		}
 	}
 

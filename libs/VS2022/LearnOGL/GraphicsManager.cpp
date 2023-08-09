@@ -12,6 +12,7 @@
 
 using namespace OGL;
 using namespace std;
+using namespace glm;
 
 GraphicsManager::GraphicsManager() 
 {
@@ -23,25 +24,25 @@ bool GraphicsManager::Initialize()
     const GfxConfiguration& conf = mApp->GetConfiguration();
 
     auto app = static_cast<BaseApplication*>(mApp);
-    auto pPipelineStateMgr = app->GetModule<IPipelineStateManager>(typeid(IPipelineStateManager));
+    auto pipelineStateManager = app->GetModule<IPipelineStateManager>();
 
-    if (pPipelineStateMgr)
+    if (pipelineStateManager)
     {
-        mInitPasses.push_back(make_shared<BRDFIntegrator>(this, pPipelineStateMgr));
-        mDrawPasses.push_back(make_shared<ShadowMapPass>(this, pPipelineStateMgr));
+        mInitPasses.push_back(make_shared<BRDFIntegrator>(this, pipelineStateManager));
+        mDrawPasses.push_back(make_shared<ShadowMapPass>(this, pipelineStateManager));
 
-        auto forward_pass = make_shared<ForwardGeometryPass>(this, pPipelineStateMgr);
+        auto forward_pass = make_shared<ForwardGeometryPass>(this, pipelineStateManager);
         forward_pass->EnableRenderToTexture();
 
         mDrawPasses.push_back(forward_pass);
-        mDrawPasses.push_back(make_shared<OverlayPass>(this, pPipelineStateMgr));
+        mDrawPasses.push_back(make_shared<OverlayPass>(this, pipelineStateManager));
     }
 
     InitConstants();
 
     mInitialize = true;
 
-    return true;
+    return false;
 }
 
 void GraphicsManager::Finalize()
@@ -52,18 +53,18 @@ void GraphicsManager::Finalize()
 void GraphicsManager::Tick()
 {
     auto app = static_cast<BaseApplication*>(mApp);
-    auto pSceneManager = app->GetModule<SceneManager>(typeid(SceneManager));
+    auto sceneManager = app->GetModule<SceneManager>();
 
-    if (pSceneManager) 
+    if (sceneManager)
     {
-        auto rev = pSceneManager->GetSceneRevision();
+        auto rev = sceneManager->GetSceneRevision();
         if (!rev)
             return;
 
         if (mSceneRevision < rev) 
         {
             EndScene();
-            const auto scene = pSceneManager->GetSceneForRendering();
+            const auto scene = sceneManager->GetSceneForRendering();
             assert(scene);
             BeginScene(*scene);
             mSceneRevision = rev;
@@ -170,18 +171,18 @@ void GraphicsManager::EndScene()
 void GraphicsManager::CalculateCameraMatrix()
 {
     auto app = static_cast<BaseApplication*>(mApp);
-    auto pSceneManager = app->GetModule<SceneManager>(typeid(SceneManager));
+    auto sceneManager = app->GetModule<SceneManager>();
 
-    if (pSceneManager) 
+    if (sceneManager)
     {
-        auto& scene = pSceneManager->GetSceneForRendering();
-        auto pCameraNode = scene->GetFirstCameraNode();
+        auto& scene = sceneManager->GetSceneForRendering();
+        auto cameraNode = scene->GetFirstCameraNode();
         DrawFrameContext& frameContext = mFrames[mFrameIndex].frameContext;
-        if (pCameraNode) 
+        if (cameraNode)
         {
-            auto transform = *pCameraNode->GetCalculatedTransform();
+            auto transform = *cameraNode->GetCalculatedTransform();
             glm::vec3 position = glm::vec3({ transform[3][0], transform[3][1], transform[3][2] });
-            glm::vec3 lookAt = pCameraNode->GetTarget();
+            glm::vec3 lookAt = cameraNode->GetTarget();
             glm::vec3 up = { 0.0f, 0.0f, 1.0f };
             frameContext.viewMatrix = glm::lookAt(position, lookAt, up);
             frameContext.camPos = { position[0], position[1], position[2], 0.0f };
@@ -198,12 +199,12 @@ void GraphicsManager::CalculateCameraMatrix()
         float nearClipDistance = 10.0f;
         float farClipDistance = 100.0f;
 
-        if (pCameraNode)
+        if (cameraNode)
         {
-            auto pCamera = scene->GetCamera(pCameraNode->GetSceneObjectRef());
-            fieldOfView = dynamic_pointer_cast<SceneObjectPerspectiveCamera>(pCamera)->GetFov();
-            nearClipDistance = pCamera->GetNearClipDistance();
-            farClipDistance = pCamera->GetFarClipDistance();
+            auto camera = scene->GetCamera(cameraNode->GetSceneObjectRef());
+            fieldOfView = dynamic_pointer_cast<SceneObjectPerspectiveCamera>(camera)->GetFov();
+            nearClipDistance = camera->GetNearClipDistance();
+            farClipDistance = camera->GetFarClipDistance();
         }
 
         float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
@@ -218,7 +219,7 @@ void GraphicsManager::CalculateLights()
     auto& lightInfo = mFrames[mFrameIndex].lightInfo;
 
     auto app = static_cast<BaseApplication*>(mApp);
-    auto pSceneManager = app->GetModule<SceneManager>(typeid(SceneManager));
+    auto pSceneManager = app->GetModule<SceneManager>();
 
     const GfxConfiguration& conf = mApp->GetConfiguration();
 
@@ -231,16 +232,16 @@ void GraphicsManager::CalculateLights()
         for (const auto& lightNode : scene->mLightNodes)
         {
             Light& light = lightInfo.lights[frameContext.numLights];
-            auto pLightNode = lightNode.second.lock();
+            auto pLightNode = lightNode.second;
             if (!pLightNode) 
                 continue;
             
             auto transPtr = pLightNode->GetCalculatedTransform();
             light.lightPosition = { 0.0f, 0.0f, 0.0f, 1.0f };
             light.lightDirection = { 0.0f, 0.0f, -1.0f, 0.0f };
-            glm::translate(*transPtr, glm::vec3(light.lightPosition));
-            glm::translate(*transPtr, glm::vec3(light.lightDirection));
-            glm::normalize(light.lightDirection);
+            translate(*transPtr, vec3(light.lightPosition));
+            translate(*transPtr, vec3(light.lightDirection));
+            normalize(light.lightDirection);
 
             auto pLight = scene->GetLight(pLightNode->GetSceneObjectRef());
             if (pLight) 
@@ -389,7 +390,8 @@ void GraphicsManager::CreateFrameBuffers()
     {
         for (int32_t j = 0; j < mFrames[i].colorTextures.size(); j++) 
         {
-            if (j == 0) {
+            if (j == 0) 
+            {
                 ReleaseTexture(mFrames[i].colorTextures[0]);
             }
             else 
@@ -414,8 +416,9 @@ void GraphicsManager::CreateFrameBuffers()
         Texture2D colorTexture;
         colorTexture.width = mCanvasWidth;
         colorTexture.height = mCanvasHeight;
+        colorTexture.pixelFormat = PixelFormat::RGBA8;
         colorTexture.mips = 1;
-        colorTexture.samples = 1;
+        colorTexture.samples = 0;
 
         GenerateTexture(colorTexture);
 
@@ -428,12 +431,13 @@ void GraphicsManager::CreateFrameBuffers()
                 colorTexture.samples = conf.msaaSamples;
                 GenerateTexture(colorTexture);
                 mFrames[0].colorTextures.push_back(colorTexture);
-                mFrames[0].enableMSAA = true;
+                mFrames[0].enableMSAA = false;
             }
 
             Texture2D depthbuffer;
             depthbuffer.width = mCanvasWidth;
             depthbuffer.height = mCanvasHeight;
+            depthbuffer.pixelFormat = PixelFormat::R8;
             depthbuffer.mips = 1;
             depthbuffer.samples = conf.msaaSamples;
 
@@ -443,7 +447,7 @@ void GraphicsManager::CreateFrameBuffers()
         }
         else 
         {
-            mFrames[i].colorTextures.push_back(mFrames[0].colorTextures[1]);
+            mFrames[i].colorTextures.push_back(mFrames[0].colorTextures[0]);
             mFrames[i].depthTexture = mFrames[0].depthTexture;
             mFrames[i].enableMSAA = mFrames[0].enableMSAA;
         }
