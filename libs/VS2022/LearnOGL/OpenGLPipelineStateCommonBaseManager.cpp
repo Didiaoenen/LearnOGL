@@ -10,7 +10,7 @@
 using namespace OGL;
 using namespace std;
 
-#define SHADER_ROOT "resources/shaders/"
+#define SHADER_ROOT "shaders/"
 
 static void OutputShaderErrorMessage(unsigned int shaderId, const char* shaderFilename) 
 {

@@ -181,7 +181,7 @@ void GraphicsManager::CalculateCameraMatrix()
         if (cameraNode)
         {
             auto transform = *cameraNode->GetCalculatedTransform();
-            glm::vec3 position = glm::vec3(0.0f, 1.0f, 3.0f);
+            glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
             glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
             glm::vec3 up = { 0.0f, 1.0f, 0.0f };
             frameContext.viewMatrix = glm::lookAt(position, position + lookAt, up);

@@ -153,7 +153,7 @@ void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
 		mat4 model = mat4(1.0f);
 		model = translate(model, vec3(0.0f, 0.0f, -1.0f));
 		model = rotate(model, radians(0.0f), vec3(1.0, 0.0, 0.0));
-		model = rotate(model, radians(45.0f), vec3(0.0, 1.0, 0.0));
+		model = rotate(model, radians(0.0f), vec3(0.0, 1.0, 0.0));
 		model = rotate(model, radians(0.0f), vec3(0.0, 0.0, 1.0));
 		model = scale(model, vec3(0.5f));
 
