@@ -76,7 +76,7 @@ void OGL_Application::Run()
 		mDT = time - mLastTime;
 		mLastTime = time;
 
-		ProcessInput(mWindow);
+		//ProcessInput(mWindow);
 
 		Update(time);
 
@@ -203,7 +203,7 @@ bool OGL_Application::WindowHint()
 	glfwSetScrollCallback(mWindow, OGL_Application::GLFWWindowScrollCallback);
 	glfwSetCursorPosCallback(mWindow, OGL_Application::GLFWWindowMouseCallback);
 
-	glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	return true;
 }

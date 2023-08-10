@@ -53,7 +53,7 @@ namespace OGL
 	protected:
 		bool mBatchDone;
 
-	private:
+	public:
 		GLenum mPrimitiveType;
 		GLuint mVerts;
 

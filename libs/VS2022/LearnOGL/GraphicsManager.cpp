@@ -77,7 +77,7 @@ void GraphicsManager::Tick()
     Draw();
     EndFrame(mFrames[mFrameIndex]);
 
-    Present();
+    //Present();
 }
 
 void GraphicsManager::Draw()
@@ -181,10 +181,10 @@ void GraphicsManager::CalculateCameraMatrix()
         if (cameraNode)
         {
             auto transform = *cameraNode->GetCalculatedTransform();
-            glm::vec3 position = glm::vec3({ transform[3][0], transform[3][1], transform[3][2] });
-            glm::vec3 lookAt = cameraNode->GetTarget();
-            glm::vec3 up = { 0.0f, 0.0f, 1.0f };
-            frameContext.viewMatrix = glm::lookAt(position, lookAt, up);
+            glm::vec3 position = glm::vec3(0.0f, 1.0f, 3.0f);
+            glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
+            glm::vec3 up = { 0.0f, 1.0f, 0.0f };
+            frameContext.viewMatrix = glm::lookAt(position, position + lookAt, up);
             frameContext.camPos = { position[0], position[1], position[2], 0.0f };
         }
         else 
@@ -196,7 +196,7 @@ void GraphicsManager::CalculateCameraMatrix()
         }
 
         float fieldOfView = glm::pi<float>() / 3.0f;
-        float nearClipDistance = 10.0f;
+        float nearClipDistance = 0.1f;
         float farClipDistance = 100.0f;
 
         if (cameraNode)
@@ -209,7 +209,7 @@ void GraphicsManager::CalculateCameraMatrix()
 
         float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
 
-        frameContext.projectionMatrix = glm::perspective(fieldOfView, screenAspect, nearClipDistance, farClipDistance);
+        frameContext.projectionMatrix = perspective(radians(60.0f), screenAspect, 0.1f, 100.0f);
     }
 }
 

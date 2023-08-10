@@ -7,6 +7,9 @@
 
 #include "Image.h"
 #include "CBuffer.h"
+#include "OpenGLPipelineStateCommonBaseManager.h"
+
+#include "LearnOGLTools.h"
 
 using namespace OGL;
 using namespace std;
@@ -18,34 +21,36 @@ void OpenGLGraphicsCommonBaseManager::Present()
 
 void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<PipelineState>& pipelineState, const Frame& frame)
 {
+	auto pPipelineState = dynamic_pointer_cast<const OpenGLPipelineState>(pipelineState);
+	mCurrentShader = pPipelineState->shaderProgram;
 	glUseProgram(mCurrentShader);
 
-	switch (pipelineState->depthTest)
-	{
-	case DepthTest::NONE:
-		glDisable(GL_DEPTH_TEST);
-		break;
-	default:
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc((GLenum)pipelineState->depthTest);
-		break;
-	}
+	//switch (pipelineState->depthTest)
+	//{
+	//case DepthTest::NONE:
+	//	glDisable(GL_DEPTH_TEST);
+	//	break;
+	//default:
+	//	glEnable(GL_DEPTH_TEST);
+	//	glDepthFunc((GLenum)pipelineState->depthTest);
+	//	break;
+	//}
 
-	glDepthMask(pipelineState->bWriteDepth);
+	//glDepthMask(pipelineState->bWriteDepth);
 
-	switch (pipelineState->cullFace)
-	{
-	case CullFace::NONE:
-		glDisable(GL_CULL_FACE);
-		break;
-	default:
-		glEnable(GL_CULL_FACE);
-		glCullFace((GLenum)pipelineState->cullFace);
-		break;
-	}
+	//switch (pipelineState->cullFace)
+	//{
+	//case CullFace::NONE:
+	//	glDisable(GL_CULL_FACE);
+	//	break;
+	//default:
+	//	glEnable(GL_CULL_FACE);
+	//	glCullFace((GLenum)pipelineState->cullFace);
+	//	break;
+	//}
 
 	//
-	uint32_t blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerFrameConstants");
+	/*uint32_t blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerFrameConstants");
 	if (blockIndex != GL_INVALID_INDEX)
 	{
 		int32_t blockSize;
@@ -55,10 +60,10 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 
 		glUniformBlockBinding(mCurrentShader, blockIndex, 10);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 10, mUBODrawFrameConstant[frame.frameIndex]);
-	}
+	}*/
 
 	//
-	blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerBatchConstants");
+	/*blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerBatchConstants");
 	if (blockIndex != GL_INVALID_INDEX) 
 	{
 		int32_t blockSize;
@@ -69,10 +74,10 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 
 		glUniformBlockBinding(mCurrentShader, blockIndex, 11);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 11, mUBODrawBatchConstant[frame.frameIndex]);
-	}
+	}*/
 
 	//
-	blockIndex = glGetUniformBlockIndex(mCurrentShader, "LightInfo");
+	/*blockIndex = glGetUniformBlockIndex(mCurrentShader, "LightInfo");
 	if (blockIndex != GL_INVALID_INDEX) 
 	{
 		int32_t blockSize;
@@ -83,10 +88,10 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 
 		glUniformBlockBinding(mCurrentShader, blockIndex, 12);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 12, mUBOLightInfo[frame.frameIndex]);
-	}
+	}*/
 
 	//
-	if (pipelineState->flag == DrawFlag::SHADOW) 
+	/*if (pipelineState->flag == DrawFlag::SHADOW) 
 	{
 		uint32_t blockIndex = glGetUniformBlockIndex(mCurrentShader, "ShadowMapConstants");
 		if (blockIndex != GL_INVALID_INDEX)
@@ -100,12 +105,12 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 			glUniformBlockBinding(mCurrentShader, blockIndex, 13);
 			glBindBufferBase(GL_UNIFORM_BUFFER, 13, mUBOShadowMatricesConstant[frame.frameIndex]);
 		}
-	}
+	}*/
 
 	//
-	SetShaderParameter("skyboxMap", 10);
-	glActiveTexture(GL_TEXTURE10);
-	glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, (GLuint)frame.skybox.handler);
+	//SetShaderParameter("skyboxMap", 10);
+	//glActiveTexture(GL_TEXTURE10);
+	//glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, (GLuint)frame.skybox.handler);
 }
 
 void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
@@ -117,34 +122,46 @@ void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
 		const auto& dbc = dynamic_cast<OpenGLDrawBatchContext&>(*pDbc);
 
 		//
-		SetShaderParameter("diffuseMap", 0);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.diffuseMap.handler);
+		//SetShaderParameter("diffuseMap", 0);
+		//glActiveTexture(GL_TEXTURE_2D);
+		//glBindTexture(GL_TEXTURE_2D, dbc.material.diffuseMap.handler);
 
 		//
-		SetShaderParameter("specularMap", 1);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.specularMap.handler);
+		//SetShaderParameter("specularMap", 1);
+		//glActiveTexture(GL_TEXTURE_2D);
+		//glBindTexture(GL_TEXTURE_2D, dbc.material.specularMap.handler);
 
 		//
-		SetShaderParameter("ambientMap", 2);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.ambientMap.handler);
+		//SetShaderParameter("ambientMap", 2);
+		//glActiveTexture(GL_TEXTURE_2D);
+		//glBindTexture(GL_TEXTURE_2D, dbc.material.ambientMap.handler);
 
 		//
-		SetShaderParameter("emissiveMap", 3);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.emissiveMap.handler);
+		//SetShaderParameter("emissiveMap", 3);
+		//glActiveTexture(GL_TEXTURE_2D);
+		//glBindTexture(GL_TEXTURE_2D, dbc.material.emissiveMap.handler);
 
 		//
-		SetShaderParameter("normalMap", 3);
-		glActiveTexture(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, dbc.material.normalMap.handler);
+		//SetShaderParameter("normalMap", 3);
+		//glActiveTexture(GL_TEXTURE_2D);
+		//glBindTexture(GL_TEXTURE_2D, dbc.material.normalMap.handler);
 
 		//
 		glBindVertexArray(dbc.vao);
 
-		glDrawElements(dbc.mode, dbc.count, dbc.type, nullptr);
+		//
+		mat4 model = mat4(1.0f);
+		model = translate(model, vec3(0.0f, 0.0f, -1.0f));
+		model = rotate(model, radians(0.0f), vec3(1.0, 0.0, 0.0));
+		model = rotate(model, radians(45.0f), vec3(0.0, 1.0, 0.0));
+		model = rotate(model, radians(0.0f), vec3(0.0, 0.0, 1.0));
+		model = scale(model, vec3(0.5f));
+
+		SetShaderParameter("model", model);
+		SetShaderParameter("view", frame.frameContext.viewMatrix);
+		SetShaderParameter("projection", frame.frameContext.projectionMatrix);
+
+		glDrawElements(dbc.mode, dbc.count, dbc.type, 0);
 	}
 
 	glBindVertexArray(0);
@@ -306,7 +323,8 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 		const auto& geometry = scene.GetGeometry(geometryNode->GetSceneObjectRef());
 		const auto& material = scene.GetMaterial(geometryNode->GetMaterialRef(0));
 		const auto& mesh = geometry->mMeshs[0];
-		
+
+		//
 		uint32_t vao, vbo, ebo;
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
@@ -319,32 +337,32 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 		glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
 		glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
 
-		if (mesh->hasNormal)
-		{
-			glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
-			glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
-		}
+		//if (mesh->hasNormal)
+		//{
+		//	glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
+		//	glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
+		//}
 
-		if (mesh->hasVertexColors)
-		{
-			glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
-			glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
-		}
+		////if (mesh->hasVertexColors)
+		////{
+		////	glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
+		////	glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
+		////}
 
-		if (mesh->hasTextureCoords)
-		{
-			glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
-			glVertexAttribPointer((GLuint)_VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::texcoord));
-		}
+		//if (mesh->hasTextureCoords)
+		//{
+		//	glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
+		//	glVertexAttribPointer((GLuint)_VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::texcoord));
+		//}
 
-		if (mesh->hasTangentsAndBitangents)
-		{
-			glEnableVertexAttribArray((GLuint)_VertAttrib::Tangent);
-			glVertexAttribPointer((GLuint)_VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::tangent));
-		
-			glEnableVertexAttribArray((GLuint)_VertAttrib::Bitangent);
-			glVertexAttribPointer((GLuint)_VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::bitangent));
-		}
+		//if (mesh->hasTangentsAndBitangents)
+		//{
+		//	glEnableVertexAttribArray((GLuint)_VertAttrib::Tangent);
+		//	glVertexAttribPointer((GLuint)_VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::tangent));
+		//
+		//	glEnableVertexAttribArray((GLuint)_VertAttrib::Bitangent);
+		//	glVertexAttribPointer((GLuint)_VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::bitangent));
+		//}
 
 		mBuffers.push_back(vbo);
 
@@ -352,9 +370,6 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndices.size() * sizeof(uint32_t), &mesh->mIndices[0], GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
-		glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
 
 		mBuffers.push_back(ebo);
 
@@ -400,89 +415,91 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 			Color mEmissive;
 			Normal mNormal;
 		*/
-		const auto& diffuse = material->mDiffuse;
-		if (diffuse.ValueMap)
-		{
-			const auto& keyName = diffuse.ValueMap->mName;
-			const auto& image = diffuse.ValueMap->GetTextureImage();
-			if (image) 
-			{
-				dbc->material.diffuseMap = uploadTexture(keyName, image);
-			}
-		}
+		//const auto& diffuse = material->mDiffuse;
+		//if (diffuse.ValueMap)
+		//{
+		//	const auto& keyName = diffuse.ValueMap->mName;
+		//	const auto& image = diffuse.ValueMap->GetTextureImage();
+		//	if (image) 
+		//	{
+		//		dbc->material.diffuseMap = uploadTexture(keyName, image);
+		//	}
+		//}
 
 		//
-		const auto& specular = material->mSpecular;
-		if (specular.ValueMap) 
-		{
-			const auto& keyName = specular.ValueMap->mName;
-			const auto& image = specular.ValueMap->GetTextureImage();
-			if (image) 
-			{
-				dbc->material.specularMap = uploadTexture(keyName, image);
-			}
-		}
+		//const auto& specular = material->mSpecular;
+		//if (specular.ValueMap) 
+		//{
+		//	const auto& keyName = specular.ValueMap->mName;
+		//	const auto& image = specular.ValueMap->GetTextureImage();
+		//	if (image) 
+		//	{
+		//		dbc->material.specularMap = uploadTexture(keyName, image);
+		//	}
+		//}
 
 		//
-		const auto& ambient = material->mAmbient;
-		if (ambient.ValueMap) 
-		{
-			const auto& keyName = ambient.ValueMap->mName;
-			const auto& image = ambient.ValueMap->GetTextureImage();
-			if (image) 
-			{
-				dbc->material.ambientMap = uploadTexture(keyName, image);
-			}
-		}
+		//const auto& ambient = material->mAmbient;
+		//if (ambient.ValueMap) 
+		//{
+		//	const auto& keyName = ambient.ValueMap->mName;
+		//	const auto& image = ambient.ValueMap->GetTextureImage();
+		//	if (image) 
+		//	{
+		//		dbc->material.ambientMap = uploadTexture(keyName, image);
+		//	}
+		//}
 
 		//
-		const auto& emissive = material->mEmissive;
-		if (emissive.ValueMap) 
-		{
-			const auto& keyName = emissive.ValueMap->mName;
-			const auto& image = emissive.ValueMap->GetTextureImage();
-			if (image) 
-			{
-				dbc->material.emissiveMap = uploadTexture(keyName, image);
-			}
-		}
+		//const auto& emissive = material->mEmissive;
+		//if (emissive.ValueMap) 
+		//{
+		//	const auto& keyName = emissive.ValueMap->mName;
+		//	const auto& image = emissive.ValueMap->GetTextureImage();
+		//	if (image) 
+		//	{
+		//		dbc->material.emissiveMap = uploadTexture(keyName, image);
+		//	}
+		//}
 
 		//
-		const auto& normal = material->mNormal;
-		if (normal.ValueMap) 
-		{
-			const auto& keyName = normal.ValueMap->mName;
-			const auto& image = normal.ValueMap->GetTextureImage();
-			if (image) 
-			{
-				dbc->material.normalMap = uploadTexture(keyName, image);
-			}
-		}
+		//const auto& normal = material->mNormal;
+		//if (normal.ValueMap) 
+		//{
+		//	const auto& keyName = normal.ValueMap->mName;
+		//	const auto& image = normal.ValueMap->GetTextureImage();
+		//	if (image) 
+		//	{
+		//		dbc->material.normalMap = uploadTexture(keyName, image);
+		//	}
+		//}
 
 		glBindVertexArray(0);
 
-		PrimitiveType primitiveType = PrimitiveType::NONE;
+		GLenum model = 0;
 		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT) == (uint32_t)PrimitiveType::POINT)
 		{
-			primitiveType = PrimitiveType::POINT;
+			model = GL_POINT;
 		}
 		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE) == (uint32_t)PrimitiveType::LINE)
 		{
-			primitiveType = PrimitiveType::LINE;
+			model = GL_LINE;
 		}
 		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE) == (uint32_t)PrimitiveType::TRIANGLE)
 		{
-			primitiveType = PrimitiveType::TRIANGLE;
+			model = GL_TRIANGLES;
 		}
 		if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON) == (uint32_t)PrimitiveType::POLYGON)
 		{
-			primitiveType = PrimitiveType::POLYGON;
+			model = GL_TRIANGLES;
 		}
 
 		dbc->batchIndex = batchIndex++;
 		dbc->vao = vao;
 		dbc->node = geometryNode;
-		dbc->type = (uint32_t)primitiveType;
+		dbc->mode = (uint32_t)model;
+		dbc->type = (uint32_t)GL_UNSIGNED_INT;
+		dbc->count = mesh->mIndices.size();
 
 		for (size_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
 		{
@@ -497,41 +514,41 @@ void OpenGLGraphicsCommonBaseManager::InitializeSkyBox(const Scene& scene)
 
 void OpenGLGraphicsCommonBaseManager::SetPerFrameConstants(const DrawFrameContext& context)
 {
-	if (!mUBODrawFrameConstant[mFrameIndex]) 
-	{
-		glGenBuffers(1, &mUBODrawFrameConstant[mFrameIndex]);
-	}
+	//if (!mUBODrawFrameConstant[mFrameIndex]) 
+	//{
+	//	glGenBuffers(1, &mUBODrawFrameConstant[mFrameIndex]);
+	//}
 
-	glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawFrameConstant[mFrameIndex]);
+	//glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawFrameConstant[mFrameIndex]);
 
-	auto constants = static_cast<PerFrameConstants>(context);
+	//auto constants = static_cast<PerFrameConstants>(context);
 
-	glBufferData(GL_UNIFORM_BUFFER, kSizePerFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);
+	//glBufferData(GL_UNIFORM_BUFFER, kSizePerFrameConstantBuffer, &constants, GL_DYNAMIC_DRAW);
 
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void OpenGLGraphicsCommonBaseManager::SetPerBatchConstants(const DrawBatchContext& context)
 {
-	if (!mUBODrawBatchConstant[mFrameIndex]) 
-	{
-		glGenBuffers(1, &mUBODrawBatchConstant[mFrameIndex]);
-	}
+	//if (!mUBODrawBatchConstant[mFrameIndex]) 
+	//{
+	//	glGenBuffers(1, &mUBODrawBatchConstant[mFrameIndex]);
+	//}
 
-	glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawBatchConstant[mFrameIndex]);
+	//glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawBatchConstant[mFrameIndex]);
 
-	const auto& constant = static_cast<const PerBatchConstants&>(context);
+	//const auto& constant = static_cast<const PerBatchConstants&>(context);
 
-	glBufferData(GL_UNIFORM_BUFFER, kSizePerBatchConstantBuffer, &constant, GL_DYNAMIC_DRAW);
+	//glBufferData(GL_UNIFORM_BUFFER, kSizePerBatchConstantBuffer, &constant, GL_DYNAMIC_DRAW);
 
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void OpenGLGraphicsCommonBaseManager::SetLightInfo(const LightInfo& lightInfo)
 {
 }
 
-bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& paramName, const glm::mat4x4& param)
+bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& paramName, const glm::mat4& param)
 {
 	unsigned int location = glGetUniformLocation(mCurrentShader, paramName.c_str());
 	if (location == -1)
@@ -543,7 +560,7 @@ bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& para
 	return true;
 }
 
-bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& paramName, const glm::mat4x4* param, const int32_t count)
+bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& paramName, const glm::mat4* param, const int32_t count)
 {
 	bool result = true;
 

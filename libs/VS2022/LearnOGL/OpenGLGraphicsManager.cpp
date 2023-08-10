@@ -45,7 +45,7 @@ void OpenGLGraphicsManager::CreateTextureView(Texture2D& textureView, const Text
 
 void OpenGLGraphicsManager::BeginPass(Frame& frame)
 {
-    if (frame.renderToTexture)
+    if (frame.renderToTexture && false)
     {
         GLuint framebuffer;
         glGenFramebuffers(1, &framebuffer);
@@ -69,7 +69,7 @@ void OpenGLGraphicsManager::BeginPass(Frame& frame)
 
         if (frame.depthTexture.handler)
         {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, frame.depthTexture.handler, 0);
+            //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, frame.depthTexture.handler, 0);
         }
 
         auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -82,7 +82,7 @@ void OpenGLGraphicsManager::BeginPass(Frame& frame)
     }
     else
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        //glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     glViewport(0, 0, mCanvasWidth, mCanvasHeight);

@@ -275,8 +275,8 @@
     <ClInclude Include="TreeNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Asset\Shaders\basic.frag" />
-    <None Include="Asset\Shaders\basic.vert" />
+    <None Include="..\..\resources\shaders\basic.frag" />
+    <None Include="..\..\resources\shaders\basic.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

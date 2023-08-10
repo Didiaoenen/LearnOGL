@@ -439,10 +439,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Asset\Shaders\basic.vert">
+    <None Include="..\..\resources\shaders\basic.vert">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="Asset\Shaders\basic.frag">
+    <None Include="..\..\resources\shaders\basic.frag">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
