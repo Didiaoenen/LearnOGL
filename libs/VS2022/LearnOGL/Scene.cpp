@@ -45,3 +45,21 @@ shared_ptr<SceneCameraNode> Scene::GetFirstCameraNode() const
 {
     return mCameraNodes.empty() ? nullptr : mCameraNodes.cbegin()->second;
 }
+
+shared_ptr<BaseSceneNode> Scene::GetSceneNode(const string& key)
+{
+    
+    auto light = mLightNodes.find(key);
+    if (light != mLightNodes.end())
+    {
+        return light->second;
+    }
+
+    auto camera = mCameraNodes.find(key);
+    if (camera != mCameraNodes.end())
+    {
+        return camera->second;
+    }
+
+    return nullptr;
+}

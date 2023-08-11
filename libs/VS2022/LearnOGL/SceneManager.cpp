@@ -63,11 +63,26 @@ bool SceneManager::LoadScene(const string& sceneName)
 		{
 			auto camera = scene->mCameras[i];
 			auto keyName = camera->mName.C_Str();
-			scenePtr->mCameras.emplace(camera->mName.C_Str(), make_shared<SceneObjectPerspectiveCamera>());
 
-			auto node = make_shared<SceneCameraNode>(keyName);
-			node->AddSceneObjectRef(keyName);
-			scenePtr->mCameraNodes.emplace(keyName, node);
+			auto cameraObject = make_shared<SceneObjectPerspectiveCamera>();
+			cameraObject->mUp.x = camera->mUp.x;
+			cameraObject->mUp.y = camera->mUp.y;
+			cameraObject->mUp.z = camera->mUp.z;
+
+			cameraObject->mLookAt.x = camera->mLookAt.x;
+			cameraObject->mLookAt.y = camera->mLookAt.y;
+			cameraObject->mLookAt.z = camera->mLookAt.z;
+
+			cameraObject->mClipPlaneFar = camera->mClipPlaneFar;
+			cameraObject->mClipPlaneNear = camera->mClipPlaneNear;
+			cameraObject->mHorizontalFOV = camera->mHorizontalFOV;
+			cameraObject->mOrthographicWidth = camera->mOrthographicWidth;
+
+			scenePtr->mCameras.emplace(keyName, cameraObject);
+
+			auto nodePtr = make_shared<SceneCameraNode>(keyName);
+			nodePtr->AddSceneObjectRef(keyName);
+			scenePtr->mCameraNodes.emplace(keyName, nodePtr);
 		}
 
 		function<void(const aiScene* scene, aiNode* node)> _ProcessNode;
@@ -168,127 +183,136 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 		_ProcessNode = [&](const aiScene* scene, aiNode* node) 
 		{
-			auto keyName = node->mName.C_Str();
-			auto nodePtr = make_shared<SceneGeometryNode>(keyName);
-			nodePtr->AddSceneObjectRef(keyName);
-
 			auto transform = node->mTransformation;
 			auto matPtr = glm::identity<mat4>();
+
 			matPtr[0][0] = transform.a1;
 			matPtr[0][1] = transform.a2;
 			matPtr[0][2] = transform.a3;
-			matPtr[0][3] = transform.a4;
+			matPtr[0][3] = transform.d1;
 
 			matPtr[1][0] = transform.b1;
 			matPtr[1][1] = transform.b2;
 			matPtr[1][2] = transform.b3;
-			matPtr[1][3] = transform.b4;
+			matPtr[1][3] = transform.d2;
 
 			matPtr[2][0] = transform.c1;
 			matPtr[2][1] = transform.c2;
 			matPtr[2][2] = transform.c3;
-			matPtr[2][3] = transform.c4;
+			matPtr[2][3] = transform.d3;
 
-			matPtr[3][0] = transform.d1;
-			matPtr[3][1] = transform.d2;
-			matPtr[3][2] = transform.d3;
+			matPtr[3][0] = transform.a4;
+			matPtr[3][1] = transform.b4;
+			matPtr[3][2] = transform.c4;
 			matPtr[3][3] = transform.d4;
 
-			nodePtr->AppendTransform(keyName, make_shared<SceneObjectTransform>(matPtr));
-			scenePtr->mGeometryNodes.emplace(keyName, nodePtr);
-
-			auto geometry = make_shared<SceneObjectGeometry>();
-			scenePtr->mGeometries.emplace(keyName, geometry);
-
-			for (size_t i = 0; i < node->mNumMeshes; i++)
+			auto keyName = node->mName.C_Str();
+			auto sceneNode = scenePtr->GetSceneNode(keyName);
+			if (sceneNode)
 			{
-				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-				geometry->mMeshs.push_back(_ProcessMesh(mesh));
-
-				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-				
-				auto materialPtr = make_shared<SceneObjectMaterial>();
-
-				aiString name;
-				if (AI_SUCCESS == aiGetMaterialString(material, AI_MATKEY_NAME, &name))
-				{
-					materialPtr->mName = name.C_Str();
-				}
-
-				vector<shared_ptr<SceneObjectTexture>> diffuseMaps = _ProcessTexture(material, aiTextureType_DIFFUSE);
-				vector<shared_ptr<SceneObjectTexture>> specularMaps = _ProcessTexture(material, aiTextureType_SPECULAR);
-				vector<shared_ptr<SceneObjectTexture>> ambientMaps = _ProcessTexture(material, aiTextureType_AMBIENT);
-				vector<shared_ptr<SceneObjectTexture>> emissiveMaps = _ProcessTexture(material, aiTextureType_EMISSIVE);
-				vector<shared_ptr<SceneObjectTexture>> normalMaps = _ProcessTexture(material, aiTextureType_NORMALS);
-			
-				if (diffuseMaps.size() > 0)
-				{
-					materialPtr->mDiffuse = diffuseMaps.at(0);
-				}
-				if (specularMaps.size() > 0)
-				{
-					materialPtr->mSpecular = specularMaps.at(0);
-				}
-				if (ambientMaps.size() > 0)
-				{
-					materialPtr->mAmbient = ambientMaps.at(0);
-				}
-				if (emissiveMaps.size() > 0)
-				{
-					materialPtr->mEmissive = emissiveMaps.at(0);
-				}
-				if (normalMaps.size() > 0)
-				{
-					materialPtr->mNormal = normalMaps.at(0);
-				}
-
-				aiColor4D diffuse, specular, ambient, emission;
-				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-				{
-					materialPtr->mDiffuse = Color(vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
-				}
-				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) 
-				{
-					materialPtr->mSpecular = Color(vec4(specular.r, specular.g, specular.b, specular.a));
-				}
-				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
-				{
-					materialPtr->mAmbient = Color(vec4(ambient.r, ambient.g, ambient.b, ambient.a));
-				}
-				if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission))
-				{
-					materialPtr->mEmissive = Color(vec4(emission.r, emission.g, emission.b, emission.a));
-				}
-
-				ai_real diffuse_intensity, specular_hardness, specular_intensity;
-				if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.diffuse.intensity", 0, 0, &diffuse_intensity))
-				{
-					materialPtr->mDiffuseIntensity = Parameter(diffuse_intensity);
-				}
-				if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.hardness", 0, 0, &specular_hardness))
-				{
-					materialPtr->mSpecularPower = Parameter(specular_hardness);
-				}
-				if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.intensity", 0, 0, &specular_intensity))
-				{
-					materialPtr->mSpecularIntensity = Parameter(specular_intensity);
-				}
-
-				for (size_t i = 0; i < material->mNumProperties; i++)
-				{
-					auto property = material->mProperties[i];
-					cout << property->mKey.C_Str() << " " << property->mType << endl;
-				}
-
-				nodePtr->AddMaterialRef(materialPtr->mName);
-
-				scenePtr->mMaterials.emplace(keyName, materialPtr);
+				sceneNode->AppendTransform(keyName, make_shared<SceneObjectTransform>(matPtr));
 			}
-
-			for (size_t i = 0; i < node->mNumChildren; i++)
+			else
 			{
-				_ProcessNode(scene, node->mChildren[i]);
+				auto nodePtr = make_shared<SceneGeometryNode>(keyName);
+				nodePtr->AddSceneObjectRef(keyName);
+
+				nodePtr->AppendTransform(keyName, make_shared<SceneObjectTransform>(matPtr));
+				scenePtr->mGeometryNodes.emplace(keyName, nodePtr);
+
+				auto geometry = make_shared<SceneObjectGeometry>();
+				scenePtr->mGeometries.emplace(keyName, geometry);
+
+				for (size_t i = 0; i < node->mNumMeshes; i++)
+				{
+					aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
+					geometry->mMeshs.push_back(_ProcessMesh(mesh));
+
+					aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+				
+					auto materialPtr = make_shared<SceneObjectMaterial>();
+
+					aiString name;
+					if (AI_SUCCESS == aiGetMaterialString(material, AI_MATKEY_NAME, &name))
+					{
+						materialPtr->mName = name.C_Str();
+					}
+
+					vector<shared_ptr<SceneObjectTexture>> diffuseMaps = _ProcessTexture(material, aiTextureType_DIFFUSE);
+					vector<shared_ptr<SceneObjectTexture>> specularMaps = _ProcessTexture(material, aiTextureType_SPECULAR);
+					vector<shared_ptr<SceneObjectTexture>> ambientMaps = _ProcessTexture(material, aiTextureType_AMBIENT);
+					vector<shared_ptr<SceneObjectTexture>> emissiveMaps = _ProcessTexture(material, aiTextureType_EMISSIVE);
+					vector<shared_ptr<SceneObjectTexture>> normalMaps = _ProcessTexture(material, aiTextureType_NORMALS);
+			
+					if (diffuseMaps.size() > 0)
+					{
+						materialPtr->mDiffuse = diffuseMaps.at(0);
+					}
+					if (specularMaps.size() > 0)
+					{
+						materialPtr->mSpecular = specularMaps.at(0);
+					}
+					if (ambientMaps.size() > 0)
+					{
+						materialPtr->mAmbient = ambientMaps.at(0);
+					}
+					if (emissiveMaps.size() > 0)
+					{
+						materialPtr->mEmissive = emissiveMaps.at(0);
+					}
+					if (normalMaps.size() > 0)
+					{
+						materialPtr->mNormal = normalMaps.at(0);
+					}
+
+					aiColor4D diffuse, specular, ambient, emission;
+					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
+					{
+						materialPtr->mDiffuse = Color(vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+					}
+					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) 
+					{
+						materialPtr->mSpecular = Color(vec4(specular.r, specular.g, specular.b, specular.a));
+					}
+					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
+					{
+						materialPtr->mAmbient = Color(vec4(ambient.r, ambient.g, ambient.b, ambient.a));
+					}
+					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission))
+					{
+						materialPtr->mEmissive = Color(vec4(emission.r, emission.g, emission.b, emission.a));
+					}
+
+					ai_real diffuse_intensity, specular_hardness, specular_intensity;
+					if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.diffuse.intensity", 0, 0, &diffuse_intensity))
+					{
+						materialPtr->mDiffuseIntensity = Parameter(diffuse_intensity);
+					}
+					if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.hardness", 0, 0, &specular_hardness))
+					{
+						materialPtr->mSpecularPower = Parameter(specular_hardness);
+					}
+					if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.intensity", 0, 0, &specular_intensity))
+					{
+						materialPtr->mSpecularIntensity = Parameter(specular_intensity);
+					}
+
+					for (size_t i = 0; i < material->mNumProperties; i++)
+					{
+						auto property = material->mProperties[i];
+						cout << property->mKey.C_Str() << " " << property->mType << endl;
+					}
+
+					nodePtr->AddMaterialRef(materialPtr->mName);
+
+					scenePtr->mMaterials.emplace(keyName, materialPtr);
+				}
+
+				for (size_t i = 0; i < node->mNumChildren; i++)
+				{
+					_ProcessNode(scene, node->mChildren[i]);
+				}
 			}
 		};
 

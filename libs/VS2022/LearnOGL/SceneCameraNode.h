@@ -22,7 +22,7 @@ public:
         auto transform = GetCalculatedTransform();
         vec3 target = GetTarget();
         auto cameraPosition = vec3(0.0f);
-        translate(*transform, cameraPosition);
+        translate(transform, cameraPosition);
         vec3 camera_z_axis({ 0.0f, 0.0f, 1.0f });
         vec3 camera_y_axis = target - cameraPosition;
         normalize(camera_y_axis);

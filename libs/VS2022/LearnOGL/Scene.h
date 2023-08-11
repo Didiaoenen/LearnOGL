@@ -22,6 +22,8 @@ public:
 	[[nodiscard]] shared_ptr<SceneObjectMaterial> GetMaterial(const string& key) const;
 
 	[[nodiscard]] shared_ptr<SceneCameraNode> GetFirstCameraNode() const;
+
+	[[nodiscard]] shared_ptr<BaseSceneNode> GetSceneNode(const string& key);
 	
 public:
 	shared_ptr<BaseSceneNode> mSceneGraph;

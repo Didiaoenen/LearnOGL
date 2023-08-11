@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <vector>
+
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
@@ -28,17 +29,15 @@ public:
 		mName = name;
 	};
 
-	[[nodiscard]] shared_ptr<mat4> GetCalculatedTransform() const
+	[[nodiscard]] mat4 GetCalculatedTransform() const
 	{
-		auto result = glm::identity<mat4>() * mat4(mUnityAxis);
+		auto result = glm::identity<mat4>();//* glm::mat4(mUnityAxis);
 		for (auto it = mTransforms.rbegin(); it != mTransforms.rend(); it++)
 		{
 			result = result * (*it)->mMatrix;
 		}
 
-		result = result * mRuntimeTransform;
-
-		return std::make_shared<mat4>(result);
+		return result * mRuntimeTransform;
 	}
 
 	virtual glm::mat3 GetLocalAxis() 
@@ -58,7 +57,6 @@ public:
 public:
 
 	string mName;
-	mat4 mTransform;
 	mat4 mRuntimeTransform{ glm::identity<mat4>() };
 	vector<shared_ptr<SceneObjectTransform>> mTransforms;
 

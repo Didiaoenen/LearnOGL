@@ -1,7 +1,6 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <glm/ext.hpp>
 
 #include <assimp/scene.h>
 
@@ -13,19 +12,20 @@ class SceneObjectCamera : public BaseSceneObject
 {
 public:
     SceneObjectCamera()
-        : BaseSceneObject(0), mAspect(16.0f / 9.0f)
+        : BaseSceneObject(0)
     {
     };
 
 public:
-
-    [[nodiscard]] float GetNearClipDistance() const { return mNearClipDistance; };
-    [[nodiscard]] float GetFarClipDistance() const { return mFarClipDistance; };
-
-protected:
-    float mAspect;
-    float mNearClipDistance{ 1.0f };
-    float mFarClipDistance{ 100.0f };
+    glm::vec3 mUp{ 0.0f, 1.0f, 0.0f };
+    glm::vec3 mLookAt{ 0.0f, 0.0f, -1.0f };
+    glm::vec3 mPosition{ 0.0f, 0.0f, 0.0f };
+    
+    float mAspect{ 0.0f };
+    float mHorizontalFOV{ glm::radians(60.0f) };
+    float mOrthographicWidth{ 0.0f };
+    float mClipPlaneNear{ 1.0f };
+    float mClipPlaneFar{ 100.0f };
 
 };
 
@@ -44,10 +44,9 @@ public:
 
 
 public:
-    explicit SceneObjectPerspectiveCamera(float fov = glm::pi<float>() / 2.0) : 
-        mFov(fov) 
+    explicit SceneObjectPerspectiveCamera()
     {
-    };
+    }
 
     [[nodiscard]] float GetFov() const { return mFov; };
 };

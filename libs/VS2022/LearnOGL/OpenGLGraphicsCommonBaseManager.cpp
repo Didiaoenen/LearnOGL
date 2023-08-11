@@ -25,6 +25,9 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 	mCurrentShader = pPipelineState->shaderProgram;
 	glUseProgram(mCurrentShader);
 
+	SetShaderParameter("view", frame.frameContext.viewMatrix);
+	SetShaderParameter("projection", frame.frameContext.projectionMatrix);
+
 	//switch (pipelineState->depthTest)
 	//{
 	//case DepthTest::NONE:
@@ -148,11 +151,6 @@ void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
 
 		//
 		glBindVertexArray(dbc.vao);
-
-		//
-		SetShaderParameter("view", frame.frameContext.viewMatrix);
-		SetShaderParameter("projection", frame.frameContext.projectionMatrix);
-
 		glDrawElements(dbc.mode, dbc.count, dbc.type, 0);
 	}
 
@@ -471,19 +469,19 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 			glBindVertexArray(0);
 
 			GLenum model = 0;
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT) == (uint32_t)PrimitiveType::POINT)
+			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT))
 			{
 				model = GL_POINT;
 			}
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE) == (uint32_t)PrimitiveType::LINE)
+			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE))
 			{
 				model = GL_LINE;
 			}
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE) == (uint32_t)PrimitiveType::TRIANGLE)
+			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE))
 			{
 				model = GL_TRIANGLES;
 			}
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON) == (uint32_t)PrimitiveType::POLYGON)
+			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON))
 			{
 				model = GL_TRIANGLES;
 			}

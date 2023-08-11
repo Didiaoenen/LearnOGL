@@ -1,5 +1,7 @@
 #include "GraphicsManager.h"
 
+#include <glm/glm.hpp>
+
 #include "BaseApplication.h"
 #include "BRDFIntegrator.h"
 #include "SceneManager.h"
@@ -77,7 +79,7 @@ void GraphicsManager::Tick()
     Draw();
     EndFrame(mFrames[mFrameIndex]);
 
-    //Present();
+    Present();
 }
 
 void GraphicsManager::Draw()
@@ -177,39 +179,19 @@ void GraphicsManager::CalculateCameraMatrix()
     {
         auto& scene = sceneManager->GetSceneForRendering();
         auto cameraNode = scene->GetFirstCameraNode();
-        DrawFrameContext& frameContext = mFrames[mFrameIndex].frameContext;
+        auto& frameContext = mFrames[mFrameIndex].frameContext;
         if (cameraNode)
         {
-            //auto transform = *cameraNode->GetCalculatedTransform();
-            glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
-            glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
-            glm::vec3 up = { 0.0f, 1.0f, 0.0f };
-            frameContext.viewMatrix = glm::lookAt(position, position + lookAt, up);
-            frameContext.camPos = { position[0], position[1], position[2], 0.0f };
+            auto cameraObject = scene->GetCamera(cameraNode->GetSceneObjectRef());
+            auto transform = cameraNode->GetCalculatedTransform();
+            frameContext.camPos = glm::vec4(transform[3][0], transform[3][1], transform[3][2], 0.0f);
+            
+            auto camPos = glm::vec3(frameContext.camPos);
+            frameContext.viewMatrix = glm::mat4(glm::mat3(transform)) * glm::lookAt(camPos, camPos + cameraObject->mLookAt, cameraObject->mUp);
+            
+            float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
+            frameContext.projectionMatrix = glm::perspective(cameraObject->mHorizontalFOV, screenAspect, cameraObject->mClipPlaneNear, cameraObject->mClipPlaneFar);
         }
-        else 
-        {
-            glm::vec3 position = { 0.0f, -5.0f, 0.0f };
-            glm::vec3 lookAt = { 0.0f, 0.0f, 0.0f };
-            glm::vec3 up = { 0.0f, 0.0f, 1.0f };
-            frameContext.viewMatrix = glm::lookAt(position, lookAt, up);
-        }
-
-        float fieldOfView = glm::pi<float>() / 3.0f;
-        float nearClipDistance = 0.1f;
-        float farClipDistance = 100.0f;
-
-        if (cameraNode)
-        {
-            auto camera = scene->GetCamera(cameraNode->GetSceneObjectRef());
-            fieldOfView = dynamic_pointer_cast<SceneObjectPerspectiveCamera>(camera)->GetFov();
-            nearClipDistance = camera->GetNearClipDistance();
-            farClipDistance = camera->GetFarClipDistance();
-        }
-
-        float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
-
-        frameContext.projectionMatrix = perspective(radians(60.0f), screenAspect, 0.1f, 100.0f);
     }
 }
 
@@ -239,8 +221,8 @@ void GraphicsManager::CalculateLights()
             auto transPtr = pLightNode->GetCalculatedTransform();
             light.lightPosition = { 0.0f, 0.0f, 0.0f, 1.0f };
             light.lightDirection = { 0.0f, 0.0f, -1.0f, 0.0f };
-            translate(*transPtr, vec3(light.lightPosition));
-            translate(*transPtr, vec3(light.lightDirection));
+            translate(transPtr, vec3(light.lightPosition));
+            translate(transPtr, vec3(light.lightDirection));
             normalize(light.lightDirection);
 
             auto pLight = scene->GetLight(pLightNode->GetSceneObjectRef());
@@ -375,7 +357,7 @@ void GraphicsManager::UpdateConstants()
 
     for (auto& pDbc : frame.batchContexts) 
     {
-        pDbc->modelMatrix = *pDbc->node->GetCalculatedTransform();
+        pDbc->modelMatrix = pDbc->node->GetCalculatedTransform();
     }
 
     CalculateCameraMatrix();
