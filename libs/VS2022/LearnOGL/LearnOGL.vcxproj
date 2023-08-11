@@ -188,6 +188,7 @@
     <ClCompile Include="SceneObjectMesh.cpp" />
     <ClCompile Include="SceneObjectSkyBox.cpp" />
     <ClCompile Include="SceneObjectTexture.cpp" />
+    <ClCompile Include="SceneObjectTransform.cpp" />
     <ClCompile Include="ShadowMapPass.cpp" />
     <ClCompile Include="SkyBoxSubPass.cpp" />
   </ItemGroup>
@@ -270,6 +271,7 @@
     <ClInclude Include="SceneObjectMesh.h" />
     <ClInclude Include="SceneObjectSkyBox.h" />
     <ClInclude Include="SceneObjectTexture.h" />
+    <ClInclude Include="SceneObjectTransform.h" />
     <ClInclude Include="ShadowMapPass.h" />
     <ClInclude Include="SkyBoxSubPass.h" />
     <ClInclude Include="TreeNode.h" />

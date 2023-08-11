@@ -16,9 +16,9 @@ public:
     void SetTarget(const vec3& target) { mTarget = target; };
     const vec3& GetTarget() { return mTarget; };
 
-    mat3x3 GetLocalAxis() override 
+    mat3 GetLocalAxis() override 
     {
-        mat3x3 result;
+        mat3 result;
         auto transform = GetCalculatedTransform();
         vec3 target = GetTarget();
         auto cameraPosition = vec3(0.0f);

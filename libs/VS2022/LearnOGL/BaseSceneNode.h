@@ -9,6 +9,7 @@
 #include "TreeNode.h"
 #include "SceneObject.h"
 
+
 using namespace std;
 using namespace glm;
 
@@ -27,32 +28,46 @@ public:
 		mName = name;
 	};
 
-	[[nodiscard]] shared_ptr<mat4x4> GetCalculatedTransform() const
+	[[nodiscard]] shared_ptr<mat4> GetCalculatedTransform() const
 	{
-		std::shared_ptr<mat4x4> result(new mat4x4());
-		//for (auto it = mTransforms.rbegin(); it != mTransforms.rend(); it++)
-		//{
-		//	*result = *result * static_cast<glm::mat4x4>(**it);
-		//}
+		auto result = glm::identity<mat4>() * mat4(mUnityAxis);
+		for (auto it = mTransforms.rbegin(); it != mTransforms.rend(); it++)
+		{
+			result = result * (*it)->mMatrix;
+		}
 
-		//*result = *result * mRuntimeTransform;
+		result = result * mRuntimeTransform;
 
-		return result;
+		return std::make_shared<mat4>(result);
 	}
 
-	virtual glm::mat3x3 GetLocalAxis() 
+	virtual glm::mat3 GetLocalAxis() 
 	{
-		return glm::mat3x3 {
+		return glm::mat3 {
 			{ 1.0f, 0.0f, 0.0f },
 			{ 0.0f, 1.0f, 0.0f },
-			{ 0.0f, 0.0f, 1.0f }
+			{ 0.0f, 0.0f, 1.0f },
 		};
 	}
-protected:
+
+	void AppendTransform(const char* key, const shared_ptr<SceneObjectTransform>& transform) 
+	{
+		mTransforms.push_back(transform);
+	}
+
+public:
 
 	string mName;
-	mat4x4 mRuntimeTransform;
-	//std::vector<std::shared_ptr<SceneObjectTransform>> mTransforms;
+	mat4 mTransform;
+	mat4 mRuntimeTransform{ glm::identity<mat4>() };
+	vector<shared_ptr<SceneObjectTransform>> mTransforms;
+
+	glm::mat3 mUnityAxis
+	{
+		{ 1.0f, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 1.0f },
+		{ 0.0f, 1.0f, 0.0f },
+	};
 
 };
 

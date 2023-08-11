@@ -192,6 +192,9 @@
     <ClCompile Include="AssetLoader.cpp">
       <Filter>源文件\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="SceneObjectTransform.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -436,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>头文件\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectTransform.h">
+      <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

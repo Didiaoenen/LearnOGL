@@ -176,7 +176,7 @@ using TextureFormat = intptr_t;
 
 struct PerBatchConstants
 {
-	glm::mat4x4 modelMatrix;  // 64 bytes
+	glm::mat4 modelMatrix;  // 64 bytes
 };
 
 struct TextureBase

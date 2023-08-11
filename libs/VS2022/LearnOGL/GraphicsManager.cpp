@@ -180,7 +180,7 @@ void GraphicsManager::CalculateCameraMatrix()
         DrawFrameContext& frameContext = mFrames[mFrameIndex].frameContext;
         if (cameraNode)
         {
-            auto transform = *cameraNode->GetCalculatedTransform();
+            //auto transform = *cameraNode->GetCalculatedTransform();
             glm::vec3 position = glm::vec3(0.0f, 0.0f, 3.0f);
             glm::vec3 lookAt = glm::vec3(0.0f, 0.0f, -1.0f);
             glm::vec3 up = { 0.0f, 1.0f, 0.0f };
@@ -379,7 +379,7 @@ void GraphicsManager::UpdateConstants()
     }
 
     CalculateCameraMatrix();
-    CalculateLights();
+    //CalculateLights();
 }
 
 void GraphicsManager::CreateFrameBuffers()

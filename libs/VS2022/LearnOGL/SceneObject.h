@@ -8,3 +8,4 @@
 #include "SceneObjectCamera.h"
 #include "SceneObjectLight.h"
 #include "SceneObjectMaterial.h"
+#include "SceneObjectTransform.h"

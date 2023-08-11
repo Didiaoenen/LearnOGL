@@ -71,10 +71,10 @@ bool SceneManager::LoadScene(const string& sceneName)
 		}
 
 		function<void(const aiScene* scene, aiNode* node)> _ProcessNode;
-		function<shared_ptr<SceneObjectGeometry>(const aiScene* scene, aiMesh* mesh)> _ProcessMesh;
+		function<shared_ptr<SceneObjectMesh>(aiMesh* mesh)> _ProcessMesh;
 		function<vector<shared_ptr<SceneObjectTexture>>(const aiMaterial* material, aiTextureType type)> _ProcessTexture;
 
-		_ProcessMesh = [&](const aiScene* scene, aiMesh* mesh) -> shared_ptr<SceneObjectGeometry> 
+		_ProcessMesh = [&](aiMesh* mesh) -> shared_ptr<SceneObjectMesh>
 		{
 			std::vector<_Vertex> vertices;
 			std::vector<uint32_t> indices;
@@ -149,13 +149,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 			meshPtr->mPrimitiveTypes = mesh->mPrimitiveTypes;
 
-			auto meshPtrs = vector<shared_ptr<SceneObjectMesh>>();
-			meshPtrs.push_back(meshPtr);
-
-			auto geometry = make_shared<SceneObjectGeometry>();
-			geometry->mMeshs = meshPtrs;
-
-			return geometry;
+			return meshPtr;
 		};
 
 		_ProcessTexture = [&](const aiMaterial* material, aiTextureType type) -> vector<shared_ptr<SceneObjectTexture>>
@@ -174,15 +168,43 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 		_ProcessNode = [&](const aiScene* scene, aiNode* node) 
 		{
+			auto keyName = node->mName.C_Str();
+			auto nodePtr = make_shared<SceneGeometryNode>(keyName);
+			nodePtr->AddSceneObjectRef(keyName);
+
+			auto transform = node->mTransformation;
+			auto matPtr = glm::identity<mat4>();
+			matPtr[0][0] = transform.a1;
+			matPtr[0][1] = transform.a2;
+			matPtr[0][2] = transform.a3;
+			matPtr[0][3] = transform.a4;
+
+			matPtr[1][0] = transform.b1;
+			matPtr[1][1] = transform.b2;
+			matPtr[1][2] = transform.b3;
+			matPtr[1][3] = transform.b4;
+
+			matPtr[2][0] = transform.c1;
+			matPtr[2][1] = transform.c2;
+			matPtr[2][2] = transform.c3;
+			matPtr[2][3] = transform.c4;
+
+			matPtr[3][0] = transform.d1;
+			matPtr[3][1] = transform.d2;
+			matPtr[3][2] = transform.d3;
+			matPtr[3][3] = transform.d4;
+
+			nodePtr->AppendTransform(keyName, make_shared<SceneObjectTransform>(matPtr));
+			scenePtr->mGeometryNodes.emplace(keyName, nodePtr);
+
+			auto geometry = make_shared<SceneObjectGeometry>();
+			scenePtr->mGeometries.emplace(keyName, geometry);
+
 			for (size_t i = 0; i < node->mNumMeshes; i++)
 			{
 				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-				scenePtr->mGeometries.emplace(mesh->mName.C_Str(), _ProcessMesh(scene, mesh));
 
-				auto keyName = mesh->mName.C_Str();
-				auto nodePtr = make_shared<SceneGeometryNode>(keyName);
-				nodePtr->AddSceneObjectRef(keyName);
-				scenePtr->mGeometryNodes.emplace(keyName, nodePtr);
+				geometry->mMeshs.push_back(_ProcessMesh(mesh));
 
 				aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 				
@@ -261,7 +283,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				nodePtr->AddMaterialRef(materialPtr->mName);
 
-				scenePtr->mMaterials.emplace(mesh->mName.C_Str(), materialPtr);
+				scenePtr->mMaterials.emplace(keyName, materialPtr);
 			}
 
 			for (size_t i = 0; i < node->mNumChildren; i++)
