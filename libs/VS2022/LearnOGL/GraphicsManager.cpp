@@ -197,70 +197,59 @@ void GraphicsManager::CalculateCameraMatrix()
 
 void GraphicsManager::CalculateLights()
 {
-    DrawFrameContext& frameContext = mFrames[mFrameIndex].frameContext;
+    auto& frameContext = mFrames[mFrameIndex].frameContext;
     auto& lightInfo = mFrames[mFrameIndex].lightInfo;
 
     auto app = static_cast<BaseApplication*>(mApp);
-    auto pSceneManager = app->GetModule<SceneManager>();
+    auto sceneManager = app->GetModule<SceneManager>();
 
     const GfxConfiguration& conf = mApp->GetConfiguration();
 
     frameContext.numLights = 0;
     frameContext.clipSpaceType = 1;
 
-    if (pSceneManager) 
+    if (sceneManager)
     {
-        auto& scene = pSceneManager->GetSceneForRendering();
-        for (const auto& lightNode : scene->mLightNodes)
+        auto& scene = sceneManager->GetSceneForRendering();
+        for (const auto& it : scene->mLightNodes)
         {
-            Light& light = lightInfo.lights[frameContext.numLights];
-            auto pLightNode = lightNode.second;
-            if (!pLightNode) 
-                continue;
+            auto lightNode = it.second;
+            auto lightObject = scene->GetLight(lightNode->GetSceneObjectRef());
             
-            auto transPtr = pLightNode->GetCalculatedTransform();
-            light.lightPosition = { 0.0f, 0.0f, 0.0f, 1.0f };
-            light.lightDirection = { 0.0f, 0.0f, -1.0f, 0.0f };
-            translate(transPtr, vec3(light.lightPosition));
-            translate(transPtr, vec3(light.lightDirection));
-            normalize(light.lightDirection);
+            auto& light = lightInfo.lights[frameContext.numLights];
+            auto transform = lightNode->GetCalculatedTransform();
+            light.lightPosition = glm::vec4(transform[3][0], transform[3][1], transform[3][2], 0.0f);
+            light.lightDirection = glm::vec4(lightObject->mDirection, 0.0f); 
 
-            auto pLight = scene->GetLight(pLightNode->GetSceneObjectRef());
-            if (pLight) 
+            /*if (lightObject)
             {
-                /*light.lightGuid = pLight->GetGuid();
-                light.lightColor = pLight->GetColor().Value;
-                light.lightIntensity = pLight->GetIntensity();
-                light.lightCastShadow = pLight->GetIfCastShadow();
-                const AttenCurve& atten_curve = pLight->GetDistanceAttenuation();
-                light.lightDistAttenCurveType = atten_curve.type;
-                memcpy(light.lightDistAttenCurveParams, &atten_curve.u, sizeof(atten_curve.u));
-                light.lightAngleAttenCurveType = AttenCurveType::kNone;
+                light.lightColor = glm::vec4(lightObject->mColorDiffuse, 1.0);
+                light.lightIntensity = lightObject->mAttenuationLinear;
+                light.lightCastShadow = false;
 
-                glm::mat4x4 view;
-                glm::mat4x4 projection;
-                BuildIdentityMatrix(projection);
+                glm::mat4 view;
+                glm::mat4 projection;
 
                 float nearClipDistance = 1.0f;
                 float farClipDistance = 1000.0f;
 
-                if (pLight->GetType() == SceneObjectType::kSceneObjectTypeLightInfi) 
+                if (lightObject->mType == SceneObjectType::kSceneObjectTypeLightInfi) 
                 {
-                    light.lightType = LightType::Infinity;
+                    light.lightType = LightType::DIRECTIONAL;
 
-                    glm::vec4 target = { 0.0f, 0.0f, 0.0f, 1.0f };
+                    glm::vec4 target = { 0.0f, 0.0f, 0.0f, 1.0 };
 
-                    auto pCameraNode = scene->GetFirstCameraNode();
-                    if (pCameraNode) 
+                    auto cameraNode = scene->GetFirstCameraNode();
+                    if (cameraNode) 
                     {
-                        auto pCamera = scene->GetCamera(pCameraNode->GetSceneObjectRef());
-                        nearClipDistance = pCamera->GetNearClipDistance();
-                        farClipDistance = pCamera->GetFarClipDistance();
+                        auto camera = scene->GetCamera(cameraNode->GetSceneObjectRef());
+                        farClipDistance = camera->mClipPlaneFar;
+                        nearClipDistance = camera->mClipPlaneNear;
 
                         target[2] = -(0.75f * nearClipDistance + 0.25f * farClipDistance);
 
-                        auto trans_ptr = pCameraNode->GetCalculatedTransform();
-                        Transform(target, *trans_ptr);
+                        auto transform = cameraNode->GetCalculatedTransform();
+                        glm::translate(transform, glm::vec3(target));
                     }
 
                     light.lightPosition = target - light.lightDirection * farClipDistance;
@@ -271,18 +260,11 @@ void GraphicsManager::CalculateLights()
                     {
                         up = { 0.1f, 0.1f, 1.0f };
                     }
-                    BuildViewRHMatrix(view, position, lookAt, up);
+                    view = glm::lookAt(position, lookAt, up);
 
-                    float sm_half_dist = min(farClipDistance * 0.25f, 800.0f);
+                    float sm_half_dist = glm::min(farClipDistance * 0.25f, 800.0f);
 
-                    if (conf.fixOpenGLPerspectiveMatrix) 
-                    {
-                        BuildOpenglOrthographicRHMatrix(projection, -sm_half_dist, sm_half_dist, sm_half_dist, -sm_half_dist, nearClipDistance, farClipDistance + sm_half_dist);
-                    }
-                    else 
-                    {
-                        BuildOrthographicRHMatrix(projection, -sm_half_dist, sm_half_dist, sm_half_dist, -sm_half_dist, nearClipDistance, farClipDistance + sm_half_dist);
-                    }
+                    projection = glm::ortho(-sm_half_dist, sm_half_dist, sm_half_dist, -sm_half_dist, nearClipDistance, farClipDistance + sm_half_dist);
 
                     light.lightPosition[3] = 0.0f;
                 }
@@ -295,58 +277,42 @@ void GraphicsManager::CalculateLights()
                     {
                         up = { 0.0f, 0.707f, 0.707f };
                     }
-                    BuildViewRHMatrix(view, position, lookAt, up);
+                    view = glm::lookAt(position, lookAt, up);
 
-                    if (pLight->GetType() == SceneObjectType::kSceneObjectTypeLightSpot) 
+                    if (lightObject->mType == SceneObjectType::kSceneObjectTypeLightSpot)
                     {
-                        light.lightType = LightType::Spot;
+                        light.lightType = LightType::SPOT;
 
-                        auto plight = dynamic_pointer_cast<SceneObjectSpotLight>(pLight);
-                        const AttenCurve& angle_atten_curve = plight->GetAngleAttenuation();
-                        light.lightAngleAttenCurveType = angle_atten_curve.type;
-                        memcpy(light.lightAngleAttenCurveParams, &angle_atten_curve.u, sizeof(angle_atten_curve.u));
-
+                        auto spotLight = dynamic_pointer_cast<SceneObjectSpotLight>(light);
                         float fieldOfView = light.lightAngleAttenCurveParams[0][1] * 2.0f;
                         float screenAspect = 1.0f;
 
-                        if (conf.fixOpenGLPerspectiveMatrix) 
-                        {
-                            BuildOpenglPerspectiveFovRHMatrix(projection, fieldOfView, screenAspect, nearClipDistance, farClipDistance);
-                        }
-                        else 
-                        {
-                            BuildPerspectiveFovRHMatrix(projection, fieldOfView, screenAspect, nearClipDistance, farClipDistance);
-                        }
+                        projection = glm::perspective(fieldOfView, screenAspect, nearClipDistance, farClipDistance);
                     }
-                    else if (pLight->GetType() == SceneObjectType::kSceneObjectTypeLightArea) 
+                    else if (lightObject->mType == SceneObjectType::kSceneObjectTypeLightArea)
                     {
-                        light.lightType = LightType::Area;
+                        light.lightType = LightType::AREA;
 
-                        auto plight = dynamic_pointer_cast<SceneObjectAreaLight>(pLight);
-                        light.lightSize = plight->GetDimension();
+                        auto areaLight = dynamic_pointer_cast<SceneObjectAreaLight>(light);
+                        light.lightSize = areaLight->GetDimension();
                     }
                     else
                     {
-                        light.lightType = LightType::Omni;
+                        light.lightType = LightType::AMBIENT;
 
                         float fieldOfView = glm::pi<float>() / 2.0f;
                         float screenAspect = 1.0f;
 
-                        if (conf.fixOpenGLPerspectiveMatrix) 
-                        {
-                            BuildOpenglPerspectiveFovRHMatrix(projection, fieldOfView, screenAspect, nearClipDistance, farClipDistance);
-                        }
-                        else 
-                        {
-                            BuildPerspectiveFovRHMatrix(projection, fieldOfView, screenAspect, nearClipDistance, farClipDistance);
-                        }
+                        projection = glm::perspective(fieldOfView, screenAspect, nearClipDistance, farClipDistance);
                     }
                 }
 
                 light.lightViewMatrix = view;
                 light.lightProjectionMatrix = projection;
-                frameContext.numLights++;*/
-            }
+                
+            }*/
+
+            frameContext.numLights++;
         }
     }
 }
@@ -361,7 +327,7 @@ void GraphicsManager::UpdateConstants()
     }
 
     CalculateCameraMatrix();
-    //CalculateLights();
+    CalculateLights();
 }
 
 void GraphicsManager::CreateFrameBuffers()

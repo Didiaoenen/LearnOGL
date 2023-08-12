@@ -51,6 +51,38 @@ bool SceneManager::LoadScene(const string& sceneName)
 		{
 			auto light = scene->mLights[i];
 			auto keyName = light->mName.C_Str();
+
+			auto lightObject = make_shared<SceneObjectLight>();
+			lightObject->mUp.x = light->mUp.x;
+			lightObject->mUp.y = light->mUp.y;
+			lightObject->mUp.z = light->mUp.z;
+
+			lightObject->mSize.x = light->mSize.x;
+			lightObject->mSize.y = light->mSize.y;
+
+			lightObject->mDirection.x = light->mDirection.x;
+			lightObject->mDirection.y = light->mDirection.y;
+			lightObject->mDirection.z = light->mDirection.z;
+
+			lightObject->mColorDiffuse.r = light->mColorDiffuse.r;
+			lightObject->mColorDiffuse.g = light->mColorDiffuse.g;
+			lightObject->mColorDiffuse.b = light->mColorDiffuse.b;
+
+			lightObject->mColorSpecular.r = light->mColorSpecular.r;
+			lightObject->mColorSpecular.g = light->mColorSpecular.g;
+			lightObject->mColorSpecular.b = light->mColorSpecular.b;
+
+			lightObject->mColorAmbient.r = light->mColorAmbient.r;
+			lightObject->mColorAmbient.g = light->mColorAmbient.g;
+			lightObject->mColorAmbient.b = light->mColorAmbient.b;
+
+			lightObject->mType = (LightType)light->mType;
+			lightObject->mAngleInnerCone = light->mAngleInnerCone;
+			lightObject->mAngleOuterCone = light->mAngleOuterCone;
+			lightObject->mAttenuationLinear = light->mAttenuationLinear;
+			lightObject->mAttenuationConstant = light->mAttenuationConstant;
+			lightObject->mAttenuationQuadratic = light->mAttenuationQuadratic;
+
 			scenePtr->mLights.emplace(keyName, make_shared<SceneObjectLight>());
 
 			auto node = make_shared<SceneLightNode>(keyName);

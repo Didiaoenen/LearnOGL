@@ -28,29 +28,29 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 	SetShaderParameter("view", frame.frameContext.viewMatrix);
 	SetShaderParameter("projection", frame.frameContext.projectionMatrix);
 
-	//switch (pipelineState->depthTest)
-	//{
-	//case DepthTest::NONE:
-	//	glDisable(GL_DEPTH_TEST);
-	//	break;
-	//default:
-	//	glEnable(GL_DEPTH_TEST);
-	//	glDepthFunc((GLenum)pipelineState->depthTest);
-	//	break;
-	//}
+	switch (pipelineState->depthTest)
+	{
+	case DepthTest::NONE:
+		glDisable(GL_DEPTH_TEST);
+		break;
+	default:
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc((GLenum)pipelineState->depthTest);
+		break;
+	}
 
 	//glDepthMask(pipelineState->bWriteDepth);
 
-	//switch (pipelineState->cullFace)
-	//{
-	//case CullFace::NONE:
-	//	glDisable(GL_CULL_FACE);
-	//	break;
-	//default:
-	//	glEnable(GL_CULL_FACE);
-	//	glCullFace((GLenum)pipelineState->cullFace);
-	//	break;
-	//}
+	switch (pipelineState->cullFace)
+	{
+	case CullFace::NONE:
+		glDisable(GL_CULL_FACE);
+		break;
+	default:
+		glEnable(GL_CULL_FACE);
+		glCullFace((GLenum)pipelineState->cullFace);
+		break;
+	}
 
 	//
 	/*uint32_t blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerFrameConstants");
@@ -66,7 +66,7 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 	}*/
 
 	//
-	/*blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerBatchConstants");
+	uint32_t blockIndex = glGetUniformBlockIndex(mCurrentShader, "PerBatchConstants");
 	if (blockIndex != GL_INVALID_INDEX) 
 	{
 		int32_t blockSize;
@@ -77,10 +77,10 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 
 		glUniformBlockBinding(mCurrentShader, blockIndex, 11);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 11, mUBODrawBatchConstant[frame.frameIndex]);
-	}*/
+	}
 
 	//
-	/*blockIndex = glGetUniformBlockIndex(mCurrentShader, "LightInfo");
+	blockIndex = glGetUniformBlockIndex(mCurrentShader, "LightInfo");
 	if (blockIndex != GL_INVALID_INDEX) 
 	{
 		int32_t blockSize;
@@ -91,7 +91,7 @@ void OpenGLGraphicsCommonBaseManager::SetPipelineState(const shared_ptr<Pipeline
 
 		glUniformBlockBinding(mCurrentShader, blockIndex, 12);
 		glBindBufferBase(GL_UNIFORM_BUFFER, 12, mUBOLightInfo[frame.frameIndex]);
-	}*/
+	}
 
 	//
 	/*if (pipelineState->flag == DrawFlag::SHADOW) 
@@ -329,17 +329,17 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 			glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
 			glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
 
-			//if (mesh->hasNormal)
-			//{
-			//	glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
-			//	glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
-			//}
+			if (mesh->hasNormal)
+			{
+				glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
+				glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
+			}
 
-			////if (mesh->hasVertexColors)
-			////{
-			////	glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
-			////	glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
-			////}
+			//if (mesh->hasVertexColors)
+			//{
+			//	glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
+			//	glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
+			//}
 
 			//if (mesh->hasTextureCoords)
 			//{
@@ -523,20 +523,12 @@ void OpenGLGraphicsCommonBaseManager::SetPerFrameConstants(const DrawFrameContex
 
 void OpenGLGraphicsCommonBaseManager::SetPerBatchConstants(const DrawBatchContext& context)
 {
-	int uboIndex = 0;
-
 	if (!mUBODrawBatchConstant[mFrameIndex]) 
 	{
 		glGenBuffers(1, &mUBODrawBatchConstant[mFrameIndex]);
 	}
 
 	glBindBuffer(GL_UNIFORM_BUFFER, mUBODrawBatchConstant[mFrameIndex]);
-
-	unsigned int uniformBlockIndexRed = glGetUniformBlockIndex(mCurrentShader, "DrawBatch");
-
-	glUniformBlockBinding(mCurrentShader, uniformBlockIndexRed, uboIndex);
-
-	glBindBufferBase(GL_UNIFORM_BUFFER, uboIndex, mUBODrawBatchConstant[mFrameIndex]);
 
 	const auto& constant = static_cast<const PerBatchConstants&>(context);
 
@@ -547,6 +539,16 @@ void OpenGLGraphicsCommonBaseManager::SetPerBatchConstants(const DrawBatchContex
 
 void OpenGLGraphicsCommonBaseManager::SetLightInfo(const LightInfo& lightInfo)
 {
+	if (!mUBOLightInfo[mFrameIndex]) 
+	{
+		glGenBuffers(1, &mUBOLightInfo[mFrameIndex]);
+	}
+
+	glBindBuffer(GL_UNIFORM_BUFFER, mUBOLightInfo[mFrameIndex]);
+
+	glBufferData(GL_UNIFORM_BUFFER, kSizeLightInfo, &lightInfo, GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 bool OpenGLGraphicsCommonBaseManager::SetShaderParameter(const std::string& paramName, const glm::mat4& param)

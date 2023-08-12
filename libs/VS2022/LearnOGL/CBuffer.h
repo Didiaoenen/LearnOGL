@@ -16,11 +16,13 @@ namespace OGL
 #define MAX_LIGHTS 100
 
 enum LightType 
-{ 
-	Omni = 0, 
-	Spot = 1, 
-	Infinity = 2, 
-	Area = 3 
+{
+    UNDEFINED,
+    DIRECTIONAL,
+    POINT,
+    SPOT,
+    AMBIENT,
+    AREA,
 };
 
 enum class DepthTest
@@ -157,18 +159,16 @@ enum  class PrimitiveType : uint16_t
 
 struct Light 
 {
-	glm::mat4x4 lightViewMatrix;               // 64 bytes
-	glm::mat4x4 lightProjectionMatrix;         // 64 bytes
-	float lightIntensity;                     // 4 bytes
-	LightType lightType;                      // 4 bytes
-	int lightCastShadow;                      // 4 bytes
-	int lightShadowMapIndex;                  // 4 bytes
-	glm::vec2 lightSize;                       // 8 bytes
-	glm::vec4 lightPosition;                   // 16 bytes
-	glm::vec4 lightColor;                      // 16 bytes
-	glm::vec4 lightDirection;                  // 16 bytes
-	glm::vec4 lightDistAttenCurveParams[2];    // 32 bytes
-	glm::vec4 lightAngleAttenCurveParams[2];   // 32 bytes
+    glm::vec4 lightPosition;                   // 16 bytes
+    glm::vec4 lightDirection;                  // 16 bytes
+	//LightType lightType;                      // 4 bytes
+	//int lightCastShadow;                      // 4 bytes
+	//int lightShadowMapIndex;                  // 4 bytes
+	//float lightIntensity;                     // 4 bytes
+	//glm::mat4 lightViewMatrix;               // 64 bytes
+	//glm::mat4 lightProjectionMatrix;         // 64 bytes
+	//glm::vec2 lightSize;                       // 8 bytes
+	//glm::vec4 lightColor;                      // 16 bytes
 };
 
 using TextureHandler = intptr_t;
@@ -218,7 +218,7 @@ struct Texture2DArray : Texture2D, TextureArrayBase
 
 struct LightInfo
 {
-	struct Light lights[MAX_LIGHTS];
+    Light lights[MAX_LIGHTS];
 };
 
 struct PerFrameConstants
@@ -259,6 +259,7 @@ struct MaterialTexture
     Texture2D normalMap;
 };
 
+const size_t kSizeLightInfo = ALIGN(sizeof(LightInfo), 256);
 const size_t kSizePerFrameConstantBuffer = ALIGN(sizeof(PerFrameConstants), 256);
 const size_t kSizePerBatchConstantBuffer = ALIGN(sizeof(PerBatchConstants), 256);
 

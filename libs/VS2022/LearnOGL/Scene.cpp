@@ -38,7 +38,13 @@ shared_ptr<SceneObjectMaterial> Scene::GetMaterial(const string& key) const
 
 shared_ptr<SceneObjectLight> Scene::GetLight(const string& key) const
 {
-    return nullptr;
+    auto i = mLights.find(key);
+    if (i == mLights.end())
+    {
+        return nullptr;
+    }
+
+    return i->second;
 }
 
 shared_ptr<SceneCameraNode> Scene::GetFirstCameraNode() const
