@@ -314,190 +314,194 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 		const auto& material = scene.GetMaterial(geometryNode->GetMaterialRef(0));
 		if (geometry && geometry->mMeshs.size() > 0)
 		{
-			const auto& mesh = geometry->mMeshs[0];
-
-			//
-			uint32_t vao, vbo, ebo;
-			glGenVertexArrays(1, &vao);
-			glBindVertexArray(vao);
-
-			glGenBuffers(1, &vbo);
-
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, mesh->mVertices.size() * sizeof(_Vertex), &mesh->mVertices[0], GL_STATIC_DRAW);
-
-			glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
-			glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
-
-			if (mesh->hasNormal)
+			for (size_t i = 0; i < geometry->mMeshs.size(); i++)
 			{
-				glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
-				glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
-			}
+				const auto& mesh = geometry->mMeshs[i];
 
-			//if (mesh->hasVertexColors)
-			//{
-			//	glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
-			//	glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
-			//}
+				//
+				uint32_t vao, vbo, ebo;
+				glGenVertexArrays(1, &vao);
+				glBindVertexArray(vao);
 
-			//if (mesh->hasTextureCoords)
-			//{
-			//	glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
-			//	glVertexAttribPointer((GLuint)_VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::texcoord));
-			//}
+				glGenBuffers(1, &vbo);
 
-			//if (mesh->hasTangentsAndBitangents)
-			//{
-			//	glEnableVertexAttribArray((GLuint)_VertAttrib::Tangent);
-			//	glVertexAttribPointer((GLuint)_VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::tangent));
-			//
-			//	glEnableVertexAttribArray((GLuint)_VertAttrib::Bitangent);
-			//	glVertexAttribPointer((GLuint)_VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::bitangent));
-			//}
+				glBindBuffer(GL_ARRAY_BUFFER, vbo);
+				glBufferData(GL_ARRAY_BUFFER, mesh->mVertices.size() * sizeof(_Vertex), &mesh->mVertices[0], GL_STATIC_DRAW);
 
-			mBuffers.push_back(vbo);
+				glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
+				glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
 
-			glGenBuffers(1, &ebo);
+				if (mesh->hasNormal)
+				{
+					glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
+					glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
+				}
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndices.size() * sizeof(uint32_t), &mesh->mIndices[0], GL_STATIC_DRAW);
+				if (mesh->hasVertexColors)
+				{
+					glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
+					glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
+				}
 
-			mBuffers.push_back(ebo);
+				if (mesh->hasTextureCoords)
+				{
+					glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
+					glVertexAttribPointer((GLuint)_VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::texcoord));
+				}
 
-			function<Texture2D(const string, const shared_ptr<Image>&)> uploadTexture;
+				if (mesh->hasTangentsAndBitangents)
+				{
+					glEnableVertexAttribArray((GLuint)_VertAttrib::Tangent);
+					glVertexAttribPointer((GLuint)_VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::tangent));
+				
+					glEnableVertexAttribArray((GLuint)_VertAttrib::Bitangent);
+					glVertexAttribPointer((GLuint)_VertAttrib::Bitangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::bitangent));
+				}
 
-			uploadTexture = [this](const string& name, const shared_ptr<Image>& image)
-			{
+				mBuffers.push_back(vbo);
 
-				GLuint id;
+				glGenBuffers(1, &ebo);
 
-				glGenTextures(1, &id);
-				glBindTexture(GL_TEXTURE_2D, id);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndices.size() * sizeof(uint32_t), &mesh->mIndices[0], GL_STATIC_DRAW);
+
+				mBuffers.push_back(ebo);
+
+				function<Texture2D(const string, const shared_ptr<Image>&)> uploadTexture;
+
+				uploadTexture = [this](const string& name, const shared_ptr<Image>& image)
+				{
+
+					GLuint id;
+
+					glGenTextures(1, &id);
+					glBindTexture(GL_TEXTURE_2D, id);
 					
-				uint32_t format, internalFormat, type;
-				GetOpenGLTextureFormat(image->pixelFormat, format, internalFormat, type);
+					uint32_t format, internalFormat, type;
+					GetOpenGLTextureFormat(image->pixelFormat, format, internalFormat, type);
 
-				glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image->width, image->height, 0, format, type, image->data);
+					glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, image->width, image->height, 0, format, type, image->data);
 
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glGenerateMipmap(GL_TEXTURE_2D);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+					glGenerateMipmap(GL_TEXTURE_2D);
 
-				glBindTexture(GL_TEXTURE_2D, 0);
+					glBindTexture(GL_TEXTURE_2D, 0);
 
-				Texture2D texture;
-				texture.handler = static_cast<TextureHandler>(id);
-				texture.format = internalFormat;
-				texture.pixelFormat = image->pixelFormat;
-				texture.width = image->width;
-				texture.height = image->height;
+					Texture2D texture;
+					texture.handler = static_cast<TextureHandler>(id);
+					texture.format = internalFormat;
+					texture.pixelFormat = image->pixelFormat;
+					texture.width = image->width;
+					texture.height = image->height;
 
-				return texture;
-			};
+					return texture;
+				};
 
-			auto dbc = make_shared<OpenGLDrawBatchContext>();
+				auto dbc = make_shared<OpenGLDrawBatchContext>();
 
-			/*
-			* 	Color mDiffuse;
-				Color mSpecular;
-				Color mAmbient;
-				Color mEmissive;
-				Normal mNormal;
-			*/
-			//const auto& diffuse = material->mDiffuse;
-			//if (diffuse.ValueMap)
-			//{
-			//	const auto& keyName = diffuse.ValueMap->mName;
-			//	const auto& image = diffuse.ValueMap->GetTextureImage();
-			//	if (image) 
-			//	{
-			//		dbc->material.diffuseMap = uploadTexture(keyName, image);
-			//	}
-			//}
+				/*
+				* 	Color mDiffuse;
+					Color mSpecular;
+					Color mAmbient;
+					Color mEmissive;
+					Normal mNormal;
+				*/
+				//const auto& diffuse = material->mDiffuse;
+				//if (diffuse.ValueMap)
+				//{
+				//	const auto& keyName = diffuse.ValueMap->mName;
+				//	const auto& image = diffuse.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.diffuseMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-			//
-			//const auto& specular = material->mSpecular;
-			//if (specular.ValueMap) 
-			//{
-			//	const auto& keyName = specular.ValueMap->mName;
-			//	const auto& image = specular.ValueMap->GetTextureImage();
-			//	if (image) 
-			//	{
-			//		dbc->material.specularMap = uploadTexture(keyName, image);
-			//	}
-			//}
+				//
+				//const auto& specular = material->mSpecular;
+				//if (specular.ValueMap) 
+				//{
+				//	const auto& keyName = specular.ValueMap->mName;
+				//	const auto& image = specular.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.specularMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-			//
-			//const auto& ambient = material->mAmbient;
-			//if (ambient.ValueMap) 
-			//{
-			//	const auto& keyName = ambient.ValueMap->mName;
-			//	const auto& image = ambient.ValueMap->GetTextureImage();
-			//	if (image) 
-			//	{
-			//		dbc->material.ambientMap = uploadTexture(keyName, image);
-			//	}
-			//}
+				//
+				//const auto& ambient = material->mAmbient;
+				//if (ambient.ValueMap) 
+				//{
+				//	const auto& keyName = ambient.ValueMap->mName;
+				//	const auto& image = ambient.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.ambientMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-			//
-			//const auto& emissive = material->mEmissive;
-			//if (emissive.ValueMap) 
-			//{
-			//	const auto& keyName = emissive.ValueMap->mName;
-			//	const auto& image = emissive.ValueMap->GetTextureImage();
-			//	if (image) 
-			//	{
-			//		dbc->material.emissiveMap = uploadTexture(keyName, image);
-			//	}
-			//}
+				//
+				//const auto& emissive = material->mEmissive;
+				//if (emissive.ValueMap) 
+				//{
+				//	const auto& keyName = emissive.ValueMap->mName;
+				//	const auto& image = emissive.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.emissiveMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-			//
-			//const auto& normal = material->mNormal;
-			//if (normal.ValueMap) 
-			//{
-			//	const auto& keyName = normal.ValueMap->mName;
-			//	const auto& image = normal.ValueMap->GetTextureImage();
-			//	if (image) 
-			//	{
-			//		dbc->material.normalMap = uploadTexture(keyName, image);
-			//	}
-			//}
+				//
+				//const auto& normal = material->mNormal;
+				//if (normal.ValueMap) 
+				//{
+				//	const auto& keyName = normal.ValueMap->mName;
+				//	const auto& image = normal.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.normalMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-			glBindVertexArray(0);
+				glBindVertexArray(0);
 
-			GLenum model = 0;
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT))
-			{
-				model = GL_POINT;
+				GLenum model = 0;
+				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT))
+				{
+					model = GL_POINT;
+				}
+				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE))
+				{
+					model = GL_LINE;
+				}
+				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE))
+				{
+					model = GL_TRIANGLES;
+				}
+				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON))
+				{
+					model = GL_TRIANGLES;
+				}
+
+				dbc->batchIndex = batchIndex++;
+				dbc->vao = vao;
+				dbc->node = geometryNode;
+				dbc->mode = (uint32_t)model;
+				dbc->type = (uint32_t)GL_UNSIGNED_INT;
+				dbc->count = mesh->mIndices.size();
+
+				for (size_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
+				{
+					mFrames[i].batchContexts.push_back(dbc);
+				}
 			}
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE))
-			{
-				model = GL_LINE;
-			}
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE))
-			{
-				model = GL_TRIANGLES;
-			}
-			if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON))
-			{
-				model = GL_TRIANGLES;
 			}
 
-			dbc->batchIndex = batchIndex++;
-			dbc->vao = vao;
-			dbc->node = geometryNode;
-			dbc->mode = (uint32_t)model;
-			dbc->type = (uint32_t)GL_UNSIGNED_INT;
-			dbc->count = mesh->mIndices.size();
-
-			for (size_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
-			{
-				mFrames[i].batchContexts.push_back(dbc);
-			}
-		}
 	}
 }
 

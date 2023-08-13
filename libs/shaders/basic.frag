@@ -28,5 +28,5 @@ void main()
     vec3 lightDir = normalize(lights[0].lightPos.xyz - WorldPos);
     float lambert = max(dot(normalize(Normal), lightDir), 0.0) * 0.5 + 0.5;
     vec3 diffuse = lambert > shadowRange ? diffuseColor : shadowColor;
-    FragColor = vec4(diffuse, 1.0);
+    FragColor = vec4(lambert * diffuseColor, 1.0);
 }
