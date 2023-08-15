@@ -4,6 +4,8 @@
 
 #include <stb_image.h>
 
+#include "AssetLoader.h"
+
 using namespace OGL;
 using namespace std;
 
@@ -16,8 +18,12 @@ bool SceneObjectTexture::LoadTexture()
 
 	stbi_set_flip_vertically_on_load(mFlip);
 
+	mImage = make_shared<Image>();
+
 	int channels;
-	void* imageData = (void*)stbi_load(mName.c_str(), &mImage->width, &mImage->height, &channels, 0);
+	AssetLoader assetLoader;
+	auto buffer = assetLoader.SyncOpenAndReadBinary(("resources/objects/" + mName).c_str());
+	void* imageData = (void*)stbi_loadf_from_memory(buffer.GetData(), buffer.GetDataSize(), &mImage->width, &mImage->height, &channels, 0);
 
 	if (!imageData)
 	{

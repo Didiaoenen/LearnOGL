@@ -409,64 +409,38 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 					Color mEmissive;
 					Normal mNormal;
 				*/
-				//const auto& diffuse = material->mDiffuse;
-				//if (diffuse.ValueMap)
-				//{
-				//	const auto& keyName = diffuse.ValueMap->mName;
-				//	const auto& image = diffuse.ValueMap->GetTextureImage();
-				//	if (image) 
-				//	{
-				//		dbc->material.diffuseMap = uploadTexture(keyName, image);
-				//	}
-				//}
+				const auto& diffuse = material->mDiffuse;
+				if (diffuse.ValueMap)
+				{
+					const auto& keyName = diffuse.ValueMap->mName;
+					const auto& image = diffuse.ValueMap->GetTextureImage();
+					if (image) 
+					{
+						dbc->material.diffuseMap = uploadTexture(keyName, image);
+					}
+				}
 
-				//
-				//const auto& specular = material->mSpecular;
-				//if (specular.ValueMap) 
-				//{
-				//	const auto& keyName = specular.ValueMap->mName;
-				//	const auto& image = specular.ValueMap->GetTextureImage();
-				//	if (image) 
-				//	{
-				//		dbc->material.specularMap = uploadTexture(keyName, image);
-				//	}
-				//}
+				const auto& normal = material->mNormal;
+				if (normal.ValueMap) 
+				{
+					const auto& keyName = normal.ValueMap->mName;
+					const auto& image = normal.ValueMap->GetTextureImage();
+					if (image) 
+					{
+						dbc->material.normalMap = uploadTexture(keyName, image);
+					}
+				}
 
-				//
-				//const auto& ambient = material->mAmbient;
-				//if (ambient.ValueMap) 
-				//{
-				//	const auto& keyName = ambient.ValueMap->mName;
-				//	const auto& image = ambient.ValueMap->GetTextureImage();
-				//	if (image) 
-				//	{
-				//		dbc->material.ambientMap = uploadTexture(keyName, image);
-				//	}
-				//}
-
-				//
-				//const auto& emissive = material->mEmissive;
-				//if (emissive.ValueMap) 
-				//{
-				//	const auto& keyName = emissive.ValueMap->mName;
-				//	const auto& image = emissive.ValueMap->GetTextureImage();
-				//	if (image) 
-				//	{
-				//		dbc->material.emissiveMap = uploadTexture(keyName, image);
-				//	}
-				//}
-
-				//
-				//const auto& normal = material->mNormal;
-				//if (normal.ValueMap) 
-				//{
-				//	const auto& keyName = normal.ValueMap->mName;
-				//	const auto& image = normal.ValueMap->GetTextureImage();
-				//	if (image) 
-				//	{
-				//		dbc->material.normalMap = uploadTexture(keyName, image);
-				//	}
-				//}
+				const auto& mask = material->mMask;
+				if (mask.ValueMap)
+				{
+					const auto& keyName = mask.ValueMap->mName;
+					const auto& image = mask.ValueMap->GetTextureImage();
+					if (image)
+					{
+						dbc->material.maskMap = uploadTexture(keyName, image);
+					}
+				}
 
 				glBindVertexArray(0);
 

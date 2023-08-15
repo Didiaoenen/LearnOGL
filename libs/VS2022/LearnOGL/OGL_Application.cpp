@@ -52,7 +52,7 @@ void OGL_Application::Setup()
 	mApp = this;
 
 	//
-	mSceneManager->LoadScene("resources/objects/ttest.blend");
+	mSceneManager->LoadScene("resources/objects/AnisiaRoon_v1.0_2.79.default.gltf");
 }
 
 void OGL_Application::Update(double dt)

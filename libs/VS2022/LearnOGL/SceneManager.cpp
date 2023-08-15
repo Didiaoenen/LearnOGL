@@ -36,7 +36,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 		AssetLoader assetLoader;
 		auto buffer = assetLoader.SyncOpenAndReadBinary(sceneName.c_str());
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFileFromMemory(buffer.GetData(), buffer.GetDataSize(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFile("./../../../" + sceneName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
 			cout << "Error::Assimp: " << importer.GetErrorString() << std::endl;
@@ -272,62 +272,20 @@ bool SceneManager::LoadScene(const string& sceneName)
 					}
 
 					vector<shared_ptr<SceneObjectTexture>> diffuseMaps = _ProcessTexture(material, aiTextureType_DIFFUSE);
-					vector<shared_ptr<SceneObjectTexture>> specularMaps = _ProcessTexture(material, aiTextureType_SPECULAR);
-					vector<shared_ptr<SceneObjectTexture>> ambientMaps = _ProcessTexture(material, aiTextureType_AMBIENT);
-					vector<shared_ptr<SceneObjectTexture>> emissiveMaps = _ProcessTexture(material, aiTextureType_EMISSIVE);
 					vector<shared_ptr<SceneObjectTexture>> normalMaps = _ProcessTexture(material, aiTextureType_NORMALS);
+					vector<shared_ptr<SceneObjectTexture>> maskMaps = _ProcessTexture(material, aiTextureType_LIGHTMAP);
 			
 					if (diffuseMaps.size() > 0)
 					{
 						materialPtr->mDiffuse = diffuseMaps.at(0);
 					}
-					if (specularMaps.size() > 0)
-					{
-						materialPtr->mSpecular = specularMaps.at(0);
-					}
-					if (ambientMaps.size() > 0)
-					{
-						materialPtr->mAmbient = ambientMaps.at(0);
-					}
-					if (emissiveMaps.size() > 0)
-					{
-						materialPtr->mEmissive = emissiveMaps.at(0);
-					}
 					if (normalMaps.size() > 0)
 					{
 						materialPtr->mNormal = normalMaps.at(0);
 					}
-
-					aiColor4D diffuse, specular, ambient, emission;
-					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
+					if (maskMaps.size() > 0)
 					{
-						materialPtr->mDiffuse = Color(vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
-					}
-					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular)) 
-					{
-						materialPtr->mSpecular = Color(vec4(specular.r, specular.g, specular.b, specular.a));
-					}
-					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
-					{
-						materialPtr->mAmbient = Color(vec4(ambient.r, ambient.g, ambient.b, ambient.a));
-					}
-					if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emission))
-					{
-						materialPtr->mEmissive = Color(vec4(emission.r, emission.g, emission.b, emission.a));
-					}
-
-					ai_real diffuse_intensity, specular_hardness, specular_intensity;
-					if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.diffuse.intensity", 0, 0, &diffuse_intensity))
-					{
-						materialPtr->mDiffuseIntensity = Parameter(diffuse_intensity);
-					}
-					if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.hardness", 0, 0, &specular_hardness))
-					{
-						materialPtr->mSpecularPower = Parameter(specular_hardness);
-					}
-					if (AI_SUCCESS == aiGetMaterialFloat(material, "$mat.blend.specular.intensity", 0, 0, &specular_intensity))
-					{
-						materialPtr->mSpecularIntensity = Parameter(specular_intensity);
+						materialPtr->mMask = maskMaps.at(0);
 					}
 
 					for (size_t i = 0; i < material->mNumProperties; i++)

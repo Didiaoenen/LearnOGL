@@ -35,7 +35,7 @@ public:
     bool mFlip;
     bool mGammaCorrection;
 
-    bool mLoaded;
+    bool mLoaded{ false };
 };
 }
 

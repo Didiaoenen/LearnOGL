@@ -40,6 +40,7 @@ public:
 	Color mAmbient;
 	Color mEmissive;
 	Normal mNormal;
+	Color mMask;
 
 	Parameter mDiffuseIntensity;
 
