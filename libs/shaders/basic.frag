@@ -17,6 +17,10 @@ layout (std140) uniform LightInfo
     Light lights[lightMaxCount];
 };
 
+uniform sampler2D diffuseMap;
+uniform sampler2D normalMap;
+uniform sampler2D maskMap;
+
 const float shadowRange = 0.5;
 const vec3 diffuseColor = vec3(1.0, 1.0, 1.0);
 const vec3 shadowColor = vec3(0.7, 0.7, 0.7);
@@ -28,5 +32,5 @@ void main()
     vec3 lightDir = normalize(lights[0].lightPos.xyz - WorldPos);
     float lambert = max(dot(normalize(Normal), lightDir), 0.0) * 0.5 + 0.5;
     vec3 diffuse = lambert > shadowRange ? diffuseColor : shadowColor;
-    FragColor = vec4(lambert * diffuseColor, 1.0);
+    FragColor = texture(diffuseMap, TexCoords);//vec4(lambert * diffuseColor, 1.0);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include "BaseSceneObject.h"
@@ -14,9 +15,14 @@ class SceneObjectMesh : public BaseSceneObject
 {
 public:
     SceneObjectMesh() {}
+    SceneObjectMesh(const std::string& name) 
+        : mName(name)
+    {
+    }
     ~SceneObjectMesh() {}
 
 public:
+    std::string mName;
     bool hasNormal{ false };
     bool hasVertexColors{ false };
     bool hasTextureCoords{ false };

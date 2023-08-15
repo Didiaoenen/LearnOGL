@@ -126,7 +126,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 			std::vector<_Vertex> vertices;
 			std::vector<uint32_t> indices;
 
-			auto meshPtr = make_shared<SceneObjectMesh>();
+			auto meshPtr = make_shared<SceneObjectMesh>(mesh->mName.C_Str());
 
 			for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 			{
@@ -158,14 +158,14 @@ bool SceneManager::LoadScene(const string& sceneName)
 					vertex.bitangent.z = mesh->mBitangents[i].z;
 				}
 
-				if (mesh->HasVertexColors(0))
-				{
-					meshPtr->hasVertexColors = true;
+				//if (mesh->HasVertexColors(0))
+				//{
+				//	meshPtr->hasVertexColors = true;
 
-					vertex.color.r = mesh->mColors[0]->r;
-					vertex.color.g = mesh->mColors[0]->g;
-					vertex.color.b = mesh->mColors[0]->b;
-				}
+				//	vertex.color.r = mesh->mColors[0]->r;
+				//	vertex.color.g = mesh->mColors[0]->g;
+				//	vertex.color.b = mesh->mColors[0]->b;
+				//}
 
 				if (mesh->HasTextureCoords(0))
 				{
@@ -288,15 +288,15 @@ bool SceneManager::LoadScene(const string& sceneName)
 						materialPtr->mMask = maskMaps.at(0);
 					}
 
-					for (size_t i = 0; i < material->mNumProperties; i++)
-					{
-						auto property = material->mProperties[i];
-						cout << property->mKey.C_Str() << " " << property->mType << endl;
-					}
+					//for (size_t i = 0; i < material->mNumProperties; i++)
+					//{
+					//	auto property = material->mProperties[i];
+					//	cout << property->mKey.C_Str() << " " << property->mType << endl;
+					//}
 
-					nodePtr->AddMaterialRef(materialPtr->mName);
+					nodePtr->AddMaterialRef(mesh->mName.C_Str());
 
-					scenePtr->mMaterials.emplace(keyName, materialPtr);
+					scenePtr->mMaterials.emplace(mesh->mName.C_Str(), materialPtr);
 				}
 
 				for (size_t i = 0; i < node->mNumChildren; i++)

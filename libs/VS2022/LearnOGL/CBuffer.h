@@ -142,7 +142,7 @@ enum class _VertAttrib
 {
     Position,
     Normal,
-    Color,
+    //Color,
     TexCoord,
     Tangent,
     Bitangent,

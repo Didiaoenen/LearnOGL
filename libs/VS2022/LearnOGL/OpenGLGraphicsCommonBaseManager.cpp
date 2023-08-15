@@ -124,30 +124,17 @@ void OpenGLGraphicsCommonBaseManager::DrawBatch(const Frame& frame)
 
 		const auto& dbc = dynamic_cast<OpenGLDrawBatchContext&>(*pDbc);
 
-		//
-		//SetShaderParameter("diffuseMap", 0);
-		//glActiveTexture(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, dbc.material.diffuseMap.handler);
+		SetShaderParameter("diffuseMap", 0);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, dbc.material.diffuseMap.handler);
 
-		//
-		//SetShaderParameter("specularMap", 1);
-		//glActiveTexture(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, dbc.material.specularMap.handler);
+		SetShaderParameter("normalMap", 1);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, dbc.material.normalMap.handler);
 
-		//
-		//SetShaderParameter("ambientMap", 2);
-		//glActiveTexture(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, dbc.material.ambientMap.handler);
-
-		//
-		//SetShaderParameter("emissiveMap", 3);
-		//glActiveTexture(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, dbc.material.emissiveMap.handler);
-
-		//
-		//SetShaderParameter("normalMap", 3);
-		//glActiveTexture(GL_TEXTURE_2D);
-		//glBindTexture(GL_TEXTURE_2D, dbc.material.normalMap.handler);
+		SetShaderParameter("maskMap", 2);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, dbc.material.maskMap.handler);
 
 		//
 		glBindVertexArray(dbc.vao);
@@ -311,12 +298,13 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 	{
 		const auto& geometryNode = it.second;
 		const auto& geometry = scene.GetGeometry(geometryNode->GetSceneObjectRef());
-		const auto& material = scene.GetMaterial(geometryNode->GetMaterialRef(0));
 		if (geometry && geometry->mMeshs.size() > 0)
 		{
 			for (size_t i = 0; i < geometry->mMeshs.size(); i++)
 			{
 				const auto& mesh = geometry->mMeshs[i];
+
+				const auto& material = scene.GetMaterial(mesh->mName);
 
 				//
 				uint32_t vao, vbo, ebo;
@@ -337,11 +325,11 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 					glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
 				}
 
-				if (mesh->hasVertexColors)
-				{
-					glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
-					glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
-				}
+				//if (mesh->hasVertexColors)
+				//{
+				//	glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
+				//	glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
+				//}
 
 				if (mesh->hasTextureCoords)
 				{
@@ -402,13 +390,6 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 
 				auto dbc = make_shared<OpenGLDrawBatchContext>();
 
-				/*
-				* 	Color mDiffuse;
-					Color mSpecular;
-					Color mAmbient;
-					Color mEmissive;
-					Normal mNormal;
-				*/
 				const auto& diffuse = material->mDiffuse;
 				if (diffuse.ValueMap)
 				{

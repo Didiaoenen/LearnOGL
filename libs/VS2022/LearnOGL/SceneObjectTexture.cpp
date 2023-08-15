@@ -21,9 +21,7 @@ bool SceneObjectTexture::LoadTexture()
 	mImage = make_shared<Image>();
 
 	int channels;
-	AssetLoader assetLoader;
-	auto buffer = assetLoader.SyncOpenAndReadBinary(("resources/objects/" + mName).c_str());
-	void* imageData = (void*)stbi_loadf_from_memory(buffer.GetData(), buffer.GetDataSize(), &mImage->width, &mImage->height, &channels, 0);
+	void* imageData = (void*)stbi_load(("./../../../resources/objects/" + mName).c_str(), &mImage->width, &mImage->height, &channels, 0);
 
 	if (!imageData)
 	{
@@ -36,9 +34,6 @@ bool SceneObjectTexture::LoadTexture()
 	switch (channels)
 	{
 	case 1:
-		//internalFormat = GL_R8;
-		//dataFormat = GL_RED;
-		//dataType = GL_UNSIGNED_BYTE;
 		mImage->pixelFormat = PixelFormat::R8;
 		mImage->imageDataType = ImageDataType::UNSIGNED_BYTE;
 		mImage->imageDataFormat = ImageDataFormat::RED;
@@ -46,18 +41,12 @@ bool SceneObjectTexture::LoadTexture()
 		break;
 
 	case 3:
-		//internalFormat = GL_RGB8;
-		//dataFormat = GL_RGB;
-		//dataType = GL_UNSIGNED_BYTE;
 		mImage->pixelFormat = PixelFormat::RGB8;
 		mImage->imageDataType = ImageDataType::UNSIGNED_BYTE;
 		mImage->imageDataFormat = ImageDataFormat::RGB;
 		break;
 
 	case 4:
-		//internalFormat = GL_RGBA8;
-		//dataFormat = GL_RGBA;
-		//dataType = GL_UNSIGNED_BYTE;
 		mImage->pixelFormat = PixelFormat::RGBA8;
 		mImage->imageDataType = ImageDataType::UNSIGNED_BYTE;
 		mImage->imageDataFormat = ImageDataFormat::RGBA;
@@ -68,7 +57,6 @@ bool SceneObjectTexture::LoadTexture()
 	}
 
 	mImage->data = imageData;
-	stbi_image_free(imageData);
 
 	mLoaded = true;
 
