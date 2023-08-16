@@ -32,11 +32,7 @@ bool GraphicsManager::Initialize()
     {
         mInitPasses.push_back(make_shared<BRDFIntegrator>(this, pipelineStateManager));
         mDrawPasses.push_back(make_shared<ShadowMapPass>(this, pipelineStateManager));
-
-        auto forward_pass = make_shared<ForwardGeometryPass>(this, pipelineStateManager);
-        forward_pass->EnableRenderToTexture();
-
-        mDrawPasses.push_back(forward_pass);
+        mDrawPasses.push_back(make_shared<ForwardGeometryPass>(this, pipelineStateManager));
         mDrawPasses.push_back(make_shared<OverlayPass>(this, pipelineStateManager));
     }
 
@@ -188,9 +184,21 @@ void GraphicsManager::CalculateCameraMatrix()
             
             auto camPos = glm::vec3(frameContext.camPos);
             frameContext.viewMatrix = glm::mat4(glm::mat3(transform)) * glm::lookAt(camPos, camPos + cameraObject->mLookAt, cameraObject->mUp);
-            
+        
             float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
             frameContext.projectionMatrix = glm::perspective(cameraObject->mHorizontalFOV, screenAspect, cameraObject->mClipPlaneNear, cameraObject->mClipPlaneFar);
+        }
+        else
+        {
+            auto i = glm::identity<mat4>();
+            i = glm::translate(i, glm::vec3(0.0f, -0.5f, -2.0f));
+            i = glm::scale(i, glm::vec3(0.3f, 0.3f, 0.3f));
+
+            auto camPos = glm::vec3(0.0f, 0.0f, 1.0f);
+            frameContext.viewMatrix = i * glm::lookAt(camPos, camPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+            float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
+            frameContext.projectionMatrix = glm::perspective(glm::radians(60.0f), screenAspect, 0.1f, 100.0f);
         }
     }
 }

@@ -57,8 +57,8 @@ protected:
 	void SetPerBatchConstants(const DrawBatchContext& context);
 	void SetLightInfo(const LightInfo& lightInfo);
 
-	bool SetShaderParameter(const std::string& paramName, const glm::mat4x4& param);
-	bool SetShaderParameter(const std::string& paramName, const glm::mat4x4* param, const int32_t count);
+	bool SetShaderParameter(const std::string& paramName, const glm::mat4& param);
+	bool SetShaderParameter(const std::string& paramName, const glm::mat4* param, const int32_t count);
 	bool SetShaderParameter(const std::string& paramName, const glm::vec4& param);
 	bool SetShaderParameter(const std::string& paramName, const glm::vec3& param);
 	bool SetShaderParameter(const std::string& paramName, const glm::vec2& param);

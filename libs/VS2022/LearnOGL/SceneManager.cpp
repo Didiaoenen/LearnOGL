@@ -158,15 +158,6 @@ bool SceneManager::LoadScene(const string& sceneName)
 					vertex.bitangent.z = mesh->mBitangents[i].z;
 				}
 
-				//if (mesh->HasVertexColors(0))
-				//{
-				//	meshPtr->hasVertexColors = true;
-
-				//	vertex.color.r = mesh->mColors[0]->r;
-				//	vertex.color.g = mesh->mColors[0]->g;
-				//	vertex.color.b = mesh->mColors[0]->b;
-				//}
-
 				if (mesh->HasTextureCoords(0))
 				{
 					meshPtr->hasTextureCoords = true;

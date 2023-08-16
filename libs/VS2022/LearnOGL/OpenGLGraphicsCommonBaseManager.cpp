@@ -325,12 +325,6 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 					glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
 				}
 
-				//if (mesh->hasVertexColors)
-				//{
-				//	glEnableVertexAttribArray((GLuint)_VertAttrib::Color);
-				//	glVertexAttribPointer((GLuint)_VertAttrib::Color, 4, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::color));
-				//}
-
 				if (mesh->hasTextureCoords)
 				{
 					glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
