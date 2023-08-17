@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 
 #include "SceneObjectMesh.h"
 
@@ -12,7 +12,7 @@ using namespace std;
 
 namespace OGL
 {
-class SceneObjectGeometry : public BaseSceneObject
+class SceneObjectGeometry : public SceneObjectBase
 {
 
 public:

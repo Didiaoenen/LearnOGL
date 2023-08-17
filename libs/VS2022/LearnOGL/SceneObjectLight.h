@@ -2,13 +2,13 @@
 
 #include <glm/glm.hpp>
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 
 #include "CBuffer.h"
 
 namespace OGL
 {
-class SceneObjectLight : public BaseSceneObject
+class SceneObjectLight : public SceneObjectBase
 {
 public:
     SceneObjectLight()

@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 #include "ParameterValueMap.h"
 
 using namespace std;
@@ -12,11 +12,10 @@ using namespace glm;
 
 namespace OGL
 {
-class SceneObjectMaterial : public BaseSceneObject
+class SceneObjectMaterial : public SceneObjectBase
 {
 public:
 	SceneObjectMaterial()
-		: BaseSceneObject(0) 
 	{
 	}
 

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 
 #include "Image.h"
 
@@ -11,16 +11,15 @@ using namespace std;
 
 namespace OGL
 {
-class SceneObjectTexture : public BaseSceneObject
+class SceneObjectTexture : public SceneObjectBase
 {
 public:
     SceneObjectTexture()
-        : BaseSceneObject(0) 
     {
     }
 
     explicit SceneObjectTexture(const string& name)
-        : BaseSceneObject(0), mName(name)
+        : mName(name)
     {
     }
 

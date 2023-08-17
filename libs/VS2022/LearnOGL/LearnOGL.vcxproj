@@ -158,6 +158,7 @@
     <ClCompile Include="OpenGLPipelineStateManager.cpp" />
     <ClCompile Include="OverlayPass.cpp" />
     <ClCompile Include="PipelineStateManager.cpp" />
+    <ClCompile Include="RefCounts.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneBaseObject.cpp" />
     <ClCompile Include="LearnOGLApp.cpp" />
@@ -198,7 +199,8 @@
     <ClInclude Include="BaseDispatchPass.h" />
     <ClInclude Include="BaseDrawPass.h" />
     <ClInclude Include="BaseSceneNode.h" />
-    <ClInclude Include="BaseSceneObject.h" />
+    <ClInclude Include="RefCounts.h" />
+    <ClInclude Include="SceneObjectBase.h" />
     <ClInclude Include="BaseSubPass.h" />
     <ClInclude Include="BRDFIntegrator.h" />
     <ClInclude Include="Buffer.h" />

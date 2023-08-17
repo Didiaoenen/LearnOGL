@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "SceneNode.h"
-#include "SceneObject.h"
+#include "SceneObjectBase.h"
 
 using namespace std;
 

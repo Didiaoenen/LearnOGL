@@ -3,17 +3,16 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 
 using namespace glm;
 
 namespace OGL
 {
-class SceneObjectTransform : public BaseSceneObject
+class SceneObjectTransform : public SceneObjectBase
 {
 public:
     SceneObjectTransform()
-        : BaseSceneObject(0) 
     {
     }
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 
 namespace OGL
 {
-class SceneObjectSkyBox : public BaseSceneObject
+class SceneObjectSkyBox : public SceneObjectBase
 {
 public:
 };

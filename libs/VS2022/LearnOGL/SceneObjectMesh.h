@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "BaseSceneObject.h"
+#include "SceneObjectBase.h"
 
 #include "CBuffer.h"
 
@@ -11,7 +11,7 @@ using namespace std;
 
 namespace OGL
 {
-class SceneObjectMesh : public BaseSceneObject
+class SceneObjectMesh : public SceneObjectBase
 {
 public:
     SceneObjectMesh() {}

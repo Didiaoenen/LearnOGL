@@ -22,6 +22,15 @@
     <Filter Include="头文件\SceneGraph">
       <UniqueIdentifier>{c8d45de4-e453-4431-9874-2de6c1d6dbcf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Base">
+      <UniqueIdentifier>{b4b0144d-e0f4-4d16-8073-ba991785da8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Base">
+      <UniqueIdentifier>{67fc8dfb-38ec-481e-8b37-3cd2c12f4d79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\SceneGraph">
+      <UniqueIdentifier>{509ecb69-d8f8-47ba-80a7-6e24c3b3272b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LearnOGLApp.cpp">
@@ -195,6 +204,9 @@
     <ClCompile Include="SceneObjectTransform.cpp">
       <Filter>源文件\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="RefCounts.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LearnOGLApp.h">
@@ -332,9 +344,6 @@
     <ClInclude Include="BaseSceneNode.h">
       <Filter>头文件\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="BaseSceneObject.h">
-      <Filter>头文件\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
@@ -442,6 +451,12 @@
     </ClInclude>
     <ClInclude Include="SceneObjectTransform.h">
       <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectBase.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="RefCounts.h">
+      <Filter>头文件\Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
