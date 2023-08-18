@@ -105,10 +105,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./../../includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,13 +145,18 @@
     <ClCompile Include="GraphicsManager.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="OGL_Application.cpp" />
+    <ClCompile Include="OGL_Asset.cpp" />
     <ClCompile Include="OGL_Camera.cpp" />
+    <ClCompile Include="OGL_Component.cpp" />
+    <ClCompile Include="OGL_Entity.cpp" />
     <ClCompile Include="OGL_Light.cpp" />
     <ClCompile Include="OGL_Material.cpp" />
     <ClCompile Include="OGL_Mesh.cpp" />
+    <ClCompile Include="OGL_MeshRenderer.cpp" />
     <ClCompile Include="OGL_SkyBox.cpp" />
     <ClCompile Include="OGL_Texture.cpp" />
     <ClCompile Include="OGL_Transform.cpp" />
+    <ClCompile Include="OGL_UUID.cpp" />
     <ClCompile Include="OpenGLGraphicsManager.cpp" />
     <ClCompile Include="OpenGLGraphicsCommonBaseManager.cpp" />
     <ClCompile Include="OpenGLPipelineStateCommonBaseManager.cpp" />
@@ -199,6 +204,11 @@
     <ClInclude Include="BaseDispatchPass.h" />
     <ClInclude Include="BaseDrawPass.h" />
     <ClInclude Include="BaseSceneNode.h" />
+    <ClInclude Include="OGL_Asset.h" />
+    <ClInclude Include="OGL_Component.h" />
+    <ClInclude Include="OGL_Entity.h" />
+    <ClInclude Include="OGL_MeshRenderer.h" />
+    <ClInclude Include="OGL_UUID.h" />
     <ClInclude Include="RefCounts.h" />
     <ClInclude Include="SceneObjectBase.h" />
     <ClInclude Include="BaseSubPass.h" />

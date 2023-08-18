@@ -6,7 +6,8 @@
 #include "SceneNode.h"
 #include "SceneObjectBase.h"
 
-using namespace std;
+#include "OGL_UUID.h"
+#include "OGL_Entity.h"
 
 namespace OGL
 {
@@ -25,6 +26,10 @@ public:
 
 	[[nodiscard]] shared_ptr<BaseSceneNode> GetSceneNode(const string& key);
 	
+	[[nodiscard]] shared_ptr<OGL_Entity> CreateEntity(const std::string& name = std::string());
+
+	[[nodiscard]] shared_ptr<OGL_Entity> GetEntity(const std::string& name);
+
 public:
 	shared_ptr<BaseSceneNode> mSceneGraph;
 
@@ -41,6 +46,8 @@ public:
 	unordered_multimap<string, shared_ptr<SceneCameraNode>> mCameraNodes;
 
 	unordered_multimap<string, shared_ptr<SceneGeometryNode>> mGeometryNodes;
+
+	std::unordered_map<std::string, shared_ptr<OGL_Entity>> mEntitys;
 
 	shared_ptr<SceneObjectSkyBox> mSkyBox;
 

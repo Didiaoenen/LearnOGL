@@ -1,8 +1,22 @@
 #pragma once
 
+#include <string>
+
+#include "OGL_Asset.h"
+#include "OGL_Texture.h"
+#include "ParameterValueMap.h"
+
 namespace OGL
 {
-class OGL_Material
+class OGL_Material : public OGL_Asset
 {
+public:
+	OGL_Material() = default;
+	OGL_Material(const std::string& name) : mName(name) {}
+	virtual ~OGL_Material() = default;
+
+public:
+	std::string mName;
+	Color mDiffuseMap;
 };
 }

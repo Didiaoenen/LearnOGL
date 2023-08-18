@@ -12,9 +12,12 @@
 #include "CBuffer.h"
 #include "AssetLoader.h"
 
+#include "OGL_Light.h"
+#include "OGL_Camera.h"
+#include "OGL_Transform.h"
+#include "OGL_MeshRenderer.h"
+
 using namespace OGL;
-using namespace std;
-using namespace glm;
 
 bool SceneManager::Initialize()
 {
@@ -36,8 +39,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 		AssetLoader assetLoader;
 		auto buffer = assetLoader.SyncOpenAndReadBinary(sceneName.c_str());
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("./../../../" + sceneName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		const aiScene* _aiScene = importer.ReadFile("./../../../" + sceneName, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+		if (!_aiScene || _aiScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !_aiScene->mRootNode)
 		{
 			cout << "Error::Assimp: " << importer.GetErrorString() << std::endl;
 			return false;
@@ -47,86 +50,74 @@ bool SceneManager::LoadScene(const string& sceneName)
 		mScenes.push(scenePtr);
 
 		//
-		for (size_t i = 0; i < scene->mNumLights; i++)
+		for (size_t i = 0; i < _aiScene->mNumLights; i++)
 		{
-			auto light = scene->mLights[i];
-			auto keyName = light->mName.C_Str();
+			auto _aiLight = _aiScene->mLights[i];
+			auto keyName = _aiLight->mName.C_Str();
+			auto entity = scenePtr->CreateEntity(keyName);
+			auto oglLight = entity->AddComponent<OGL_Light>();
 
-			auto lightObject = make_shared<SceneObjectLight>();
-			lightObject->mUp.x = light->mUp.x;
-			lightObject->mUp.y = light->mUp.y;
-			lightObject->mUp.z = light->mUp.z;
+			oglLight.mUp.x = _aiLight->mUp.x;
+			oglLight.mUp.y = _aiLight->mUp.y;
+			oglLight.mUp.z = _aiLight->mUp.z;
 
-			lightObject->mSize.x = light->mSize.x;
-			lightObject->mSize.y = light->mSize.y;
+			oglLight.mSize.x = _aiLight->mSize.x;
+			oglLight.mSize.y = _aiLight->mSize.y;
 
-			lightObject->mDirection.x = light->mDirection.x;
-			lightObject->mDirection.y = light->mDirection.y;
-			lightObject->mDirection.z = light->mDirection.z;
+			oglLight.mDirection.x = _aiLight->mDirection.x;
+			oglLight.mDirection.y = _aiLight->mDirection.y;
+			oglLight.mDirection.z = _aiLight->mDirection.z;
 
-			lightObject->mColorDiffuse.r = light->mColorDiffuse.r;
-			lightObject->mColorDiffuse.g = light->mColorDiffuse.g;
-			lightObject->mColorDiffuse.b = light->mColorDiffuse.b;
+			oglLight.mColorDiffuse.r = _aiLight->mColorDiffuse.r;
+			oglLight.mColorDiffuse.g = _aiLight->mColorDiffuse.g;
+			oglLight.mColorDiffuse.b = _aiLight->mColorDiffuse.b;
 
-			lightObject->mColorSpecular.r = light->mColorSpecular.r;
-			lightObject->mColorSpecular.g = light->mColorSpecular.g;
-			lightObject->mColorSpecular.b = light->mColorSpecular.b;
+			oglLight.mColorSpecular.r = _aiLight->mColorSpecular.r;
+			oglLight.mColorSpecular.g = _aiLight->mColorSpecular.g;
+			oglLight.mColorSpecular.b = _aiLight->mColorSpecular.b;
 
-			lightObject->mColorAmbient.r = light->mColorAmbient.r;
-			lightObject->mColorAmbient.g = light->mColorAmbient.g;
-			lightObject->mColorAmbient.b = light->mColorAmbient.b;
+			oglLight.mColorAmbient.r = _aiLight->mColorAmbient.r;
+			oglLight.mColorAmbient.g = _aiLight->mColorAmbient.g;
+			oglLight.mColorAmbient.b = _aiLight->mColorAmbient.b;
 
-			lightObject->mType = (LightType)light->mType;
-			lightObject->mAngleInnerCone = light->mAngleInnerCone;
-			lightObject->mAngleOuterCone = light->mAngleOuterCone;
-			lightObject->mAttenuationLinear = light->mAttenuationLinear;
-			lightObject->mAttenuationConstant = light->mAttenuationConstant;
-			lightObject->mAttenuationQuadratic = light->mAttenuationQuadratic;
-
-			scenePtr->mLights.emplace(keyName, make_shared<SceneObjectLight>());
-
-			auto node = make_shared<SceneLightNode>(keyName);
-			node->AddSceneObjectRef(keyName);
-			scenePtr->mLightNodes.emplace(keyName, node);
+			oglLight.mAngleInnerCone = _aiLight->mAngleInnerCone;
+			oglLight.mAngleOuterCone = _aiLight->mAngleOuterCone;
+			oglLight.mAttenuationLinear = _aiLight->mAttenuationLinear;
+			oglLight.mAttenuationConstant = _aiLight->mAttenuationConstant;
+			oglLight.mAttenuationQuadratic = _aiLight->mAttenuationQuadratic;
 		}
 
 		//
-		for (size_t i = 0; i < scene->mNumCameras; i++)
+		for (size_t i = 0; i < _aiScene->mNumCameras; i++)
 		{
-			auto camera = scene->mCameras[i];
-			auto keyName = camera->mName.C_Str();
+			auto _aiCamera = _aiScene->mCameras[i];
+			auto keyName = _aiCamera->mName.C_Str();
+			auto entity = scenePtr->CreateEntity(keyName);
+			auto oglCamera = entity->AddComponent<OGL_Camera>();
 
-			auto cameraObject = make_shared<SceneObjectPerspectiveCamera>();
-			cameraObject->mUp.x = camera->mUp.x;
-			cameraObject->mUp.y = camera->mUp.y;
-			cameraObject->mUp.z = camera->mUp.z;
+			oglCamera.mUp.x = _aiCamera->mUp.x;
+			oglCamera.mUp.y = _aiCamera->mUp.y;
+			oglCamera.mUp.z = _aiCamera->mUp.z;
 
-			cameraObject->mLookAt.x = camera->mLookAt.x;
-			cameraObject->mLookAt.y = camera->mLookAt.y;
-			cameraObject->mLookAt.z = camera->mLookAt.z;
+			oglCamera.mLookAt.x = _aiCamera->mLookAt.x;
+			oglCamera.mLookAt.y = _aiCamera->mLookAt.y;
+			oglCamera.mLookAt.z = _aiCamera->mLookAt.z;
 
-			cameraObject->mClipPlaneFar = camera->mClipPlaneFar;
-			cameraObject->mClipPlaneNear = camera->mClipPlaneNear;
-			cameraObject->mHorizontalFOV = camera->mHorizontalFOV;
-			cameraObject->mOrthographicWidth = camera->mOrthographicWidth;
-
-			scenePtr->mCameras.emplace(keyName, cameraObject);
-
-			auto nodePtr = make_shared<SceneCameraNode>(keyName);
-			nodePtr->AddSceneObjectRef(keyName);
-			scenePtr->mCameraNodes.emplace(keyName, nodePtr);
+			oglCamera.mClipPlaneFar = _aiCamera->mClipPlaneFar;
+			oglCamera.mClipPlaneNear = _aiCamera->mClipPlaneNear;
+			oglCamera.mHorizontalFOV = _aiCamera->mHorizontalFOV;
+			oglCamera.mOrthographicWidth = _aiCamera->mOrthographicWidth;
 		}
 
+		function<OGL_Mesh(aiMesh* mesh)> _ProcessMesh;
 		function<void(const aiScene* scene, aiNode* node)> _ProcessNode;
-		function<shared_ptr<SceneObjectMesh>(aiMesh* mesh)> _ProcessMesh;
-		function<vector<shared_ptr<SceneObjectTexture>>(const aiMaterial* material, aiTextureType type)> _ProcessTexture;
+		function<std::vector<OGL_Texture>(const aiMaterial* material, aiTextureType type)> _ProcessTexture;
 
-		_ProcessMesh = [&](aiMesh* mesh) -> shared_ptr<SceneObjectMesh>
+		_ProcessMesh = [&](aiMesh* mesh) -> OGL_Mesh
 		{
-			std::vector<_Vertex> vertices;
-			std::vector<uint32_t> indices;
-
-			auto meshPtr = make_shared<SceneObjectMesh>(mesh->mName.C_Str());
+			auto keyName = mesh->mName.C_Str();
+			auto oglMesh = OGL_Mesh(keyName);
+			oglMesh.mPrimitiveTypes = mesh->mPrimitiveTypes;
 
 			for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 			{
@@ -138,7 +129,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasNormals())
 				{
-					meshPtr->hasNormal = true;
+					oglMesh.hasNormal = true;
 
 					vertex.normal.x = mesh->mNormals[i].x;
 					vertex.normal.y = mesh->mNormals[i].y;
@@ -147,7 +138,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasTangentsAndBitangents())
 				{
-					meshPtr->hasTangentsAndBitangents = true;
+					oglMesh.hasTangentsAndBitangents = true;
 
 					vertex.tangent.x = mesh->mTangents[i].x;
 					vertex.tangent.y = mesh->mTangents[i].y;
@@ -160,7 +151,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasTextureCoords(0))
 				{
-					meshPtr->hasTextureCoords = true;
+					oglMesh.hasTextureCoords = true;
 
 					vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
 					vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
@@ -170,7 +161,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 					vertex.texcoord = glm::vec2(0);
 				}
 
-				vertices.push_back(vertex);
+				oglMesh.mVertices.push_back(vertex);
 			}
 
 			for (uint32_t i = 0; i < mesh->mNumFaces; i++)
@@ -178,27 +169,22 @@ bool SceneManager::LoadScene(const string& sceneName)
 				aiFace face = mesh->mFaces[i];
 				for (uint32_t j = 0; j < face.mNumIndices; j++)
 				{
-					indices.push_back(face.mIndices[j]);
+					oglMesh.mIndices.push_back(face.mIndices[j]);
 				}
 			}
 
-			meshPtr->mVertices = vertices;
-			meshPtr->mIndices = indices;
-
-			meshPtr->mPrimitiveTypes = mesh->mPrimitiveTypes;
-
-			return meshPtr;
+			return oglMesh;
 		};
 
-		_ProcessTexture = [&](const aiMaterial* material, aiTextureType type) -> vector<shared_ptr<SceneObjectTexture>>
+		_ProcessTexture = [&](const aiMaterial* material, aiTextureType type) -> std::vector<OGL_Texture>
 		{
-			vector<shared_ptr<SceneObjectTexture>> textures;
+			std::vector<OGL_Texture> textures;
 
 			for (GLuint i = 0; i < material->GetTextureCount(type); i++)
 			{
 				aiString str;
 				material->GetTexture(type, i, &str);
-				textures.push_back(make_shared<SceneObjectTexture>(str.C_Str()));
+				textures.push_back(OGL_Texture(str.C_Str()));
 			}
 
 			return textures;
@@ -207,87 +193,68 @@ bool SceneManager::LoadScene(const string& sceneName)
 		_ProcessNode = [&](const aiScene* scene, aiNode* node) 
 		{
 			auto transform = node->mTransformation;
-			auto matPtr = glm::identity<mat4>();
+			auto tempTransform = glm::identity<mat4>();
 
-			matPtr[0][0] = transform.a1;
-			matPtr[0][1] = transform.a2;
-			matPtr[0][2] = transform.a3;
-			matPtr[0][3] = transform.d1;
+			tempTransform[0][0] = transform.a1;
+			tempTransform[0][1] = transform.a2;
+			tempTransform[0][2] = transform.a3;
+			tempTransform[0][3] = transform.d1;
 
-			matPtr[1][0] = transform.b1;
-			matPtr[1][1] = transform.b2;
-			matPtr[1][2] = transform.b3;
-			matPtr[1][3] = transform.d2;
+			tempTransform[1][0] = transform.b1;
+			tempTransform[1][1] = transform.b2;
+			tempTransform[1][2] = transform.b3;
+			tempTransform[1][3] = transform.d2;
 
-			matPtr[2][0] = transform.c1;
-			matPtr[2][1] = transform.c2;
-			matPtr[2][2] = transform.c3;
-			matPtr[2][3] = transform.d3;
+			tempTransform[2][0] = transform.c1;
+			tempTransform[2][1] = transform.c2;
+			tempTransform[2][2] = transform.c3;
+			tempTransform[2][3] = transform.d3;
 
-			matPtr[3][0] = transform.a4;
-			matPtr[3][1] = transform.b4;
-			matPtr[3][2] = transform.c4;
-			matPtr[3][3] = transform.d4;
+			tempTransform[3][0] = transform.a4;
+			tempTransform[3][1] = transform.b4;
+			tempTransform[3][2] = transform.c4;
+			tempTransform[3][3] = transform.d4;
 
 			auto keyName = node->mName.C_Str();
-			auto sceneNode = scenePtr->GetSceneNode(keyName);
-			if (sceneNode)
+			auto entity = scenePtr->GetEntity(keyName);
+			if (entity)
 			{
-				sceneNode->AppendTransform(keyName, make_shared<SceneObjectTransform>(matPtr));
+				auto oglTransform = entity->AddComponent<OGL_Transform>();
+				oglTransform.mTransform = tempTransform;
 			}
 			else
 			{
-				auto nodePtr = make_shared<SceneGeometryNode>(keyName);
-				nodePtr->AddSceneObjectRef(keyName);
+				auto entity = scenePtr->CreateEntity(keyName);
+				auto oglTransform = entity->AddComponent<OGL_Transform>();
+				oglTransform.mTransform = tempTransform;
 
-				nodePtr->AppendTransform(keyName, make_shared<SceneObjectTransform>(matPtr));
-				scenePtr->mGeometryNodes.emplace(keyName, nodePtr);
-
-				auto geometry = make_shared<SceneObjectGeometry>();
-				scenePtr->mGeometries.emplace(keyName, geometry);
-
+				auto oglMashRenderer = entity->AddComponent<OGL_MeshRenderer>();
 				for (size_t i = 0; i < node->mNumMeshes; i++)
 				{
-					aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+					auto _aiMesh = scene->mMeshes[node->mMeshes[i]];
 
-					geometry->mMeshs.push_back(_ProcessMesh(mesh));
+					oglMashRenderer.mMeshs.push_back(_ProcessMesh(_aiMesh));
 
-					aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-				
-					auto materialPtr = make_shared<SceneObjectMaterial>();
+					auto _aiMaterial = scene->mMaterials[_aiMesh->mMaterialIndex];
+
+					auto oglMaterial = OGL_Material();
 
 					aiString name;
-					if (AI_SUCCESS == aiGetMaterialString(material, AI_MATKEY_NAME, &name))
+					if (AI_SUCCESS == aiGetMaterialString(_aiMaterial, AI_MATKEY_NAME, &name))
 					{
-						materialPtr->mName = name.C_Str();
+						oglMaterial.mName = name.C_Str();
 					}
 
-					vector<shared_ptr<SceneObjectTexture>> diffuseMaps = _ProcessTexture(material, aiTextureType_DIFFUSE);
-					vector<shared_ptr<SceneObjectTexture>> normalMaps = _ProcessTexture(material, aiTextureType_NORMALS);
-					vector<shared_ptr<SceneObjectTexture>> maskMaps = _ProcessTexture(material, aiTextureType_LIGHTMAP);
-			
+					std::vector<OGL_Texture> diffuseMaps = _ProcessTexture(_aiMaterial, aiTextureType_DIFFUSE);
+					std::vector<OGL_Texture> normalMaps = _ProcessTexture(_aiMaterial, aiTextureType_NORMALS);
+					std::vector<OGL_Texture> maskMaps = _ProcessTexture(_aiMaterial, aiTextureType_LIGHTMAP);
+
 					if (diffuseMaps.size() > 0)
 					{
-						materialPtr->mDiffuse = diffuseMaps.at(0);
-					}
-					if (normalMaps.size() > 0)
-					{
-						materialPtr->mNormal = normalMaps.at(0);
-					}
-					if (maskMaps.size() > 0)
-					{
-						materialPtr->mMask = maskMaps.at(0);
 					}
 
-					//for (size_t i = 0; i < material->mNumProperties; i++)
-					//{
-					//	auto property = material->mProperties[i];
-					//	cout << property->mKey.C_Str() << " " << property->mType << endl;
-					//}
-
-					nodePtr->AddMaterialRef(mesh->mName.C_Str());
-
-					scenePtr->mMaterials.emplace(mesh->mName.C_Str(), materialPtr);
+					auto keyName = _aiMesh->mName.C_Str();
+					oglMashRenderer.mMaterials.emplace(keyName, oglMaterial);
 				}
 
 				for (size_t i = 0; i < node->mNumChildren; i++)
@@ -297,7 +264,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 			}
 		};
 
-		_ProcessNode(scene, scene->mRootNode);
+		_ProcessNode(_aiScene, _aiScene->mRootNode);
 	}
 
 	mSceneRevision++;
@@ -310,17 +277,17 @@ const shared_ptr<Scene> SceneManager::GetSceneForRendering() const
     return mScenes.top();
 }
 
-std::weak_ptr<BaseSceneNode> SceneManager::GetRootNode() const
+std::shared_ptr<BaseSceneNode> SceneManager::GetRootNode() const
 {
     return mScenes.top()->mSceneGraph;
 }
 
-weak_ptr<SceneGeometryNode> SceneManager::GetSceneGeometryNode(const string& name) const
+shared_ptr<SceneGeometryNode> SceneManager::GetSceneGeometryNode(const string& name) const
 {
-    return weak_ptr<SceneGeometryNode>();
+    return shared_ptr<SceneGeometryNode>();
 }
 
-weak_ptr<SceneObjectGeometry> SceneManager::GetSceneGeometryObject(const string& key) const
+shared_ptr<SceneObjectGeometry> SceneManager::GetSceneGeometryObject(const string& key) const
 {
-    return weak_ptr<SceneObjectGeometry>();
+    return shared_ptr<SceneObjectGeometry>();
 }

@@ -29,9 +29,9 @@ public:
 
 	void ResetScene() override { mSceneRevision++; };
 
-	weak_ptr<BaseSceneNode> GetRootNode() const override;
-	weak_ptr<SceneGeometryNode> GetSceneGeometryNode(const string& name) const override;
-	weak_ptr<SceneObjectGeometry> GetSceneGeometryObject(const string& key) const override;
+	shared_ptr<BaseSceneNode> GetRootNode() const override;
+	shared_ptr<SceneGeometryNode> GetSceneGeometryNode(const string& name) const override;
+	shared_ptr<SceneObjectGeometry> GetSceneGeometryObject(const string& key) const override;
 
 protected:
 	stack<shared_ptr<Scene>> mScenes;

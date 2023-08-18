@@ -26,8 +26,8 @@ public:
 
     virtual void ResetScene() = 0;
 
-    virtual weak_ptr<BaseSceneNode> GetRootNode() const = 0;
-    virtual weak_ptr<SceneGeometryNode> GetSceneGeometryNode(const string& name) const = 0;
-    virtual weak_ptr<SceneObjectGeometry> GetSceneGeometryObject(const string& key) const = 0;
+    virtual shared_ptr<BaseSceneNode> GetRootNode() const = 0;
+    virtual shared_ptr<SceneGeometryNode> GetSceneGeometryNode(const string& name) const = 0;
+    virtual shared_ptr<SceneObjectGeometry> GetSceneGeometryObject(const string& key) const = 0;
 };
 }
