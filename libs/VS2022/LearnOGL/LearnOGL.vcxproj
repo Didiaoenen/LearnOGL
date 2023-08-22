@@ -200,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetLoader.h" />
+    <ClInclude Include="OGL_Base.h" />
     <ClInclude Include="BaseApplication.h" />
     <ClInclude Include="BaseDispatchPass.h" />
     <ClInclude Include="BaseDrawPass.h" />

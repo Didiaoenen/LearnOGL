@@ -11,8 +11,10 @@
 
 #include "LearnOGLTools.h"
 
+#include "OGL_Entity.h"
+#include "OGL_MeshRenderer.h"
+
 using namespace OGL;
-using namespace std;
 
 void OpenGLGraphicsCommonBaseManager::Present()
 {
@@ -294,19 +296,22 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 {
 	uint32_t batchIndex = 0;
 
-	for (const auto& it : scene.mGeometryNodes)
+	for (const auto& [_, oglEntity] : scene.mEntitys)
 	{
-		const auto& geometryNode = it.second;
-		const auto& geometry = scene.GetGeometry(geometryNode->GetSceneObjectRef());
-		if (geometry && geometry->mMeshs.size() > 0)
+		if (!oglEntity->HasComponent<OGL_MeshRenderer>())
 		{
-			for (size_t i = 0; i < geometry->mMeshs.size(); i++)
+			continue;
+		}
+
+		const auto& oglMeshRenderer = oglEntity->GetComponent<OGL_MeshRenderer>();
+		for (size_t i = 0; i < oglMeshRenderer.mMeshs.size(); i++)
+		{
+			const auto& oglMesh = oglMeshRenderer.mMeshs[i];
+			const auto& it = oglMeshRenderer.mMaterials.find(oglMesh->mName);
+			if (it != oglMeshRenderer.mMaterials.end())
 			{
-				const auto& mesh = geometry->mMeshs[i];
+				const auto& [_, oglMaerial] = *it;
 
-				const auto& material = scene.GetMaterial(mesh->mName);
-
-				//
 				uint32_t vao, vbo, ebo;
 				glGenVertexArrays(1, &vao);
 				glBindVertexArray(vao);
@@ -314,24 +319,24 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 				glGenBuffers(1, &vbo);
 
 				glBindBuffer(GL_ARRAY_BUFFER, vbo);
-				glBufferData(GL_ARRAY_BUFFER, mesh->mVertices.size() * sizeof(_Vertex), &mesh->mVertices[0], GL_STATIC_DRAW);
+				glBufferData(GL_ARRAY_BUFFER, oglMesh->mVertices.size() * sizeof(_Vertex), &oglMesh->mVertices[0], GL_STATIC_DRAW);
 
 				glEnableVertexAttribArray((GLuint)_VertAttrib::Position);
 				glVertexAttribPointer((GLuint)_VertAttrib::Position, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)0);
 
-				if (mesh->hasNormal)
+				if (oglMesh->hasNormal)
 				{
 					glEnableVertexAttribArray((GLuint)_VertAttrib::Normal);
 					glVertexAttribPointer((GLuint)_VertAttrib::Normal, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::normal));
 				}
 
-				if (mesh->hasTextureCoords)
+				if (oglMesh->hasTextureCoords)
 				{
 					glEnableVertexAttribArray((GLuint)_VertAttrib::TexCoord);
 					glVertexAttribPointer((GLuint)_VertAttrib::TexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::texcoord));
 				}
 
-				if (mesh->hasTangentsAndBitangents)
+				if (oglMesh->hasTangentsAndBitangents)
 				{
 					glEnableVertexAttribArray((GLuint)_VertAttrib::Tangent);
 					glVertexAttribPointer((GLuint)_VertAttrib::Tangent, 3, GL_FLOAT, GL_FALSE, sizeof(_Vertex), (void*)offsetof(_Vertex, _Vertex::tangent));
@@ -345,7 +350,7 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 				glGenBuffers(1, &ebo);
 
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->mIndices.size() * sizeof(uint32_t), &mesh->mIndices[0], GL_STATIC_DRAW);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, oglMesh->mIndices.size() * sizeof(uint32_t), &oglMesh->mIndices[0], GL_STATIC_DRAW);
 
 				mBuffers.push_back(ebo);
 
@@ -384,73 +389,72 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 
 				auto dbc = make_shared<OpenGLDrawBatchContext>();
 
-				const auto& diffuse = material->mDiffuse;
-				if (diffuse.ValueMap)
-				{
-					const auto& keyName = diffuse.ValueMap->mName;
-					const auto& image = diffuse.ValueMap->GetTextureImage();
-					if (image) 
-					{
-						dbc->material.diffuseMap = uploadTexture(keyName, image);
-					}
-				}
+				//const auto& diffuse = oglMaerial->mDiffuseMap;
+				//if (diffuse.ValueMap)
+				//{
+				//	const auto& keyName = diffuse.ValueMap->mName;
+				//	const auto& image = diffuse.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.diffuseMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-				const auto& normal = material->mNormal;
-				if (normal.ValueMap) 
-				{
-					const auto& keyName = normal.ValueMap->mName;
-					const auto& image = normal.ValueMap->GetTextureImage();
-					if (image) 
-					{
-						dbc->material.normalMap = uploadTexture(keyName, image);
-					}
-				}
+				//const auto& normal = material->mNormal;
+				//if (normal.ValueMap) 
+				//{
+				//	const auto& keyName = normal.ValueMap->mName;
+				//	const auto& image = normal.ValueMap->GetTextureImage();
+				//	if (image) 
+				//	{
+				//		dbc->material.normalMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
-				const auto& mask = material->mMask;
-				if (mask.ValueMap)
-				{
-					const auto& keyName = mask.ValueMap->mName;
-					const auto& image = mask.ValueMap->GetTextureImage();
-					if (image)
-					{
-						dbc->material.maskMap = uploadTexture(keyName, image);
-					}
-				}
+				//const auto& mask = material->mMask;
+				//if (mask.ValueMap)
+				//{
+				//	const auto& keyName = mask.ValueMap->mName;
+				//	const auto& image = mask.ValueMap->GetTextureImage();
+				//	if (image)
+				//	{
+				//		dbc->material.maskMap = uploadTexture(keyName, image);
+				//	}
+				//}
 
 				glBindVertexArray(0);
 
 				GLenum model = 0;
-				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT))
+				if ((oglMesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POINT))
 				{
 					model = GL_POINT;
 				}
-				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE))
+				if ((oglMesh->mPrimitiveTypes & (uint32_t)PrimitiveType::LINE))
 				{
 					model = GL_LINE;
 				}
-				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE))
+				if ((oglMesh->mPrimitiveTypes & (uint32_t)PrimitiveType::TRIANGLE))
 				{
 					model = GL_TRIANGLES;
 				}
-				if ((mesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON))
+				if ((oglMesh->mPrimitiveTypes & (uint32_t)PrimitiveType::POLYGON))
 				{
 					model = GL_TRIANGLES;
 				}
 
 				dbc->batchIndex = batchIndex++;
 				dbc->vao = vao;
-				dbc->node = geometryNode;
 				dbc->mode = (uint32_t)model;
 				dbc->type = (uint32_t)GL_UNSIGNED_INT;
-				dbc->count = mesh->mIndices.size();
+				dbc->count = oglMesh->mIndices.size();
 
 				for (size_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
 				{
 					mFrames[i].batchContexts.push_back(dbc);
 				}
 			}
-			}
 
+		}
 	}
 }
 

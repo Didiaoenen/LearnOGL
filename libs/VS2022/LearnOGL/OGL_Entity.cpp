@@ -3,15 +3,14 @@
 using namespace OGL;
 
 OGL_Entity::OGL_Entity()
-	: mEntityHandle(mRegistry.create())
 {
 	Init();
 }
 
-OGL_Entity::OGL_Entity(entt::entity handle)
-	: mEntityHandle(handle)
+OGL_Entity::OGL_Entity(entt::entity handle, Scene* scene)
+	: mEntityHandle(handle), mScene(scene)
 {
-
+	Init();
 }
 
 OGL_Entity::OGL_Entity(const OGL_Entity& other)

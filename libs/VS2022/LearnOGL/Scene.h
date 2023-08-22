@@ -3,14 +3,18 @@
 #include <memory>
 #include <unordered_map>
 
+#include <entt/entt.hpp>
+
 #include "SceneNode.h"
 #include "SceneObjectBase.h"
 
 #include "OGL_UUID.h"
-#include "OGL_Entity.h"
 
 namespace OGL
 {
+
+class OGL_Entity;
+
 class Scene
 {
 public:
@@ -26,11 +30,13 @@ public:
 
 	[[nodiscard]] shared_ptr<BaseSceneNode> GetSceneNode(const string& key);
 	
-	[[nodiscard]] shared_ptr<OGL_Entity> CreateEntity(const std::string& name = std::string());
+	[[nodiscard]] Ref<OGL_Entity> CreateEntity(const std::string& name = std::string());
 
-	[[nodiscard]] shared_ptr<OGL_Entity> GetEntity(const std::string& name);
+	[[nodiscard]] Ref<OGL_Entity> GetEntity(const std::string& name);
 
 public:
+	entt::registry mRegistry{};
+
 	shared_ptr<BaseSceneNode> mSceneGraph;
 
 	unordered_map<string, shared_ptr<SceneObjectLight>> mLights;

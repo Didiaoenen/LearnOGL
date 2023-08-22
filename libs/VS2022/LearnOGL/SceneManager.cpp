@@ -14,6 +14,7 @@
 
 #include "OGL_Light.h"
 #include "OGL_Camera.h"
+#include "OGL_Entity.h"
 #include "OGL_Transform.h"
 #include "OGL_MeshRenderer.h"
 
@@ -54,8 +55,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 		{
 			auto _aiLight = _aiScene->mLights[i];
 			auto keyName = _aiLight->mName.C_Str();
-			auto entity = scenePtr->CreateEntity(keyName);
-			auto oglLight = entity->AddComponent<OGL_Light>();
+			auto oglEntity = scenePtr->CreateEntity(keyName);
+			auto& oglLight = oglEntity->AddComponent<OGL_Light>();
 
 			oglLight.mUp.x = _aiLight->mUp.x;
 			oglLight.mUp.y = _aiLight->mUp.y;
@@ -92,8 +93,8 @@ bool SceneManager::LoadScene(const string& sceneName)
 		{
 			auto _aiCamera = _aiScene->mCameras[i];
 			auto keyName = _aiCamera->mName.C_Str();
-			auto entity = scenePtr->CreateEntity(keyName);
-			auto oglCamera = entity->AddComponent<OGL_Camera>();
+			auto oglEntity = scenePtr->CreateEntity(keyName);
+			auto& oglCamera = oglEntity->AddComponent<OGL_Camera>();
 
 			oglCamera.mUp.x = _aiCamera->mUp.x;
 			oglCamera.mUp.y = _aiCamera->mUp.y;
@@ -109,15 +110,15 @@ bool SceneManager::LoadScene(const string& sceneName)
 			oglCamera.mOrthographicWidth = _aiCamera->mOrthographicWidth;
 		}
 
-		function<OGL_Mesh(aiMesh* mesh)> _ProcessMesh;
+		function<Ref<OGL_Mesh>(aiMesh* mesh)> _ProcessMesh;
 		function<void(const aiScene* scene, aiNode* node)> _ProcessNode;
-		function<std::vector<OGL_Texture>(const aiMaterial* material, aiTextureType type)> _ProcessTexture;
+		function<std::vector<Ref<OGL_Texture>>(const aiMaterial* material, aiTextureType type)> _ProcessTexture;
 
-		_ProcessMesh = [&](aiMesh* mesh) -> OGL_Mesh
+		_ProcessMesh = [&](aiMesh* mesh) -> Ref<OGL_Mesh>
 		{
 			auto keyName = mesh->mName.C_Str();
-			auto oglMesh = OGL_Mesh(keyName);
-			oglMesh.mPrimitiveTypes = mesh->mPrimitiveTypes;
+			auto oglMesh = CreateRef<OGL_Mesh>(keyName);
+			oglMesh->mPrimitiveTypes = mesh->mPrimitiveTypes;
 
 			for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 			{
@@ -129,7 +130,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasNormals())
 				{
-					oglMesh.hasNormal = true;
+					oglMesh->hasNormal = true;
 
 					vertex.normal.x = mesh->mNormals[i].x;
 					vertex.normal.y = mesh->mNormals[i].y;
@@ -138,7 +139,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasTangentsAndBitangents())
 				{
-					oglMesh.hasTangentsAndBitangents = true;
+					oglMesh->hasTangentsAndBitangents = true;
 
 					vertex.tangent.x = mesh->mTangents[i].x;
 					vertex.tangent.y = mesh->mTangents[i].y;
@@ -151,7 +152,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 
 				if (mesh->HasTextureCoords(0))
 				{
-					oglMesh.hasTextureCoords = true;
+					oglMesh->hasTextureCoords = true;
 
 					vertex.texcoord.x = mesh->mTextureCoords[0][i].x;
 					vertex.texcoord.y = mesh->mTextureCoords[0][i].y;
@@ -161,7 +162,7 @@ bool SceneManager::LoadScene(const string& sceneName)
 					vertex.texcoord = glm::vec2(0);
 				}
 
-				oglMesh.mVertices.push_back(vertex);
+				oglMesh->mVertices.push_back(vertex);
 			}
 
 			for (uint32_t i = 0; i < mesh->mNumFaces; i++)
@@ -169,22 +170,22 @@ bool SceneManager::LoadScene(const string& sceneName)
 				aiFace face = mesh->mFaces[i];
 				for (uint32_t j = 0; j < face.mNumIndices; j++)
 				{
-					oglMesh.mIndices.push_back(face.mIndices[j]);
+					oglMesh->mIndices.push_back(face.mIndices[j]);
 				}
 			}
 
 			return oglMesh;
 		};
 
-		_ProcessTexture = [&](const aiMaterial* material, aiTextureType type) -> std::vector<OGL_Texture>
+		_ProcessTexture = [&](const aiMaterial* material, aiTextureType type) -> std::vector<Ref<OGL_Texture>>
 		{
-			std::vector<OGL_Texture> textures;
+			std::vector<Ref<OGL_Texture>> textures;
 
 			for (GLuint i = 0; i < material->GetTextureCount(type); i++)
 			{
 				aiString str;
 				material->GetTexture(type, i, &str);
-				textures.push_back(OGL_Texture(str.C_Str()));
+				textures.push_back(CreateRef<OGL_Texture>(str.C_Str()));
 			}
 
 			return textures;
@@ -216,45 +217,49 @@ bool SceneManager::LoadScene(const string& sceneName)
 			tempTransform[3][3] = transform.d4;
 
 			auto keyName = node->mName.C_Str();
-			auto entity = scenePtr->GetEntity(keyName);
-			if (entity)
+			auto oglEntity = scenePtr->GetEntity(keyName);
+			if (oglEntity)
 			{
-				auto oglTransform = entity->AddComponent<OGL_Transform>();
+				auto& oglTransform = oglEntity->AddComponent<OGL_Transform>();
 				oglTransform.mTransform = tempTransform;
 			}
 			else
 			{
-				auto entity = scenePtr->CreateEntity(keyName);
-				auto oglTransform = entity->AddComponent<OGL_Transform>();
-				oglTransform.mTransform = tempTransform;
-
-				auto oglMashRenderer = entity->AddComponent<OGL_MeshRenderer>();
-				for (size_t i = 0; i < node->mNumMeshes; i++)
+				if (node->mNumMeshes > 0)
 				{
-					auto _aiMesh = scene->mMeshes[node->mMeshes[i]];
+					oglEntity = scenePtr->CreateEntity(keyName);
+					auto& oglTransform = oglEntity->AddComponent<OGL_Transform>();
+					oglTransform.mTransform = tempTransform;
 
-					oglMashRenderer.mMeshs.push_back(_ProcessMesh(_aiMesh));
-
-					auto _aiMaterial = scene->mMaterials[_aiMesh->mMaterialIndex];
-
-					auto oglMaterial = OGL_Material();
-
-					aiString name;
-					if (AI_SUCCESS == aiGetMaterialString(_aiMaterial, AI_MATKEY_NAME, &name))
+					auto& oglMashRenderer = oglEntity->AddComponent<OGL_MeshRenderer>();
+					for (size_t i = 0; i < node->mNumMeshes; i++)
 					{
-						oglMaterial.mName = name.C_Str();
+						auto _aiMesh = scene->mMeshes[node->mMeshes[i]];
+
+						oglMashRenderer.mMeshs.push_back(_ProcessMesh(_aiMesh));
+
+						auto _aiMaterial = scene->mMaterials[_aiMesh->mMaterialIndex];
+
+						auto oglMaterial = CreateRef<OGL_Material>();
+
+						aiString name;
+						if (AI_SUCCESS == aiGetMaterialString(_aiMaterial, AI_MATKEY_NAME, &name))
+						{
+							oglMaterial->mName = name.C_Str();
+						}
+
+						const auto& diffuseMaps = _ProcessTexture(_aiMaterial, aiTextureType_DIFFUSE);
+						const auto& normalMaps = _ProcessTexture(_aiMaterial, aiTextureType_NORMALS);
+						const auto& maskMaps = _ProcessTexture(_aiMaterial, aiTextureType_LIGHTMAP);
+
+						if (diffuseMaps.size() > 0)
+						{
+							oglMaterial->mDiffuseMap = diffuseMaps.at(0);
+						}
+
+						auto keyName = _aiMesh->mName.C_Str();
+						oglMashRenderer.mMaterials.emplace(keyName, oglMaterial);
 					}
-
-					std::vector<OGL_Texture> diffuseMaps = _ProcessTexture(_aiMaterial, aiTextureType_DIFFUSE);
-					std::vector<OGL_Texture> normalMaps = _ProcessTexture(_aiMaterial, aiTextureType_NORMALS);
-					std::vector<OGL_Texture> maskMaps = _ProcessTexture(_aiMaterial, aiTextureType_LIGHTMAP);
-
-					if (diffuseMaps.size() > 0)
-					{
-					}
-
-					auto keyName = _aiMesh->mName.C_Str();
-					oglMashRenderer.mMaterials.emplace(keyName, oglMaterial);
 				}
 
 				for (size_t i = 0; i < node->mNumChildren; i++)

@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 
+#include "Scene.h"
 #include "RefCounts.h"
 #include "OGL_Component.h"
 
@@ -11,26 +12,32 @@ class OGL_Entity : public RefCounts
 {
 public:
 	OGL_Entity();
-	OGL_Entity(entt::entity handle);
+	OGL_Entity(entt::entity handle, Scene* scene);
 	OGL_Entity(const OGL_Entity& other);
 	virtual ~OGL_Entity() = default;
 
 	template<typename T, typename... Args>
 	T& AddComponent(Args&&... args)
 	{
-		return mRegistry.emplace<T>(mEntityHandle, std::forward<Args>(args)...);
+		return mScene->mRegistry.emplace<T>(mEntityHandle, std::forward<Args>(args)...);
 	}
 
 	template<typename T>
 	T& GetComponent()
 	{
-		return mRegistry.get<T>(mEntityHandle);
+		return mScene->mRegistry.get<T>(mEntityHandle);
+	}
+
+	template<typename T>
+	bool HasComponent()
+	{
+		return mScene->mRegistry.any_of<T>(mEntityHandle);
 	}
 
 	template<typename T>
 	void RemoveComponent()
 	{
-		mRegistry.remove<T>(mEntityHandle);
+		mScene->mRegistry.remove<T>(mEntityHandle);
 	}
 
 	operator bool() const { return mEntityHandle != entt::null; }
@@ -48,7 +55,7 @@ protected:
 	}
 
 public:
-	entt::registry mRegistry{};
+	Scene* mScene{ nullptr };
 	entt::entity mEntityHandle{ entt::null };
 };
 }

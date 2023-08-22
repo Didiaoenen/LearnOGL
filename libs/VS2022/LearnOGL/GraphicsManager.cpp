@@ -130,7 +130,7 @@ void GraphicsManager::BeginScene(const Scene& scene)
         GenerateCubemapArray(mFrames[0].frameContext.cubeShadowMap);
     }
 
-    if (scene.mGeometries.size()) 
+    if (scene.mEntitys.size()) 
     {
         InitializeGeometries(scene);
     }
@@ -331,7 +331,7 @@ void GraphicsManager::UpdateConstants()
 
     for (auto& pDbc : frame.batchContexts) 
     {
-        pDbc->modelMatrix = pDbc->node->GetCalculatedTransform();
+        //pDbc->modelMatrix = pDbc->node->GetCalculatedTransform();
     }
 
     CalculateCameraMatrix();

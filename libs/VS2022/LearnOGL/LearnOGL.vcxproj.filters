@@ -482,11 +482,14 @@
     <ClInclude Include="OGL_Component.h">
       <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
+    <ClInclude Include="OGL_Base.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
     <ClInclude Include="OGL_UUID.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="OGL_MeshRenderer.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

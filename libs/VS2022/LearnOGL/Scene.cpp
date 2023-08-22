@@ -1,5 +1,8 @@
 #include "Scene.h"
 
+#include "OGL_Base.h"
+#include "OGL_Entity.h"
+
 using namespace OGL;
 
 shared_ptr<SceneObjectCamera> Scene::GetCamera(const string& key) const
@@ -69,15 +72,15 @@ shared_ptr<BaseSceneNode> Scene::GetSceneNode(const string& key)
     return nullptr;
 }
 
-shared_ptr<OGL_Entity> Scene::CreateEntity(const std::string& name)
+Ref<OGL_Entity> Scene::CreateEntity(const std::string& name)
 {
-    auto entity = std::make_shared<OGL_Entity>();
+    auto entity = CreateRef<OGL_Entity>(mRegistry.create(), this);
     entity->AddComponent<OGL_TagComponent>(name);
-    mEntitys.emplace(std::make_pair(name, entity));
+    mEntitys.emplace(name, entity);
     return entity;
 }
 
-shared_ptr<OGL_Entity> Scene::GetEntity(const std::string& name)
+Ref<OGL_Entity> Scene::GetEntity(const std::string& name)
 {
     auto entity = mEntitys.find(name);
     if (entity != mEntitys.end())

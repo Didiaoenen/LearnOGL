@@ -4,10 +4,8 @@
 
 #include <glm/glm.hpp>
 
-#include "SceneObjectTexture.h"
-
-using namespace std;
-using namespace glm;
+#include "OGL_Base.h"
+#include "OGL_Texture.h"
 
 namespace OGL
 {
@@ -15,7 +13,7 @@ template <typename T>
 struct ParameterValueMap 
 {
     T Value = (T)0;
-    shared_ptr<SceneObjectTexture> ValueMap;
+    Ref<OGL_Texture> ValueMap;
 
     ParameterValueMap() = default;
     ~ParameterValueMap() = default;
@@ -25,18 +23,18 @@ struct ParameterValueMap
     {
     }
 
-    explicit ParameterValueMap(shared_ptr<SceneObjectTexture> value)
+    explicit ParameterValueMap(Ref<OGL_Texture> value)
         : ValueMap(std::move(value)) 
     {
     }
 
-    ParameterValueMap& operator=(const shared_ptr<SceneObjectTexture>& rhs) 
+    ParameterValueMap& operator=(const Ref<OGL_Texture>& rhs)
     {
         ValueMap = rhs;
         return *this;
     }
 
-    ParameterValueMap& operator=(shared_ptr<SceneObjectTexture>&& rhs) 
+    ParameterValueMap& operator=(Ref<OGL_Texture>&& rhs)
     {
         ValueMap.swap(rhs);
         return *this;
@@ -44,7 +42,7 @@ struct ParameterValueMap
 
 };
 
-using Color = ParameterValueMap<vec4>;
-using Normal = ParameterValueMap<vec3>;
+using Color = ParameterValueMap<glm::vec4>;
+using Normal = ParameterValueMap<glm::vec3>;
 using Parameter = ParameterValueMap<float>;
 }
