@@ -32,7 +32,7 @@ void OGL_EditorCamera::ProcessMouseMovement(double xoffset, double yoffset, bool
 
 void OGL_EditorCamera::ProcessMouseScroll(double yoffset)
 {
-	mZoom -= yoffset;
+	mZoom -= yoffset * mZoomSpeed;
 	if (mZoom < 1.0f)
 	{
 		mZoom = 1.0f;
@@ -68,9 +68,9 @@ void OGL_EditorCamera::ProcessKeyboard(CameraMovement dir, double dt)
 void OGL_EditorCamera::UpdateCameraVectors()
 {
 	glm::vec3 front;
-	front.x = cos(glm::radians(mYaw)) * cos(glm::radians(mPitch));
-	front.y = sin(glm::radians(mPitch));
-	front.z = sin(glm::radians(mYaw)) * cos(glm::radians(mPitch));
+	front.x = glm::cos(glm::radians(mYaw)) * glm::cos(glm::radians(mPitch));
+	front.y = glm::sin(glm::radians(mPitch));
+	front.z = glm::sin(glm::radians(mYaw)) * glm::cos(glm::radians(mPitch));
 	mFront = glm::normalize(front);
 
 	mRight = glm::normalize(glm::cross(mFront, mWorldUp));

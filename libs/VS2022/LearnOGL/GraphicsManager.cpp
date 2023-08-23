@@ -12,6 +12,7 @@
 
 #include "SceneObjectCamera.h"
 
+#include "OGL_Light.h"
 #include "OGL_Transform.h"
 #include "OGL_Application.h"
 
@@ -194,12 +195,10 @@ void GraphicsManager::CalculateCameraMatrix()
         else
         {
             auto i = glm::identity<mat4>();
-            i = glm::translate(i, glm::vec3(0.0f, -0.5f, -2.0f));
-            i = glm::scale(i, glm::vec3(0.3f, 0.3f, 0.3f));
+            i = glm::translate(i, glm::vec3(0.0f, -1.5f, -3.0f));
 
             auto camPos = app->mEditorCamera->mPosition;
-            auto distance = glm::distance(camPos, glm::vec3(0.0f, 0.0f, -1.0f));
-            frameContext.viewMatrix = i * glm::lookAt(camPos, camPos + app->mEditorCamera->mFront * distance, app->mEditorCamera->mUp);
+            frameContext.viewMatrix = glm::lookAt(camPos, camPos + app->mEditorCamera->mFront, app->mEditorCamera->mUp) * i;
 
             auto info = app->mEditorCamera->mCameraInfo;
             float screenAspect = (float)info.width / (float)info.height;
@@ -224,15 +223,19 @@ void GraphicsManager::CalculateLights()
     if (sceneManager)
     {
         auto& scene = sceneManager->GetSceneForRendering();
-        for (const auto& it : scene->mLightNodes)
+        for (const auto& [_, oglEntity] : scene->mEntitys)
         {
-            auto lightNode = it.second;
-            auto lightObject = scene->GetLight(lightNode->GetSceneObjectRef());
-            
+            if (!oglEntity->HasComponent<OGL_Light>())
+            {
+                continue;
+            }
+
+            const auto& oglLight = oglEntity->GetComponent<OGL_Light>();
+            const auto& oglTransform = oglEntity->GetComponent<OGL_Transform>();
+            auto transform = oglTransform.mTransform;
             auto& light = lightInfo.lights[frameContext.numLights];
-            auto transform = lightNode->GetCalculatedTransform();
             light.lightPosition = glm::vec4(transform[3][0], transform[3][1], transform[3][2], 0.0f);
-            light.lightDirection = glm::vec4(lightObject->mDirection, 0.0f); 
+            light.lightDirection = glm::vec4(oglLight.mDirection, 0.0f);
 
             /*if (lightObject)
             {

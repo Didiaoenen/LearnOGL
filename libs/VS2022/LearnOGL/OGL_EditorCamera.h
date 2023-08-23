@@ -38,8 +38,9 @@ public:
 
 	float mZoom{ 0.0f };
 
-	float mMovementSpeed{ 2.5f };
-	float mMouseSenesitivity{ 0.1f };
+	float mZoomSpeed{ 0.5f };
+	float mMovementSpeed{ 1.0f };
+	float mMouseSenesitivity{ 0.05f };
 
 	CameraInfo mCameraInfo{};
 
