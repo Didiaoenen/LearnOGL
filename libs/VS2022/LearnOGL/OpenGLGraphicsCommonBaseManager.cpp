@@ -389,16 +389,16 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 
 				auto dbc = make_shared<OpenGLDrawBatchContext>();
 
-				//const auto& diffuse = oglMaerial->mDiffuseMap;
-				//if (diffuse.ValueMap)
-				//{
-				//	const auto& keyName = diffuse.ValueMap->mName;
-				//	const auto& image = diffuse.ValueMap->GetTextureImage();
-				//	if (image) 
-				//	{
-				//		dbc->material.diffuseMap = uploadTexture(keyName, image);
-				//	}
-				//}
+				const auto& diffuse = oglMaerial->mDiffuseMap;
+				if (diffuse.ValueMap)
+				{
+					const auto& keyName = diffuse.ValueMap->mName;
+					const auto& image = diffuse.ValueMap->GetTextureImage();
+					if (image) 
+					{
+						dbc->material.diffuseMap = uploadTexture(keyName, image);
+					}
+				}
 
 				//const auto& normal = material->mNormal;
 				//if (normal.ValueMap) 
@@ -447,6 +447,7 @@ void OpenGLGraphicsCommonBaseManager::InitializeGeometries(const Scene& scene)
 				dbc->mode = (uint32_t)model;
 				dbc->type = (uint32_t)GL_UNSIGNED_INT;
 				dbc->count = oglMesh->mIndices.size();
+				dbc->entity = oglEntity;
 
 				for (size_t i = 0; i < GfxConfiguration::kMaxInFlightFrameCount; i++) 
 				{

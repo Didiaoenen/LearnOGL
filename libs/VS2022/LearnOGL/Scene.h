@@ -34,6 +34,8 @@ public:
 
 	[[nodiscard]] Ref<OGL_Entity> GetEntity(const std::string& name);
 
+	void Tick();
+
 public:
 	entt::registry mRegistry{};
 

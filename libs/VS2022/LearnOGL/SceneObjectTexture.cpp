@@ -60,7 +60,7 @@ bool SceneObjectTexture::LoadTexture()
 
 	mLoaded = true;
 
-	return mLoaded;
+	return true;
 }
 
 shared_ptr<Image> OGL::SceneObjectTexture::GetTextureImage()

@@ -35,6 +35,14 @@ OGL_Application::OGL_Application()
 	RegisterRuntimeModule(mPipelineStateManager);
 	RegisterRuntimeModule(mSceneManager);
 	RegisterRuntimeModule(mAssetLoader);
+
+	mEditorCamera = new OGL_EditorCamera();
+	mEditorCamera->mCameraInfo.fov = 60.0f;
+	mEditorCamera->mCameraInfo.width = info.windowWidth;
+	mEditorCamera->mCameraInfo.height = info.windowHeight;
+	mEditorCamera->mCameraInfo.zFar = 100.0f;
+	mEditorCamera->mCameraInfo.zNear = 0.1f;
+	mEditorCamera->mZoom = mEditorCamera->mCameraInfo.fov;
 }
 
 bool OGL_Application::Initialize()
@@ -76,7 +84,7 @@ void OGL_Application::Run()
 		mDT = time - mLastTime;
 		mLastTime = time;
 
-		//ProcessInput(mWindow);
+		ProcessInput(mWindow);
 
 		Update(time);
 
@@ -112,12 +120,12 @@ void OGL_Application::MouseCallback(GLFWwindow* window, double xpos, double ypos
 	mLastX = xpos;
 	mLastY = ypos;
 
-	//mCamera->ProcessMouseMovement(xoffset, yoffset);
+	mEditorCamera->ProcessMouseMovement(xoffset, yoffset);
 }
 
 void OGL_Application::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	//mCamera->ProcessMouseScroll(yoffset);
+	mEditorCamera->ProcessMouseScroll(yoffset);
 }
 
 void* OGL_Application::GetMainWindowHandler()
@@ -134,22 +142,22 @@ void OGL_Application::ProcessInput(GLFWwindow* window)
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		//mCamera->ProcessKeyboard(CameraMovement::Forward, mDT);
+		mEditorCamera->ProcessKeyboard(CameraMovement::Forward, mDT);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		//mCamera->ProcessKeyboard(CameraMovement::Backward, mDT);
+		mEditorCamera->ProcessKeyboard(CameraMovement::Backward, mDT);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		//mCamera->ProcessKeyboard(CameraMovement::Left, mDT);
+		mEditorCamera->ProcessKeyboard(CameraMovement::Left, mDT);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		//mCamera->ProcessKeyboard(CameraMovement::Right, mDT);
+		mEditorCamera->ProcessKeyboard(CameraMovement::Right, mDT);
 	}
 
 	Input();
@@ -203,7 +211,7 @@ bool OGL_Application::WindowHint()
 	glfwSetScrollCallback(mWindow, OGL_Application::GLFWWindowScrollCallback);
 	glfwSetCursorPosCallback(mWindow, OGL_Application::GLFWWindowMouseCallback);
 
-	//glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(mWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	return true;
 }

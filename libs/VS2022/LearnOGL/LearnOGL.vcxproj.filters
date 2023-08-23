@@ -207,20 +207,23 @@
     <ClCompile Include="RefCounts.cpp">
       <Filter>源文件\Base</Filter>
     </ClCompile>
-    <ClCompile Include="OGL_Entity.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="OGL_Asset.cpp">
+      <Filter>源文件\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="OGL_Component.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="OGL_Asset.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="OGL_UUID.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="OGL_Entity.cpp">
+      <Filter>源文件\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="OGL_MeshRenderer.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_UUID.cpp">
+      <Filter>源文件\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="OGL_EditorCamera.cpp">
+      <Filter>源文件\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -489,6 +492,9 @@
       <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
     <ClInclude Include="OGL_MeshRenderer.h">
+      <Filter>头文件\SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL_EditorCamera.h">
       <Filter>头文件\SceneGraph</Filter>
     </ClInclude>
   </ItemGroup>

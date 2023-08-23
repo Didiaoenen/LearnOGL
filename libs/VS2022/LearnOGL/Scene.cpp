@@ -2,6 +2,8 @@
 
 #include "OGL_Base.h"
 #include "OGL_Entity.h"
+#include "OGL_Camera.h"
+#include "OGL_Transform.h"
 
 using namespace OGL;
 
@@ -88,4 +90,9 @@ Ref<OGL_Entity> Scene::GetEntity(const std::string& name)
         return entity->second;
     }
     return nullptr;
+}
+
+void Scene::Tick()
+{
+
 }

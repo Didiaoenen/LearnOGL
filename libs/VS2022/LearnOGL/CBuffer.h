@@ -148,7 +148,7 @@ enum class _VertAttrib
     Bitangent,
 };
 
-enum  class PrimitiveType : uint16_t
+enum class PrimitiveType : uint16_t
 {
     NONE = 0,
     POINT = 1 << 0,
@@ -156,6 +156,14 @@ enum  class PrimitiveType : uint16_t
     TRIANGLE = 1 << 2,
     POLYGON = 1 << 3,
 };
+
+//enum class CameraMovement 
+//{
+//    Forward,
+//    Backward,
+//    Left,
+//    Right
+//};
 
 struct Light 
 {

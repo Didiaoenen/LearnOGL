@@ -14,6 +14,7 @@
 #include "AssetLoader.h"
 
 #include "LearnOGLDefine.h"
+#include "OGL_EditorCamera.h"
 
 namespace OGL
 {
@@ -70,6 +71,10 @@ private:
 	PipelineStateManager* mPipelineStateManager;
 	SceneManager* mSceneManager;
 	AssetLoader* mAssetLoader;
+
+public:
+	OGL_EditorCamera* mEditorCamera;
+
 };
 
 #define DECLARE_MAIN(App)			\

@@ -19,7 +19,9 @@ public:
 	template<typename T, typename... Args>
 	T& AddComponent(Args&&... args)
 	{
-		return mScene->mRegistry.emplace<T>(mEntityHandle, std::forward<Args>(args)...);
+		auto& component = mScene->mRegistry.emplace<T>(mEntityHandle, std::forward<Args>(args)...);
+		component.mEntity = mEntityHandle;
+		return component;
 	}
 
 	template<typename T>

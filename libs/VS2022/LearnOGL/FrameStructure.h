@@ -7,6 +7,9 @@
 #include "Scene.h"
 #include "CBuffer.h"
 
+#include "OGL_Base.h"
+#include "OGL_Entity.h"
+
 namespace OGL
 {
 struct DrawFrameContext : PerFrameConstants, FrameTextures
@@ -20,7 +23,7 @@ struct DrawBatchContext : PerBatchConstants
 
 	int32_t batchIndex{ 0 };
 	MaterialTexture material;
-	std::shared_ptr<SceneGeometryNode> node;
+	Ref<OGL_Entity> entity;
 };
 
 struct Frame : GlobalTexture

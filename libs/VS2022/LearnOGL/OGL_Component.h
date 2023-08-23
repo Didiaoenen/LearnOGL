@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <entt/entt.hpp>
 
 #include "OGL_UUID.h"
 
@@ -11,6 +12,10 @@ class OGL_Component
 public:
 	OGL_Component() = default;
 	virtual ~OGL_Component() = default;
+
+public:
+	entt::entity mEntity{ entt::null };
+
 };
 
 class OGL_IDComponent : public OGL_Component

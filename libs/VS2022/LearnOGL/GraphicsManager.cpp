@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "BaseApplication.h"
+//#include "BaseApplication.h"
 #include "BRDFIntegrator.h"
 #include "SceneManager.h"
 
@@ -11,6 +11,9 @@
 #include "OverlayPass.h"
 
 #include "SceneObjectCamera.h"
+
+#include "OGL_Transform.h"
+#include "OGL_Application.h"
 
 using namespace OGL;
 using namespace std;
@@ -168,7 +171,7 @@ void GraphicsManager::EndScene()
 
 void GraphicsManager::CalculateCameraMatrix()
 {
-    auto app = static_cast<BaseApplication*>(mApp);
+    auto app = static_cast<OGL_Application*>(mApp);
     auto sceneManager = app->GetModule<SceneManager>();
 
     if (sceneManager)
@@ -194,11 +197,13 @@ void GraphicsManager::CalculateCameraMatrix()
             i = glm::translate(i, glm::vec3(0.0f, -0.5f, -2.0f));
             i = glm::scale(i, glm::vec3(0.3f, 0.3f, 0.3f));
 
-            auto camPos = glm::vec3(0.0f, 0.0f, 1.0f);
-            frameContext.viewMatrix = i * glm::lookAt(camPos, camPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            auto camPos = app->mEditorCamera->mPosition;
+            auto distance = glm::distance(camPos, glm::vec3(0.0f, 0.0f, -1.0f));
+            frameContext.viewMatrix = i * glm::lookAt(camPos, camPos + app->mEditorCamera->mFront * distance, app->mEditorCamera->mUp);
 
-            float screenAspect = (float)mCanvasWidth / (float)mCanvasHeight;
-            frameContext.projectionMatrix = glm::perspective(glm::radians(60.0f), screenAspect, 0.1f, 100.0f);
+            auto info = app->mEditorCamera->mCameraInfo;
+            float screenAspect = (float)info.width / (float)info.height;
+            frameContext.projectionMatrix = glm::perspective(glm::radians(app->mEditorCamera->mZoom), screenAspect, info.zNear, info.zFar);
         }
     }
 }
@@ -329,9 +334,10 @@ void GraphicsManager::UpdateConstants()
 {
     auto& frame = mFrames[mFrameIndex];
 
-    for (auto& pDbc : frame.batchContexts) 
+    for (auto& dbc : frame.batchContexts) 
     {
-        //pDbc->modelMatrix = pDbc->node->GetCalculatedTransform();
+        const auto& transform = dbc->entity->GetComponent<OGL_Transform>();
+        dbc->modelMatrix = transform.GetTransform();
     }
 
     CalculateCameraMatrix();
